@@ -1,0 +1,24 @@
+server {
+    listen       80;
+    server_name  searchapi.local;
+    # root /usr/share/nginx/html;
+    root /usr/share/nginx/html/searchapi/applications/searchapi;
+    index index.php index.html index.htm;
+    
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        fastcgi_pass   php-fpm:9000;
+        fastcgi_index  index.php;
+        # fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    location ~ /\.ht {
+        deny  all;
+    }
+}
