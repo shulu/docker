@@ -11,8 +11,8 @@ services:
     volumes:
       # - /docker/www/html:/usr/share/nginx/html:rw
       - /docker/www:/usr/share/nginx/html:rw
-      - /docker/conf/nginx/conf:/etc/nginx/conf.d/:ro
-      - /docker/conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /docker/nginx:/etc/nginx/conf.d/:ro
+      - /docker/conf/nginx.conf:/etc/nginx/nginx.conf:ro
       - /docker/log/nginx/:/var/log/nginx/:rw
     links:
       - php-fpm:php-fpm
@@ -21,16 +21,16 @@ services:
       - TZ=Asia/Shanghai
 
   php-fpm:
-    # build: .
-    image: php:fpm
+    build: ./php/
+    # image: php:fpm
     container_name: php-fpm
     expose:
       - "9000"
     volumes:
       # - /docker/www/html/:/usr/share/nginx/html:rw
       - /docker/www/:/usr/share/nginx/html:rw
-      - /docer/conf/php/php.ini:/usr/local/etc/php/php.ini:rw
-      - /docker/conf/php/php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf:rw
+      - /docer/conf/php.ini:/usr/local/etc/php/php.ini:ro
+      - /docker/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:rw
       - /docker/log/php-fpm/:/var/log/php-fpm/:rw
     links:
       - mysql:mysql
@@ -45,9 +45,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - /docker/conf/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:ro
-      # - /docker/mysql/:/var/lib/mysql/:rw
-      - /docker/log/mysql/:/var/log/mysql/:rw
+      - /docker/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:ro
+      - /docker/mysql/:/var/lib/mysql/:rw
     environment:
       MYSQL_ROOT_PASSWORD: "123456"
     privileged: true 

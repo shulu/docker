@@ -29,3 +29,5 @@ datadir		= /var/lib/mysql
 # Disabling symbolic-links is recommended to prevent assorted security risks
 symbolic-links=0
 explicit_defaults_for_timestamp=true
+innodb_use_native_aio=0
+ignore-db-dir=lost+found
