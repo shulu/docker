@@ -4,6 +4,8 @@ COPY ./sources.list.stretch /etc/apt/sources.list
 
 RUN apt-get update
 
+RUN docker-php-ext-install mysqli
+
 # Install Redis extension from source
 ENV PHPREDIS_VERSION 4.1.1
 COPY ./phpredis-$PHPREDIS_VERSION.tar.gz /tmp/redis.tar.gz
