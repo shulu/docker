@@ -2,9 +2,14 @@ FROM php:fpm
 
 COPY ./sources.list.stretch /etc/apt/sources.list
 
-RUN apt-get update
-
-RUN docker-php-ext-install mysqli
+RUN apt-get update \
+	&& docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-install exif \
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install calendar \
+    && docker-php-ext-install sockets
 
 # Install Redis extension from source
 ENV PHPREDIS_VERSION 4.1.1
