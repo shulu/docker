@@ -22,4 +22,16 @@ RUN mkdir -p /tmp/redis \
     && docker-php-ext-install /tmp/redis \
     && rm -r /tmp/redis
 
+# Install Swoole extension from source
+ENV SWOOLE_VERSION 4.1.2
+COPY ./swoole-src-$SWOOLE_VERSION.tar.gz /tmp/swoole.tar.gz
+RUN ls /tmp
+RUN mkdir -p /tmp/swoole \
+    && tar -xf /tmp/swoole.tar.gz -C /tmp/swoole --strip-components=1 \
+    && rm /tmp/swoole.tar.gz \
+    && docker-php-ext-configure /tmp/swoole --enable-swoole \
+    && docker-php-ext-install /tmp/swoole \
+    && rm -r /tmp/swoole
+
+
 
