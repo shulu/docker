@@ -1,4 +1,79 @@
 <?php
+
+# 返回 随机密码 默认10位
+function random_pwd($len = 10, $type = 1)
+{
+    switch ($type) {
+        case 2:
+            $chars = '0123456789';
+            break;
+        case 3:
+            $chars = 'abcdefghijklmnopqrstuvwxyz';
+            break;
+        case 4:
+            $chars = 'ABDEFGHIJKLMNOPQRSTUVWXYZ';
+            break;
+        case 5:
+            $chars = 'abcdefghijklmnopqrstuvwxyzABDEFGHIJKLMNOPQRSTUVWXYZ';
+            break;
+        default:
+            $chars = 'abcdefghijklmnopqrstuvwxyzABDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            break;
+    }
+
+    $password = '';
+    for ($i = 0; $i < $len; $i++) {
+        $password .= $chars[ mt_rand(0, strlen($chars) - 1) ];
+    }
+
+    return $password;
+}
+function curl($url, $info, $time = '', $act = '', $timeout = 8, $post = 1)
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    if ($post) {
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        if ($post == 2) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $info);
+        } else {//为了兼容之前的post请求方式
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "act=$act&" . $info . "&time=" . $time . "&sign=" . md5($time . "#gr*%com#"));
+        }
+        curl_setopt($ch, CURLOPT_COOKIEJAR, COOKIEJAR);
+    } else {
+        curl_setopt($ch, CURLOPT_URL, $url . '?' . $info);
+    }
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+
+    ob_start();
+    curl_exec($ch);
+    $contents = ob_get_contents();
+    ob_end_clean();
+    curl_close($ch);
+
+    return $contents;
+}
+$code = random_pwd(6,2);
+$content = " 【多娱互动】 {$code} (手机绑定验证码)，请在20分钟内完成绑定。如非本人操作，请忽略。";
+$ori_coding = mb_detect_encoding($content);
+$content = mb_convert_encoding($content, 'utf-8', $ori_coding);
+$content = urlencode($content);
+$phone = 13570274240;
+$un=400178;
+$pw = 400178;
+$sms_url = "http://61.129.57.153:7891/mt?dc=15&da={$phone}&un={$un}&pw={$pw}&tf=3&rf=2&sm={$content}";
+$ch=curl_init($sms_url);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+curl_setopt($ch,CURLOPT_BINARYTRANSFER,true);
+$output=curl_exec($ch);
+$result = json_decode($output, true);
+if ($result['success'] === 1)
+{
+
+}
+exit;
+echo phpinfo();exit();
 class Bim
 {
 	public function doSomething()
