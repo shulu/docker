@@ -1,5 +1,6 @@
 <?php
-
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 # 返回 随机密码 默认10位
 function random_pwd($len = 10, $type = 1)
 {
@@ -28,6 +29,7 @@ function random_pwd($len = 10, $type = 1)
 
     return $password;
 }
+
 function curl($url, $info, $time = '', $act = '', $timeout = 8, $post = 1)
 {
     $ch = curl_init();
@@ -40,8 +42,9 @@ function curl($url, $info, $time = '', $act = '', $timeout = 8, $post = 1)
         } else {//为了兼容之前的post请求方式
             curl_setopt($ch, CURLOPT_POSTFIELDS, "act=$act&" . $info . "&time=" . $time . "&sign=" . md5($time . "#gr*%com#"));
         }
-        curl_setopt($ch, CURLOPT_COOKIEJAR, COOKIEJAR);
+        #curl_setopt($ch, CURLOPT_COOKIEJAR, COOKIEJAR);
     } else {
+        #curl_setopt($ch,CURLOPT_BINARYTRANSFER,true);
         curl_setopt($ch, CURLOPT_URL, $url . '?' . $info);
     }
     curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
@@ -54,24 +57,60 @@ function curl($url, $info, $time = '', $act = '', $timeout = 8, $post = 1)
 
     return $contents;
 }
+
+function post_curl($post_url, $post_arr)
+{
+    $postdata = get_urlencoded_string($post_arr);
+    $ch       = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $post_url);
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    $result = curl_exec($ch);
+    curl_close($ch);
+    unset($ch);
+
+    return $result;
+}
+function get_urlencoded_string($params) {
+    $normalized = array();
+    foreach ($params as $key => $val) {
+        $normalized[] = $key . "=" . rawurlencode($val);
+    }
+
+    return implode("&", $normalized);
+}
+
+//sms
 $code = random_pwd(6,2);
 $content = " 【多娱互动】 {$code} (手机绑定验证码)，请在20分钟内完成绑定。如非本人操作，请忽略。";
 $ori_coding = mb_detect_encoding($content);
 $content = mb_convert_encoding($content, 'utf-8', $ori_coding);
 $content = urlencode($content);
-$phone = 13570274240;
+$mobile = 13570274240;
 $un=400178;
 $pw = 400178;
-$sms_url = "http://61.129.57.153:7891/mt?dc=15&da={$phone}&un={$un}&pw={$pw}&tf=3&rf=2&sm={$content}";
-$ch=curl_init($sms_url);
-curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-curl_setopt($ch,CURLOPT_BINARYTRANSFER,true);
-$output=curl_exec($ch);
-$result = json_decode($output, true);
-if ($result['success'] === 1)
-{
-
-}
+$api_url = "http://61.129.57.153:7891/mt";
+$info = "dc=15&da={$mobile}&un={$un}&pw={$pw}&tf=3&rf=2&sm={$content}";
+$options =[
+    'http' => [
+        'method' => 'GET',
+        'header' => 'Content-type:application/x-www-form-urlencoded',
+        'content' => '',
+        'timeout' => 60 // 超时时间（单位:s）
+    ]
+];
+$context = stream_context_create($options);
+$result = file_get_contents("$api_url?{$info}", false, $context);
+#$result = curl($api_url, $info, '', '', 20, false);
+echo json_encode(['$result'=>$result]);
+#$sms_url = "http://61.129.57.153:7891/mt?dc=15&da={$phone}&un={$un}&pw={$pw}&tf=3&rf=2&sm={$content}";
+#$ch=curl_init($sms_url);
+#curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+#curl_setopt($ch,CURLOPT_BINARYTRANSFER,true);
+#$output=curl_exec($ch);
 exit;
 echo phpinfo();exit();
 class Bim

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/adcenter-gznuoer-com" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/h5-gznuoer-com" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/msdk-nuoer-com" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/opgroup-gznuoer-com" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/passport-gznuoge-com" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/phpRedisAdmin/vendor" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/script-gznuoer-com" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/www-gznuoge-com" vcs="Git" />
+  </component>
+</project>

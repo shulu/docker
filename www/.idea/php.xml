@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/PubSub" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/.git/refs" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Configuration" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/.git/objects" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Connection" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Cluster" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/tests/Predis" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/.git/hooks" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/tests/PHPUnit" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/.git/logs" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Profile" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/.git/info" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Pipeline" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Response" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Monitor" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Transaction" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Command" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Collection" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Replication" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Protocol" />
+      <path value="$PROJECT_DIR$/phpRedisAdmin/vendor/src/Session" />
+    </include_path>
+  </component>
+</project>
