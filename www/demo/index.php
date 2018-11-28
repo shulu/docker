@@ -1,6 +1,41 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+
+echo md5 ('61.140.24.26reg_forbidden').PHP_EOL;
+
+echo md5 ('318654321').PHP_EOL;
+
+echo usertab ('yu54294535', 1);
+
+function usertab($uname, $s = TRUE) {
+	$uname = strtolower($uname);
+	$c1    = substr($uname, 0, 1);
+	$c2    = substr($uname, -1);
+	$n     = ord($c1) + ord($c2);
+	$l     = strlen($uname);
+	$n     += $l * $l;
+	if ($s) {
+		return 'user_' . $n % 20;
+	} else {
+		return $n % 20;
+	}
+}
+exit();
+$url = "http://logselect.gznuoer.com/getAgentinfo_sql.php?uname=sarcasme3&sign=".md5('sarcasme3#gr*%com#');
+echo $url;
+
+exit();
+echo md5('15315421647526e13e25db9a5ce462e0cb72e736bc589').PHP_EOL;
+echo md5('1542164752#gr*%com#').PHP_EOL;
+echo md5('appid=3&uid=15&uname=sarcasme3&sessionid=4&logotype=1').PHP_EOL;
+echo md5('login_successful15sarcasm33');
+exit();
+echo urlencode('多娱互动');
+$str = 'a:1:{s:2:"hf";a:1:{i:0;a:3:{s:7:"game_id";s:1:"2";s:4:"adid";s:4:"1242";s:11:"game_byname";s:4:"xydj";}}}';
+$str = 'a:1:{s:2:"hf";a:2:{i:0;a:3:{s:7:"game_id";s:1:"1";s:4:"adid";s:4:"1518";s:11:"game_byname";s:8:"azcsdemo";}i:1;a:3:{s:7:"game_id";s:1:"1";s:4:"adid";s:4:"1002";s:11:"game_byname";s:8:"azcsdemo";}}}';
+print_r(unserialize($str));
+exit();
 # 返回 随机密码 默认10位
 function random_pwd($len = 10, $type = 1)
 {
@@ -90,9 +125,10 @@ $ori_coding = mb_detect_encoding($content);
 $content = mb_convert_encoding($content, 'utf-8', $ori_coding);
 $content = urlencode($content);
 $mobile = 13570274240;
-$un=400178;
-$pw = 400178;
-$api_url = "http://61.129.57.153:7891/mt";
+$un=700002;
+$pw = 700002;
+#$api_url = "http://61.129.57.153:7891/mt";
+$api_url = "http://61.129.57.20:7891/mt";
 $info = "dc=15&da={$mobile}&un={$un}&pw={$pw}&tf=3&rf=2&sm={$content}";
 $options =[
     'http' => [
@@ -102,9 +138,9 @@ $options =[
         'timeout' => 60 // 超时时间（单位:s）
     ]
 ];
-$context = stream_context_create($options);
-$result = file_get_contents("$api_url?{$info}", false, $context);
-#$result = curl($api_url, $info, '', '', 20, false);
+#$context = stream_context_create($options);
+#$result = file_get_contents("$api_url?{$info}", false, $context);
+$result = curl($api_url, $info, '', '', 20, false);
 echo json_encode(['$result'=>$result]);
 #$sms_url = "http://61.129.57.153:7891/mt?dc=15&da={$phone}&un={$un}&pw={$pw}&tf=3&rf=2&sm={$content}";
 #$ch=curl_init($sms_url);
