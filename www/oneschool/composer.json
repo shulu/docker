@@ -18,7 +18,8 @@
     "require": {
         "php": ">=5.4.0",
         "topthink/framework": "5.0.*",
-        "liushoukun/dawn-api": "^2.0"
+        "liushoukun/dawn-api": "^2.0",
+        "doctrine/orm": "^2.6"
     },
     "autoload": {
         "psr-4": {

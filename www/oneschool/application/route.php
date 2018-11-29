@@ -13,12 +13,18 @@ use think\Route;
 Route::get('/',function(){
 	return 'Hello,world!';
 });
-Route::get('news/:id','index/Index/read');	//查询
-Route::post('index','index/Index/add'); 		//新增
-Route::put('news/:id','index/Index/update'); //修改
+
+Route::group('v1',function (){
+	Route::any('auth/signin/mobile/:email/:nickname','index/User/createWithEmail');
+	Route::any('auth/send_sms_code','index/User/sendCode');
+	Route::any('auth/signin/captcha','index/User/sendCode');
+	Route::any('account/password/reset','index/User/sendCode');
+	Route::resource('user','index/User');
+});
+
+Route::any('accessToken','index/auth/accessToken');//Oauth
 
 return [
     '__pattern__' => [
-        'name' => '\w+',
     ],
 ];

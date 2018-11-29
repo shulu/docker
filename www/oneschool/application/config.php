@@ -187,13 +187,36 @@ return [
 
     'cache'                  => [
         // 驱动方式
-        'type'   => 'File',
-        // 缓存保存目录
-        'path'   => CACHE_PATH,
-        // 缓存前缀
-        'prefix' => '',
-        // 缓存有效期 0表示永久缓存
-        'expire' => 0,
+	    // 使用复合缓存类型
+	    'type'  =>  'complex',
+	    // 默认使用的缓存
+	    'default'   =>  [
+		    // 驱动方式
+		    'type'   => 'File',
+		    // 缓存保存目录
+		    'path'   => CACHE_PATH,
+	    ],
+	    // 文件缓存
+	    'file'   =>  [
+		    // 驱动方式
+		    'type'   => 'file',
+		    // 设置不同的缓存保存目录
+		    'path'   => RUNTIME_PATH . 'file/',
+	    ],
+	    // redis缓存
+        'redis'   =>  [
+	        // 驱动方式
+	        'type'   => 'redis',
+	        // 服务器地址
+	        'host'       => '192.168.99.100',
+	        'port' => 6379,
+	        'password' => '',
+	        'select' => 0,
+	        'timeout' => 0,
+	        'expire' => 0,
+	        'persistent' => false,
+	        'prefix' => '',
+        ],
     ],
 
     // +----------------------------------------------------------------------
