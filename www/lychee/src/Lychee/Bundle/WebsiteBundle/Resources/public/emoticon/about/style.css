@@ -1,0 +1,210 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline; }
+
+html {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle; }
+
+q, blockquote {
+  quotes: none; }
+  q:before, q:after, blockquote:before, blockquote:after {
+    content: "";
+    content: none; }
+
+a img {
+  border: none; }
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block; }
+
+html {
+  background-color: #4E9BCC; }
+
+body {
+  position: relative;
+  width: 100%;
+  background-color: #4E9BCC;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding-bottom: 142.1875%; }
+
+.phrase {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 88.125%;
+  background-image: url("image/phrase.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  left: 8.59375%;
+  margin-top: 5.15625%; }
+  .phrase::before {
+    content: "";
+    display: block;
+    margin-top: 42.19858%; }
+
+.coser {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 43.90625%;
+  background-image: url("image/coser.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  left: 2.5%;
+  margin-top: 25%; }
+  .coser::before {
+    content: "";
+    display: block;
+    margin-top: 75.44484%; }
+
+.welfare {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 41.71875%;
+  background-image: url("image/welfare.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  left: 39.0625%;
+  margin-top: 35%; }
+  .welfare::before {
+    content: "";
+    display: block;
+    margin-top: 79.40075%; }
+
+.painting {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 37.65625%;
+  background-image: url("image/painting.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  left: 60.9375%;
+  margin-top: 65%; }
+  .painting::before {
+    content: "";
+    display: block;
+    margin-top: 87.9668%; }
+
+.change {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 37.8125%;
+  background-image: url("image/change.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  left: 61.25%;
+  margin-top: 103.125%; }
+  .change::before {
+    content: "";
+    display: block;
+    margin-top: 87.60331%; }
+
+.ciyo {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 56.875%;
+  background-image: url("image/ciyo.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  left: 3.125%;
+  margin-top: 73.125%; }
+  .ciyo::before {
+    content: "";
+    display: block;
+    margin-top: 55.49451%; }
+
+.download {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 31.25%;
+  background-image: url("image/button.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  left: 13.75%;
+  margin-top: 114.53125%; }
+  .download::before {
+    content: "";
+    display: block;
+    margin-top: 42%; }
+
+.contact {
+  left: 0%;
+  margin-top: 138.75%;
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  font-size: 3.4375vw;
+  color: #fff; }
+
+.cricles {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow-x: hidden; }
+
+.cricle1 {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden; }
+  .cricle1::before {
+    content: "";
+    display: block;
+    border-radius: 50%;
+    background-color: #378ec5;
+    width: 75%;
+    padding-top: 75%;
+    position: absolute;
+    z-index: 1;
+    top: -13.18681%;
+    right: -35.9375%; }
+
+.cricle2 {
+  display: block;
+  border-radius: 50%;
+  background-color: #2876a8;
+  width: 93.75%;
+  padding-top: 93.75%;
+  position: absolute;
+  z-index: 1;
+  top: 38.68132%;
+  left: -25.625%; }

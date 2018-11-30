@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Error Code</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 6px 12px;
+        }
+        th {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<table>
+{% for section in sections %}
+    <tbody>
+        <tr style="background-color:yellowgreen;">
+            <th colspan="4">{{ section.class | split('\\') | last | replace({'Error': ''}) }}</th>
+        </tr>
+        <tr>
+            <th>Code</th><th>Name</th><th>Message</th><th>Display</th>
+        </tr>
+        {% for error in section.errors %}
+            <tr>
+                <td>{{ error.code }}</td><td>{{ error.name }}</td><td>{{ error.message }}</td><td>{{ error.displayMessage }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+{% endfor %}
+</table>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends 'LycheeAdminBundle:Game:layout.html.twig' %}
+{% block body %}
+    <form role="form" method="post" action="{{ path('lychee_admin_game_editcategory') }}"
+          enctype="multipart/form-data">
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="category_name">分类名称(不多于20字)</label>
+                <input type="text" name="category_name" id="category_name" class="form-control" value="{{ category.name }}">
+                <input type="hidden" name="categroy_id" id="category_id" value="{{ category.id }}">
+            </div>
+            <div class="form-group main-icon">
+                <label for="icon">游戏图标</label>
+                <input type="file" class="form-control icon" name="icon" id="icon">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">保 存</button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/datepicker2/css/bootstrap-datetimepicker.min.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style>
+        .nav-tabs { margin-bottom: 10px; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/bootstrap-datetimepicker.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/locales/bootstrap-datetimepicker.zh-CN.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="application/javascript">
+        $(document).ready(function () {
+            var fileinputConfig = {
+                allowedFileTypes: ['image'],
+                showUpload: false
+            };
+            var iconConfig = {
+                initialPreview: [
+                    '<img src="{{ category.icon }}" alt="">'
+                ]
+            };
+            $.extend(iconConfig, fileinputConfig);
+            $(".icon").fileinput(iconConfig);
+            $('.main-icon .fileinput-remove-button').attr('disabled', 'true');
+            $("button[type=submit]").click(function () {
+                if (!$("#category_name").val()) {
+                    alert("游戏分类必填");
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% set beforeSubjects = posts|slice(0, 3) %}
+{% set afterSubjects = posts|slice(3) %}
+
+{% for p in beforeSubjects %}
+	{% include 'LycheeWebsiteBundle:Home:post-mobile.html.twig' with {post: p} %}
+{% endfor %}
+{% if subjects is defined %}
+	<li class="special-activity swiper-container">
+		<a class="-title" href="javascript:;">专题活动</a>
+		<ul class="swiper-wrapper">
+			{% for subject in subjects %}
+				<li class="swiper-slide">
+					<a href="javascript:;">
+						<img src="{{ subject.banner }}"/>
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</li>
+{% endif %}
+{% for p in afterSubjects %}
+	{% include 'LycheeWebsiteBundle:Home:post-mobile.html.twig' with {post: p} %}
+{% endfor %}

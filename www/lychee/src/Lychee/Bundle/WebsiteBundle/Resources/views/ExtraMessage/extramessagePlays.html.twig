@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>剧本列表</title>
+    <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/bootstrap/css/bootstrap.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/css/main.css') }}" />
+    <script type="text/javascript" src="{{ asset('bundles/lycheewebsite/js/jquery-1.11.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/lycheewebsite/bootstrap/js/bootstrap.js') }}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="container">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_play" title="添加新的剧本">
+            <span class="glyphicon glyphicon-plus">剧本</span>
+        </button>
+        {% if plays | length > 0 %}
+            <ul class="nav nav-pills">
+                {% for play in plays %}
+                    <li><a href="{{ path('lychee_website_extramessage_extramessageplaysmanage', {id: play.id}) }}">{{ play.subtitleline ? play.subtitleline : '' }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="modal fade" id="add_play" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">添加新的剧本</h4>
+                    </div>
+                    <form role="form" method="post" action="{{ path('lychee_website_extramessage_addplay') }}">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="play_name">剧本名字</label>
+                                <input type="text" class="form-control" id="play_name" name="play_name">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">添 加</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
+</html>
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

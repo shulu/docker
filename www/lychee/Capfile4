@@ -1,0 +1,37 @@
+load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+
+require 'capifony_symfony2'
+
+before "deploy" do
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop event -e=prod|| echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop topic_visit -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop topic.update -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop recommendable_topic.create -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop recommendable_topic.delete -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop post.create.follow_topic -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop post.create -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop post.delete -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop post.pass_audit -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop post.reject_audit -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop post.like -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop user.login -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop user.register -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop post.exposure -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop short_video.stop_play -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:txvod-consumer:schedule stop ProcedureStateChanged -e=prod|| echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:txvod-consumer:schedule stop FileDeleted -e=prod|| echo"
+end
+
+after "deploy:finalize_update" do
+    run "touch #{latest_release}/var/api/logs/prod.log"
+    run "chmod -R 777 #{latest_release}/var"
+    run "php #{latest_release}/app/api/console lychee:consumer:schedule start event -e=prod"
+    run "php #{latest_release}/app/api/console lychee:consumer:schedule start user.login -e=prod"
+    run "php #{latest_release}/app/api/console lychee:consumer:schedule start user.register -e=prod"
+end
+
+after "deploy:create_symlink" do
+    run "sudo service php-fpm restart"
+end
+
+load 'app/config/deploy'

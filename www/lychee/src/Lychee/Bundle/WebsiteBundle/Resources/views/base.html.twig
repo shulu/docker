@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block meta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="{{ block('title') }}">
+    {% endblock %}
+    <link rel="apple-touch-icon" href="/ciyocon-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/ciyocon-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/ciyocon-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/ciyocon-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/ciyocon-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/ciyocon-touch-icon-180x180.png">
+    <link rel="shortcut icon" type="image/ico-x" href="/ciyocon-favicon.ico" />
+    <title>{% block title "次元" %}</title>
+    {% block styles %}{% endblock %}
+</head>
+<body {% block body_attributes %}{% endblock %}>
+{% block body %}{% endblock %}
+{{ include('LycheeWebsiteBundle::googleAnalytics.html.twig') }}
+</body>
+{% block scripts %}{% endblock %}
+</html>

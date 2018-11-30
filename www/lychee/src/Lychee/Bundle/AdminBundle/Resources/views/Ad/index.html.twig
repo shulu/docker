@@ -1,0 +1,112 @@
+{% extends 'LycheeAdminBundle:Ad:layout.html.twig' %}
+
+{% block body %}
+    <div>
+        <a class="btn btn-primary pull-left create-ad" href="{{ path('lychee_admin_ad_createad') }}">
+            <span class="glyphicon glyphicon-plus"></span> 添加广告
+        </a>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>图片</th>
+                    <th>链接</th>
+                    <th>次元</th>
+                    <th>推广时间段</th>
+                    <th>总访问量</th>
+                    <th>唯一访问量</th>
+                    <th><span class="glyphicon glyphicon-wrench"></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in campaigns %}
+                    <tr>
+                        <td>{{ c.id }}</td>
+                        <td>
+                            <a href="{{ c.image }}" target="_blank"><img src="{{ c.image|resizeImage(0, 100) }}"></a>
+                        </td>
+                        <td><a href="{{ c.link }}" target="_blank">{{ c.link }}</a></td>
+                        <td>
+                            {% if c.id in campaignTopics|keys %}
+                                {% for topicPosition in campaignTopics[c.id] %}
+                                    <span class="label label-info">{{ topics[topicPosition[0]].title }} ( {{ topicPosition[1] }} )</span>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if now > c.endTime %}
+                                已结束
+                            {% else %}
+                                <p>开始 {{ c.startTime|date('Y-m-d') }}</p>
+                                <p>结束(不包含) {{ c.endTime|date('Y-m-d') }}</p>
+                            {% endif %}
+                        </td>
+                        <td>{{ views[c.id][0] }}</td>
+                        <td>{{ views[c.id][1] }}</td>
+                        <td>
+                            <a class="btn btn-default" href="{{ path('lychee_admin_ad_createad', {id: c.id}) }}">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                            <button class="btn btn-danger remove-campaign" data-id="{{ c.id }}">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <nav>
+            <ul class="pagination">
+                <li>
+                    <a href="{{ path('lychee_admin_ad_index',
+                    {page: 1, count: app.request.get('count')}) }}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% if pages == 0 %}{% set pages = 1 %}{% endif %}
+                {% for p in 1..pages %}
+                    <li class="{{ p==page? 'active' }}">
+                        <a href="{{ path('lychee_admin_ad_index',
+                        {page: p, count: app.request.get('count')}) }}">
+                            {{ p }}
+                        </a>
+                    </li>
+                {% endfor %}
+                <li>
+                    <a href="{{ path('lychee_admin_ad_index', {page: pages, count: app.request.get('count')}) }}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .create-ad { margin-bottom: 10px; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('.remove-campaign').click(function () {
+                var $delBtn = $(this);
+                var campaignId = $(this).data('id');
+                if (confirm('确定删除广告?')) {
+                    $.post('{{ path("lychee_admin_ad_removecampaign") }}', {
+                        id: campaignId
+                    }, function (data) {
+                        $delBtn.parent().parent().remove();
+                    }, 'json');
+                }
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

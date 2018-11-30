@@ -1,0 +1,144 @@
+parameters:
+    core_database_driver:   pdo_mysql
+    core_database_host:     127.0.0.1
+    core_database_port:     ~
+    core_database_name:     lychee
+    core_database_user:     root
+    core_database_password: ~
+
+    mailer_transport:  smtp
+    mailer_host:       127.0.0.1
+    mailer_user:       ~
+    mailer_password:   ~
+
+    locale:            en
+    secret:            ThisTokenIsNotSoSecretChangeIt
+
+    core_redis_db_host: 127.0.0.1
+    core_redis_db_port: 6379
+
+    core_redis_cache_host: 127.0.0.1
+    core_redis_cache_port: 6380
+
+    core_memcache_host: 127.0.0.1
+    core_memcache_port: 11211
+
+    rabbit_mq_host: localhost
+    rabbit_mq_port: 5672
+    rabbit_mq_user: guest
+    rabbit_mq_password: guest
+
+    qiniu_access_key: 41vFZF9HylpQ_vZSwJ7zoV83mqS8ExAi3ZmkQeRO
+    qiniu_secret_key: gyP2jUJf5AJha5I5VFKBDYU4-rkPCUjArHr76vgb
+    qiniu_bucket: lychee|ciyocon
+
+    sinaweibo_client_key: 1179866376
+    sinaweibo_client_secret: efa7e739df801535f6e0865d925441a8
+
+    yiciyuan_sinaweibo_client_key: 103306585
+    yiciyuan_sinaweibo_client_secret: ae7c666f2061f2a77106ea3444ef25bc
+
+    qq_app_key: 1101961501
+    qq_app_secret: i09gAYza97AJPWQO
+
+    yiciyuan_qq_app_key: 1105941300
+    yiciyuan_qq_app_secret: T44vzY3WlPdJunuo
+
+    wechat_app_id: wx2e2b791e1b7e39b5
+    wechat_app_secret: 84a3d33da24b577759c6f6217d937cb5
+    wechat_mp_app_id: wx53fd17314ef573f8
+    wechat_mp_app_secret: fe9210d17e8e5d54bfc1513777768e75
+
+    yiciyuan_wechat_app_id: wxb20d1813d530893c
+    yiciyuan_wechat_app_secret: 5190d596c338e318295aaa404ed4f99f
+
+    #image upload
+    image_server_domain: img.ciyocon.com
+    qiniu_upload_host: "http://qn.ciyocon.com"
+
+    #jpush
+    jpush_appkey: c910a6bd432a08fbcc73255b
+    jpush_master_secret: 5ec41beb810bc961f89478af
+
+    #jpush miao
+    miao_jpush_appkey: 027a306cf32df435d7259c53
+    miao_jpush_secret: 2405353254c635b6fbc823c2
+
+    #report system error
+    report_system_error: false
+
+    #elasticsearch
+    core_elasticsearch_host: 127.0.0.1
+    core_elasticsearch_port: 9200
+    core_elasticsearch_index: ciyo
+
+    #im
+    chatto_host: chatto.ciyo.cn
+    chatto_port: 7020
+    chatto_api_token: 7Q9{l=7P4nbudGS1D9+E^6<lJ)DmN8
+
+    #weibo callback url
+    weibo_callback_url: http://api.ciyocon.com/social/weibo/callback
+
+    # Tupu key
+    tupu_secret_id: 56a09ba4006bedfd7c201fac
+
+    # alipay_account_info
+    ciyocon_alipay_app_id: 2016092101942031
+    ciyocon_alipay_seller_id: 2088421728796990
+    ciyocon_alipay_business_private_key: private.pem
+    ciyocon_alipay_public_key: alipay_public.pem
+
+    yiciyuan_alipay_app_id: 2017010504863725
+    yiciyuan_alipay_seller_id: ~
+    yiciyuan_alipay_business_private_key: yiciyuan_private.key
+    yiciyuan_alipay_public_key: yiciyuan_alipay_public.key
+
+    # wechat_account_info
+    ciyocon_wechat_key: bc2be216eed41a4e03c02f5b54125e3f
+    ciyocon_wechat_mch_id: 1393442102
+    ciyocon_wechat_app_id: wx2e2b791e1b7e39b5
+
+    yiciyuan_wechat_key: bc2be216eed41a4e03c02f5b54125e3f
+    yiciyuan_wechat_mch_id: 1429609502
+    yiciyuan_wechat_app_id: wxb20d1813d530893c
+
+    #qpay_account_info
+    ciyocon_qpay_key: bc2be216eed41a4e03c02f5b54125e3f
+    ciyocon_qpay_mch_id: 1443227201
+    ciyocon_qpay_app_id: 1101961501
+    ciyocon_qpay_app_key: i09gAYza97AJPWQO
+
+    yiciyuan_qpay_key: bc2be216eed41a4e03c02f5b54125e3f
+    yiciyuan_qpay_mch_id: 1443227201
+    yiciyuan_qpay_app_id: 1101961501
+    yiciyuan_qpay_app_key: i09gAYza97AJPWQO
+
+    bilibili_game_id: 286
+    bilibili_merchant_id: 87
+    bilibili_app_key: 941a32302fb442b4904b6288924efd9f
+    bilibili_secrect_key: 60cb1d796dbd48279dba7d9e6c42277a
+    bilibili_server_id: 522
+    bilibili_server_name: bilibili区
+
+    # 动漫之家
+    dmzj_merchant_id: 2000431
+    dmzj_merchant_key: 30eed6b689f8e397e032cc4a69065c75
+    dmzj_app_id: b061d4aed59c11e7b14fc6a10b512583
+
+    # facebook
+    facebook_appid: 325855814575531
+    facebook_secret: 6c80d7f1ac4c90bf1966a3514d618d92
+
+    #腾讯云
+    tx_secret_id: AKIDQeeOt8UoHUTIwMoWGl13qOo0ylNkRiJe
+    tx_secret_key: ECvOhkX7UebKq57tOhkX3JJ3WjindpnW
+
+    txvod_api_host: 'vod.api.qcloud.com'
+
+    #proxy
+    proxy_host: null
+    proxy_port: null
+
+    #google pay
+    google_public_key:

@@ -1,0 +1,200 @@
+{% extends 'LycheeAdminBundle:Game:layout.html.twig' %}
+{% block body %}
+    <button type="button" id="create_recommendation_btn" class="btn btn-primary" data-toggle="modal"
+            data-target="#create_recommendation_form">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    {% if columns | length > 0%}
+        <ul class="nav nav-tabs">
+            {% for column in columns %}
+                <li role="presentation" class="{% if currentColumn == column.id %}active{% endif %}">
+                    <a href="{{ path('lychee_admin_game_gamecolumnrecommendation', {column: column.id}) }}">{{ column.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>游戏名称</th>
+                    <th>Icon</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if applications | length > 0 %}
+                    {% for application in applications %}
+                        <tr id="item_{{ positions[application.id] }}" data-column-id="{{ currentColumn }}">
+                            <td>{{ application.appName }}</td>
+                            <td><img src="{{ application.icon }}" alt="{{ application.appName }}" width="44px"/></td>
+                            <td>
+                                {% if loop.length > 1 %}
+
+                                    {% if loop.first%}
+                                        <button class="btn btn-default position-down" data-position-id="{{ positions[application.id] }}" >
+                                            <span class="glyphicon glyphicon-arrow-down"></span>
+                                        </button>
+                                        <button class="btn btn-default position-bottom" data-position-id="{{ positions[application.id] }}">
+                                            置底
+                                        </button>
+                                    {% elseif loop.last %}
+                                        <button class="btn btn-default position-up" data-position-id="{{ positions[application.id] }}">
+                                            <span class="glyphicon glyphicon-arrow-up"></span>
+                                        </button>
+                                        <button class="btn btn-default position-top" data-position-id="{{ positions[application.id] }}">
+                                            置顶
+                                        </button>
+                                    {% else %}
+                                        <button class="btn btn-default position-up" data-position-id="{{ positions[application.id] }}">
+                                            <span class="glyphicon glyphicon-arrow-up"></span>
+                                        </button>
+                                        <button class="btn btn-default position-down" data-position-id="{{ positions[application.id] }}">
+                                            <span class="glyphicon glyphicon-arrow-down"></span>
+                                        </button>
+                                        <button class="btn btn-default position-top" data-position-id="{{ positions[application.id] }}">
+                                            置顶
+                                        </button>
+                                        <button class="btn btn-default position-bottom" data-position-id="{{ positions[application.id] }}">
+                                            置底
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                                <button class="btn btn-danger delete-recommendation"
+                                        data-application-id="{{ application.id }}" data-column-id="{{ currentColumn }}">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <!-- Modal -->
+    <div class="modal fade" id="create_recommendation_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加{{ subTitle }}</h4>
+                </div>
+                <form role="form" method="post" action="{{ path('lychee_admin_game_addrecommendation') }}"
+                      enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="game_id">游戏ID</label>
+                            <input type="text" name="game_id" id="game_id" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="column_id">游戏栏目(必选，若无栏目可选，请先添加栏目)</label>
+                            <select class="form-control" id="column_id" name="column_id">
+                                {% if columns | length > 0 %}
+                                    {% for column in columns  %}
+                                        <option value="{{ column.id }}" {% if column.id == currentColumn %} selected {% endif %}>{{ column.title }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">保 存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .nav-tabs { margin-bottom: 10px; }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="application/javascript">
+        $(document).ready(function () {
+            function IsNumbers(val) {
+                return /^\d*$/.test(val);
+            }
+            $("button[type=submit]").click(function () {
+                var column_id = $('#column_id').val();
+                var game_id = $('#game_id').val();
+                if(!IsNumbers(game_id)) {
+                    alert("游戏ID");
+                    return false;
+                }
+                if(game_id == '') {
+                    alert('id不能为空');
+                    return false;
+                }
+                if (!column_id) {
+                    alert("游戏栏目不能为空");
+                    return false;
+                }
+            });
+            $(".delete-recommendation").click(function () {
+                if (confirm("确认删除？")) {
+                    var $form = $('<form></form>');
+                    $form.attr("action", "{{ path('lychee_admin_game_deleterecommendation') }}");
+                    $form.attr("method", "post");
+                    $form.append('<input type="hidden", name="column_id" value="' + $(this).data('column-id') + '">');
+                    $form.append('<input type="hidden", name="application_id" value="' + $(this).data('application-id') + '">');
+                    $("body").append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+            function positionChangeSubmit(columnId, currentPosition, nextPosition) {
+                var $form = $('<form></form>');
+                $form.attr("action", "{{ path('lychee_admin_game_positionchange') }}");
+                $form.attr("method", "post");
+                $form.append('<input type="hidden", name="current_position" value="' + currentPosition + '">');
+                $form.append('<input type="hidden", name="next_position" value="' + nextPosition + '">');
+                $form.append('<input type="hidden", name="column_id" value="' + columnId + '">');
+                $("body").append($form);
+                $form.submit();
+            }
+            $('.position-down').click(function () {
+                var currentPosition = $(this).data('position-id');
+                var currentElement = $('#item_' + currentPosition);
+                var columnId = $(currentElement).data('column-id');
+                var nextElement = $(currentElement).next();
+                var nextPosition = nextElement.attr('id').substring(5);
+                positionChangeSubmit(columnId, currentPosition, nextPosition);
+
+            });
+            $('.position-up').click(function () {
+                var currentPosition = $(this).data('position-id');
+                var currentElement = $('#item_' + currentPosition);
+                var columnId = $(currentElement).data('column-id');
+                var nextElement = $(currentElement).prev();
+                var nextPosition = nextElement.attr('id').substring(5);
+                positionChangeSubmit(columnId, currentPosition, nextPosition);
+            });
+            $('.position-top').click(function () {
+                var currentPosition = $(this).data('position-id');
+                var currentElement = $('#item_' + currentPosition);
+                var columnId = $(currentElement).data('column-id');
+                var nextElement = $(currentElement).parent().children().first();
+                var nextPosition = nextElement.attr('id').substring(5);
+                positionChangeSubmit(columnId, currentPosition, nextPosition);
+            });
+            $('.position-bottom').click(function () {
+                var currentPosition = $(this).data('position-id');
+                var currentElement = $('#item_' + currentPosition);
+                var columnId = $(currentElement).data('column-id');
+                var nextElement = $(currentElement).parent().children().last();
+                var nextPosition = nextElement.attr('id').substring(5);
+                positionChangeSubmit(columnId, currentPosition, nextPosition);
+            })
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,68 @@
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+{% set wechatInfo = signWechat() %}
+wx.config({
+    debug: false,
+    appId: '{{ wechatInfo.appId }}',
+    timestamp: {{ wechatInfo.timestamp }},
+    nonceStr: '{{ wechatInfo.nonceStr }}',
+    signature: '{{ wechatInfo.signature }}',
+    jsApiList: [
+        'onMenuShareTimeline',
+        'onMenuShareAppMessage',
+        'onMenuShareQQ',
+        'onMenuShareWeibo',
+        'previewImage'
+    ]
+});
+
+(function(o){
+    var wxIsReady = false;
+    var wxShareOptions = null;
+
+    /*
+     * options: {title, content, link, image}
+     */
+    function wxShareOpt(opt) {
+        return {
+            title: opt.title ? opt.title : document.title,
+            desc: opt.content ? opt.content : '',
+            link: opt.link ? opt.link : document.URL,
+            imgUrl: opt.image ? opt.image : null,
+            type: 'link',
+            dataUrl: '',
+            success: function() {},
+            cancel: function() {}
+        };
+    }
+
+    var setupShare = function(appOpt, timelineOpt, qqOpt, weiboOpt) {
+        var setup = function(func, opt, defaultOpt) {
+            var options = opt ? opt : defaultOpt;
+            func.call(wx, wxShareOpt(options));
+        };
+
+        appOpt = appOpt ? appOpt : {};
+        setup(wx.onMenuShareAppMessage, appOpt, {});
+        setup(wx.onMenuShareTimeline, timelineOpt, appOpt);
+        setup(wx.onMenuShareQQ, qqOpt, appOpt);
+        setup(wx.onMenuShareWeibo, weiboOpt, appOpt);
+    };
+
+    o.wxSetupShare = function() {
+        if (!wxIsReady) {
+            wxShareOptions = arguments;
+        } else {
+            setupShare.apply(this, arguments);
+        }
+    };
+
+    wx.ready(function() {
+        wxIsReady = true;
+        if (wxShareOptions) {
+            setupShare.apply(this, wxShareOptions);
+        }
+    });
+    wx.error(function(e){});
+})(window);
+</script>

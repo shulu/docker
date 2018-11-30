@@ -1,0 +1,27 @@
+load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+
+require 'capifony_symfony2'
+
+before "deploy" do
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:task:schedule stop -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop event -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop topic_announce -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop topic_deletion -e=prod || echo"
+    run "[ -f #{current_release}/app/api/console ] && php #{current_release}/app/api/console lychee:consumer:schedule stop clean_user_posts -e=prod || echo"
+end
+
+after "deploy:finalize_update" do
+    run "touch #{latest_release}/var/api/logs/prod.log"
+    run "chmod -R 777 #{latest_release}/var"
+    run "php #{latest_release}/app/api/console lychee:task:schedule start -e=prod"
+    run "php #{latest_release}/app/api/console lychee:consumer:schedule start event -e=prod"
+    run "php #{latest_release}/app/api/console lychee:consumer:schedule start topic_announce -e=prod"
+    run "php #{latest_release}/app/api/console lychee:consumer:schedule start topic_deletion -e=prod"
+    run "php #{latest_release}/app/api/console lychee:consumer:schedule start clean_user_posts -e=prod"
+end
+
+after "deploy:create_symlink" do
+    run "sudo service php-fpm restart"
+end
+
+load 'app/config/deploy'

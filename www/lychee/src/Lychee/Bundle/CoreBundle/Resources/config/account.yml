@@ -1,0 +1,38 @@
+services:
+    lychee.module.account:
+        class: Lychee\Module\Account\AccountService
+        arguments:
+            - '@doctrine'
+            - '@memcache.default'
+            - '@lychee.event_dispatcher_async'
+            - '@lychee.module.search.accountSearcher'
+            - '@lychee.module.account.level_calculator'
+
+    lychee.module.account.mission_manager:
+        class: Lychee\Module\Account\Mission\MissionManager
+        arguments:
+            - '@doctrine'
+            - ~
+            - '@lychee.module.account'
+
+    lychee.module.account.level_calculator:
+        class: Lychee\Module\Account\Mission\LevelCalculator
+
+    lychee.module.account.posts_cleaner:
+        class: Lychee\Module\Account\AccountCleaner
+        arguments:
+            - '@old_sound_rabbit_mq.clean_user_posts_producer'
+            - '@lychee.module.account'
+            - '@lychee.module.post'
+            - '@lychee.module.comment'
+            - '@doctrine'
+            - '@?logger'
+
+    lychee.module.account.device_blocker:
+        class: Lychee\Module\Account\DeviceBlocker
+        arguments: ['@doctrine']
+
+    lychee.module.account.sign_in_recorder:
+        class: Lychee\Module\Account\AccountSignInRecorder
+        arguments:
+            - '@doctrine'

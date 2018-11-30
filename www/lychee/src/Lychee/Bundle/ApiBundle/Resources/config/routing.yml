@@ -1,0 +1,5 @@
+lychee_api:
+    resource: "@LycheeApiBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

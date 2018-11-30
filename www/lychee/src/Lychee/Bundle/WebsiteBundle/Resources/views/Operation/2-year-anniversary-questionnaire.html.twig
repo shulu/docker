@@ -1,0 +1,237 @@
+{% spaceless %}
+	<!DOCTYPE html>
+	<html xmlns="http://www.w3.org/1999/html">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0"/>
+		<meta name="format-detection" content="telephone=no"/>
+		<title>真爱大测试</title>
+		<link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/operation/2-year-anniversary-questionnaire/style.css') }}" />
+	</head>
+	<body>
+	<script>
+		function showButton(t) {
+			document.getElementById('next-btn').style.display = t == 'next' ? 'block' : 'none';
+			document.getElementById('submit-btn').style.display = t == 'submit' ? 'block' : 'none';
+		}
+
+		function optionOnClick(o, questionIndex) {
+			var q = optionFindQuestion(o);
+
+			var values = questionGetValue(q);
+			if (o.checked) {
+				if (values.indexOf(o.value) == -1) {
+					values.push(o.value);
+				}
+				var atMost = questionGetAtMost(q);
+				if (values.length > atMost) {
+					values = values.slice(values.length - atMost);
+				}
+			} else {
+				var i = values.indexOf(o.value);
+				if (i >= 0) {
+					values.splice(i, 1);
+				}
+			}
+			questionSetValue(q, values);
+		}
+
+		function optionFindQuestion(o) {
+			var tmp = o;
+			while (tmp != null && !(tmp.classList.contains('question'))) {
+				tmp = tmp.parentElement;
+			}
+			return tmp;
+		}
+
+		function questionGetOptions(q) {
+			return [].slice.call(q.getElementsByTagName('input')).filter(function(i){return i.type == 'checkbox';});
+		}
+
+		function questionGetAtMost(q) {
+			if (q.hasAttribute('data-at-most')) {
+				return parseInt(q.getAttribute('data-at-most'));
+			} else {
+				return 1;
+			}
+		}
+
+		function questionGetValueElement(q) {
+			var is = q.getElementsByTagName('input');
+			for (var i = 0; i < is.length; ++i) {
+				if (is[i].type == 'hidden') {
+					return is[i];
+				}
+			}
+			return {value: ''};
+		}
+
+		function questionSetValue(q, v) {
+			v = v instanceof Array ? v : [v];
+			questionGetValueElement(q).value = v instanceof Array ? v.join(',') : v;
+			var options = questionGetOptions(q);
+			options.forEach(function(o){
+				o.checked = v.indexOf(o.value) != -1;
+			});
+			if (v.length > 0) {
+				q.classList.remove('empty');
+			}
+		}
+
+		function questionGetValue(q) {
+			return questionGetValueElement(q).value.split(',').filter(function(v){return v != '';});
+		}
+
+		function getQuestions() {
+			return [].slice.call(document.getElementsByClassName('question'));
+		}
+		function getStep1Questions() {
+			return [].slice.call(document.querySelectorAll('.step1 .question'));
+		}
+		function getStep2Questions() {
+			return [].slice.call(document.querySelectorAll('.step2 .question'));
+		}
+		function goNext() {
+			var questions = getStep1Questions();
+			var allFill = checkQuestions(questions);
+			if (allFill === true) {
+				document.getElementsByClassName('step1')[0].style.display = 'none';
+				document.getElementsByClassName('step2')[0].style.display = 'block';
+				getStep2Questions()[0].scrollIntoView();
+				showButton('submit');
+			}
+		}
+
+		function checkQuestions(qs) {
+			var firstEmpty = null;
+			qs.reverse().forEach(function(q){
+				var v = questionGetValue(q);
+				if (v.length == 0) {
+					q.classList.add('empty');
+					firstEmpty = q;
+				} else {
+					q.classList.remove('empty');
+				}
+			});
+
+			if (firstEmpty != null) {
+				firstEmpty.scrollIntoView();
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		function goSubmit() {
+			var questions = getStep2Questions();
+			var allFill = checkQuestions(questions);
+			if (allFill) {
+				document.getElementsByTagName('form')[0].submit();
+			}
+		}
+
+	</script>
+	<div class="logo"><img src="http://qn.ciyocon.com/web/operation/2-year-anniversary/logo.png" alt=""></div>
+	<div class="preview"><img src="http://qn.ciyocon.com/web/operation/2-year-anniversary/preview.png" alt=""></div>
+	<form action="" method="post" autocomplete="off">
+		<div class="step1">
+			<p class="remarks">备注：满分零分，答对不得分，答错扣分。单项选择题7.5分一道，判断题5分一道。</p>
+			<div class="question-type">单项选择题</div>
+			<ol class="questions">
+				{% set qi = 0 %}
+				{% for q in singleQuestions %}
+					{% set qi = qi + 1 %}
+					{% set qType = q.questionType is defined ? q.questionType : '' %}
+					<li class="question {{qType }}">
+						<h3>{{ qi }}、{{ q.title }}</h3>
+						<input type="hidden" name="q{{ qi }}" value="{{ values['q' ~ qi] is defined ? values['q' ~ qi] : '' }}" autocomplete="off"/>
+						{% if (q.attachment is defined ? true : false) %}
+							<div class="img">
+								<img src="{{ q.attachment }}">
+							</div>
+						{% endif %}
+						<ol class="options">
+							{% for o in q.options %}
+								{% set oi = loop.index %}
+								{% set oType = q.optionType == 'image' ? 'image' : 'text' %}
+								<li class="option {{ oType }}">
+									{% if oType == 'text' %}
+										<input type="checkbox" id="q{{ qi }}-o{{ oi }}" autocomplete="off" value="{{ oi }}"/>
+										<label for="q{{ qi }}-o{{ oi }}">{{ o }}</label>
+									{% endif %}
+									{% if oType == 'image'  %}
+										<input type="checkbox" id="q{{ qi }}-o{{ oi }}" autocomplete="off" value="{{ oi }}"/>
+										<label for="q{{ qi }}-o{{ oi }}" ><img src={{ o }} alt=""></label>
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ol>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+		<div class="step2" style="display: none">
+			<div class="question-type">判断题</div>
+			<ol class="questions">
+				{% for q in judgeQuestions %}
+					{% set qi = qi + 1 %}
+					{% set qType = q.questionType is defined ? q.questionType : '' %}
+					<li class="question {{qType }}">
+						<h3>{{ qi }}、{{ q.title }}</h3>
+						<input type="hidden" name="q{{ qi }}" value="{{ values['q' ~ qi] is defined ? values['q' ~ qi] : '' }}" autocomplete="off"/>
+						{% if (q.attachment is defined ? true : false) %}
+							<div class="img">
+								<img src="{{ q.attachment }}">
+							</div>
+						{% endif %}
+						<ol class="options">
+							{% for o in q.options %}
+								{% set oi = loop.index %}
+								{% set oType = q.optionType == 'image' ? 'image' : 'text' %}
+								<li class="option {{ oType }}">
+									{% if oType == 'text' %}
+										<input type="checkbox" id="q{{ qi }}-o{{ oi }}" autocomplete="off" value="{{ oi }}"/>
+										<label for="q{{ qi }}-o{{ oi }}">{{ o }}</label>
+									{% endif %}
+									{% if oType == 'image'  %}
+										<input type="checkbox" id="q{{ qi }}-o{{ oi }}" autocomplete="off" value="{{ oi }}"/>
+										<label for="q{{ qi }}-o{{ oi }}" ><img src={{ o }} alt=""></label>
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ol>
+					</li>
+				{% endfor %}
+			</ol>
+		</div>
+		<button id="next-btn" type="button" onclick="goNext()">下一页</button>
+		<button id="submit-btn" type="button" style="display: none" onclick="goSubmit()">提交</button>
+
+	</form>
+
+	<script>
+		(function(){
+			var posted = false;
+
+			getQuestions().forEach(function(q, qi){
+				var v = questionGetValue(q);
+				if (posted && v.length == 0) {
+					q.classList.add('empty');
+				}
+				questionSetValue(q, v);
+
+				var options = questionGetOptions(q);
+				options.forEach(function(o){
+					var handler = (function(a, ii){
+						return function(){
+							optionOnClick(a, ii);
+						};})(o, qi);
+					o.onchange = handler;
+				});
+			});
+		})();
+	</script>
+	</body>
+	</html>
+{% endspaceless %}
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

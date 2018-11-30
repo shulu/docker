@@ -1,0 +1,199 @@
+{% extends 'LycheeAdminBundle:Game:layout.html.twig' %}
+
+{% block body %}
+    <!-- Modal -->
+    <form class="form-horizontal" method="post" action="{{ path('lychee_admin_game_editgame') }}"
+            enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{{ application.id }}"/>
+        <div class="form-group">
+            <label for="app_name" class="col-sm-2 control-label">应用名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="app_name" name="app_name" value="{{ application.appName }}">
+            </div>
+        </div>
+        <div class="form-group main-icon">
+            <label for="icon" class="col-sm-2 control-label">应用图标</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control icon" name="icon" id="icon">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="short_description" class="col-sm-2 control-label">一句话描述</label>
+            <div class="col-sm-10">
+                <input type="text" name="short_description" id="short_description" class="form-control"
+                       value="{{ application.shortDescription }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description" class="col-sm-2 control-label">描述</label>
+            <div class="col-sm-10">
+                <textarea name="description" id="description" class="form-control">{{ application.description }}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="app_type" class="col-sm-2 control-label">应用类型 (必填，无游戏分类选择时，请先新建游戏分类) </label>
+            <div class="col-sm-10">
+                <select name="app_type" id="app_type" class="form-control">
+                    {% if categories | length > 0 %}
+                        {% for category in categories%}
+                            <option value="{{ category.id }}" {% if category.id == application.categoryId %} selected {% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="app_publisher" class="col-sm-2 control-label">发行商</label>
+            <div class="col-sm-10">
+                <input type="text" name="app_publisher" id="app_publisher" class="form-control" value="{{ application.publisher }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="player_numbers" class="col-sm-2 control-label">玩家人数</label>
+            <div class="col-sm-10">
+                <input type="text" name="player_numbers" id="player_numbers" class="form-control" value="{{ application.playerNumbers }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ios_size" class="col-sm-2 control-label">iOS文件大小</label>
+            <div class="col-sm-10">
+                <input type="text" name="ios_size" id="ios_size" class="form-control" value="{{ application.iosSize }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="android_size" class="col-sm-2 control-label">Android文件大小</label>
+            <div class="col-sm-10">
+                <input type="text" name="android_size" id="android_size" class="form-control"
+                       value="{{ application.androidSize }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ios_link" class="col-sm-2 control-label">iOS链接</label>
+            <div class="col-sm-10">
+                <input type="text" name="ios_link" id="ios_link" class="form-control"
+                       value="{{ application.iosLink }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="android_link" class="col-sm-2 control-label">Android链接</label>
+            <div class="col-sm-10">
+                <input type="text" name="android_link" id="android_link" class="form-control"
+                       value="{{ application.androidLink }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="screenshots" class="col-sm-2 control-label">截图（如要修改，需全部重新上传）</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control screenshots" name="screenshots[]">
+                <button type="button" class="btn btn-default" id="add_screenshot">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="title" class="col-sm-2 control-label">标题</label>
+            <div class="col-sm-10">
+                <input type="text" name="title" id="title" class="form-control" value="{{ application.title }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="banner" class="col-sm-2 control-label">封面</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control banner" name="banner" id="banner">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="topic_id" class="col-sm-2 control-label">关联专题ID</label>
+            <div class="col-sm-10">
+                <input type="text" name="topic_id" id="topic_id" class="form-control" value="{{ application.topicId }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="launch_date" class="col-sm-2 control-label">上线日期</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="launch_date" id="launch_date" value="{{ application.launchDate | date('Y-m-d H:i')}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">保 存</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/datepicker2/css/bootstrap-datetimepicker.min.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style>
+        .nav-tabs { margin-bottom: 10px; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/bootstrap-datetimepicker.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/locales/bootstrap-datetimepicker.zh-CN.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="application/javascript">
+        $(document).ready(function () {
+            var fileinputConfig = {
+                allowedFileTypes: ['image'],
+                showUpload: false
+            };
+            var iconConfig = {
+                initialPreview: [
+                    '<img src="{{ application.icon }}" alt="">'
+                ]
+            };
+            $.extend(iconConfig, fileinputConfig);
+            $(".icon").fileinput(iconConfig);
+            var bannerConfig = {
+                initialPreview: [
+                    '<img src="{{ application.banner }}" alt="">'
+                ]
+            };
+            $.extend(bannerConfig, fileinputConfig);
+            $(".banner").fileinput(bannerConfig);
+            var screenshotsConfig = {
+                initialPreview: [
+                    {% for screenshot in screenshots %}
+                    '<img src="{{ screenshot }}" alt="">',
+                    {% endfor %}
+                ]
+            };
+            $.extend(screenshotsConfig, fileinputConfig);
+            $(".screenshots").fileinput(screenshotsConfig);
+            $("#add_screenshot").on("click", function() {
+                var $fileUpload = $('<input type="file" class="form-control screenshots" name="screenshots[]">');
+                $(this).before($fileUpload);
+                $fileUpload.fileinput(fileinputConfig);
+
+                return false;
+            });
+            $('#launch_date').datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                language: "zh-CN",
+                todayHighlight: true
+            });
+            $('.main-icon .fileinput-remove-button').attr('disabled', 'true');
+            $("button[type=submit]").click(function () {
+                if (!$("#app_type").val()) {
+                    alert("游戏分类必填，请先选择或到游戏分类下新建游戏分类");
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

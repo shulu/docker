@@ -1,0 +1,515 @@
+@charset "UTF-8"
+
+@import "compass/reset"
+@import "compass/css3"
+@import "compass/utilities"
+
+html, body
+  margin: 0 auto
+
+html
+  background-color: #000
+  width: 320#{$u}
+  height: 100%
+  //&:before
+  //  content: ''
+  //  display: block
+  //  position: absolute
+  //  z-index: 9999
+  //  top: 0
+  //  bottom: 0
+  //  left: -160#{$u}
+  //  width: 50%
+  //  background-color: #000
+  //&:after
+  //  content: ''
+  //  display: block
+  //  position: absolute
+  //  z-index: 9999
+  //  top: 0
+  //  bottom: 0
+  //  right: -160#{$u}
+  //  width: 50%
+  //  background-color: #000
+
+body
+  position: relative
+  width: 320#{$u}
+  min-height: 480#{$u}
+  height: 100%
+  font-family: "Helvetica Neue", STXihei, "华文细黑", Heiti, "黑体", "Microsoft YaHei", "微软雅黑", Tahoma, Arial, SimSun, "宋体", sans-serif
+  color: #fff
+  //left: -2240#{$u}
+
+.warpper
+  position: absolute
+  width: 100%
+  height: 100%
+  overflow: hidden
+  background-image: url('image/bg.jpg'), url('image/bg_flex.png')
+  background-repeat: no-repeat, repeat-y
+  background-size: 100% auto, 100% 100%
+
+.warpped
+  position: absolute
+  width: 2560#{$u}
+  height: 100%
+  transition-property: transform, left
+  transition-timing-function: ease-in-out
+  transition-duration: 0.3s
+  transition-delay: 0.3s
+
+.cover
+  position: relative
+  //left: 0
+  width: 320#{$u}
+  height: 100%
+  float: left
+  overflow-y: hidden
+  img
+    position: absolute
+    top: 7%
+    left: 0
+    right: 0
+    display: block
+    margin: 0 auto
+    width: 258#{$u}
+    height: 229#{$u}
+  span
+    position: absolute
+    bottom: 28%
+    left: 0
+    right: 0
+    display: block
+    margin: 0 auto
+    font-size: 16#{$u}
+    text-align: center
+    line-height: 30#{$u}
+    letter-spacing: 2#{$u}
+    strong
+      background: url("image/text_mark.png") no-repeat 0 0/100%
+      padding: 3#{$u} 2#{$u} 4#{$u} 9#{$u}
+      font-size: 15#{$u}
+      &:after
+        white-space: pre
+        content: '\A'
+  a
+    position: absolute
+    bottom: 10%
+    left: 0
+    right: 0
+    display: block
+    margin: 0 auto
+    width: 240#{$u}
+    height: 42#{$u}
+    border: none
+    border-radius: 3#{$u}
+    text-align: center
+    font-size: 17#{$u}
+    line-height: 42#{$u}
+    vertical-align: middle
+    color: #fff
+    background-color: #45c3f5
+    text-decoration: none
+    cursor: pointer
+
+.questions
+  counter-reset: questions
+  //width: 100%
+  height: 100%
+  float: left
+  h2
+    position: absolute
+    z-index: 10
+    top: 12%
+    left: 0
+    right: 0
+    text-align: center
+    font-size: 14#{$u}
+    line-height: 19#{$u}
+    vertical-align: middle
+    &:before
+      counter-increment: questions
+      content: counter(questions) '/6'
+      display: inline-block
+      width: 28.5#{$u}
+      height: 19#{$u}
+      padding: 1#{$u} 3#{$u} 1#{$u} 1#{$u}
+      margin-right: 4#{$u}
+      background: url('image/list_mark.png') no-repeat
+      background-size: 100%
+      font-size: 13#{$u}
+      line-height: 19#{$u}
+      vertical-align: middle
+  &>li
+    position: relative
+    width: 320#{$u}
+    height: 100%
+    overflow-y: hidden
+    float: left
+    //@for $i from 1 through 6
+    //  &:nth-child(#{$i})
+    //    left: (320*$i)#{$u}
+
+
+.options-square
+  .option
+    position: absolute
+    &:nth-child(1)
+      top: 24%
+      left: 8%
+    &:nth-child(2)
+      top: 24%
+      right: 8%
+    &:nth-child(3)
+      top: 59%
+      left: 8%
+    &:nth-child(4)
+      top: 59%
+      right: 8%
+    label
+      &:before
+        content: ''
+        position: absolute
+        z-index: 5
+        display: block
+        width: 74#{$u}
+        height: 23#{$u}
+        background-repeat: no-repeat
+        background-size: 100%
+        margin: 0 auto
+        left: 0
+        right: 0
+        top: -10#{$u}
+    &:nth-child(1)
+      label
+        &:before
+          background-image: url("image/option_a.png")
+    &:nth-child(2)
+      label
+        &:before
+          background-image: url("image/option_b.png")
+    &:nth-child(3)
+      label
+        &:before
+          background-image: url("image/option_c.png")
+    &:nth-child(4)
+      label
+        &:before
+          background-image: url("image/option_d.png")
+    img
+      width: 105#{$u}
+      height: 105#{$u}
+      border-radius: 52.5#{$u}
+      border: solid #45b0e2 3#{$u}
+    span
+      position: absolute
+      display: block
+      width: 85#{$u}
+      height: 30#{$u}
+      border-radius: 15#{$u}
+      margin: 0 auto
+      left: 0
+      right: 0
+      bottom: -10#{$u}
+      background-color: #fff
+      color: #000
+      font-size: 16#{$u}
+      box-shadow: 0 -4px 3px 0 rgba(0, 0, 0, 0.08)
+      line-height: 30#{$u}
+      vertical-align: middle
+      &:before
+        content: ''
+        display: inline-block
+        width: 18#{$u}
+        height: 16#{$u}
+        background-image: url("image/unselected.png")
+        background-repeat: no-repeat
+        background-size: auto 100%
+        background-origin: content-box
+        background-position: 0
+        margin: 0 2#{$u} 0 10#{$u}
+        line-height: 30#{$u}
+        vertical-align: middle
+        padding-bottom: 2.5#{$u}
+    input[type=radio]
+      display: none
+      &:checked+label span
+        &:before
+          background-image: url("image/selected.png"), url("image/unselected.png")
+          background-size: 15.5#{$u} 11#{$u}, auto 100%
+          background-position: 2.5#{$u} 2#{$u}, 0
+
+.options-linear
+  .option
+    position: absolute
+    label
+      &:before
+        content: ''
+        position: absolute
+        z-index: 5
+        display: block
+        width: 74#{$u}
+        height: 23#{$u}
+        background-repeat: no-repeat
+        background-size: 100%
+        margin: 0 auto
+        left: 0
+        right: 0
+        top: -10#{$u}
+    img
+      position: relative
+      z-index: 4
+      width: 64#{$u}
+      height: 64#{$u}
+      border-radius: 64#{$u}
+      border: solid #45b0e2 3#{$u}
+    span
+      position: absolute
+      display: block
+      width: 290#{$u}
+      height: 36#{$u}
+      border-radius: 18#{$u}
+      top: 17#{$u}
+      background-color: #fff
+      color: #000
+      font-size: 16#{$u}
+      line-height: 36#{$u}
+      vertical-align: middle
+      &:before
+        content: ''
+        display: inline-block
+        width: 18#{$u}
+        height: 16#{$u}
+        background-image: url("image/unselected.png")
+        background-repeat: no-repeat
+        background-size: auto 100%
+        background-origin: content-box
+        background-position: 0
+        margin: 0 2#{$u} 0 10#{$u}
+        line-height: 36#{$u}
+        vertical-align: middle
+        padding-bottom: 2.5#{$u}
+    input[type=radio]
+      display: none
+      &:checked+label span
+        &:before
+          background-image: url("image/selected.png"), url("image/unselected.png")
+          background-size: 15.5#{$u} 11#{$u}, auto 100%
+          background-position: 2.5#{$u} 2#{$u}, 0
+    &:nth-child(1)
+      top: 22%
+      left: 5%
+      label
+        &:before
+          background-image: url("image/option_a.png")
+      span
+        left: 0
+        &:before
+          margin-left: 77#{$u}
+    &:nth-child(2)
+      top: 39%
+      right: 5%
+      label
+        &:before
+          background-image: url("image/option_b.png")
+      span
+        right: 0
+        &:before
+          margin-left: 18#{$u}
+    &:nth-child(3)
+      top: 55%
+      left: 5%
+      label
+        &:before
+          background-image: url("image/option_c.png")
+      span
+        left: 0
+        &:before
+          margin-left: 77#{$u}
+    &:nth-child(4)
+      top: 72%
+      right: 5%
+      label
+        &:before
+          background-image: url("image/option_d.png")
+      span
+        right: 0
+        &:before
+          margin-left: 18#{$u}
+
+.prev
+  display: block
+  width: 66#{$u}
+  height: 30#{$u}
+  position: absolute
+  left: 0
+  top: 89%
+  background: url("image/prev.png") no-repeat
+  background-size: 100% 100%
+  font-size: 15#{$u}
+  line-height: 30#{$u}
+  vertical-align: middle
+  color: #fff
+  padding-left: 13#{$u}
+  text-decoration: none
+
+.questions > li:nth-child(1) .prev
+  display: none
+
+.result
+  position: relative
+  //left: 2240#{$u}
+  width: 320#{$u}
+  height: 100%
+  overflow-y: hidden
+  float: left
+  &:before
+    content: ''
+    display: block
+    width: 228.5#{$u}
+    height: 46.5#{$u}
+    background: url("image/title.png") no-repeat
+    background-size: 100% 100%
+    margin: 0 auto
+    position: absolute
+    left: 0
+    right: 0
+    top: 6%
+  .chart
+    width: 199#{$u}
+    height: 199#{$u}
+    background: url("image/chart.png") no-repeat
+    background-size: 100% 100%
+    margin: 0 auto
+    position: absolute
+    left: 0
+    right: 0
+    top: 18%
+    @mixin chart-item($name)
+      width: 35#{$u}
+      height: 35#{$u}
+      position: absolute
+      z-index: 10
+      background-image: url("image/#{$name}.png")
+      background-size: 100% 100%
+      background-repeat: no-repeat
+    .zhai
+      +chart-item('zhai')
+      top: 82#{$u}
+      right: -17.5#{$u}
+    .meng
+      +chart-item('meng')
+      top: -4.2#{$u}
+      right: 32.25#{$u}
+    .ran
+      +chart-item('ran')
+      top: -4.2#{$u}
+      left: 32.25#{$u}
+    .fu
+      +chart-item('fu')
+      top: 82#{$u}
+      left: -17.5#{$u}
+    .jian
+      +chart-item('jian')
+      bottom: -4.2#{$u}
+      left: 32.25#{$u}
+    .ao
+      +chart-item('ao')
+      bottom: -4.2#{$u}
+      right: 32.25#{$u}
+    svg
+      width: 172#{$u}
+      height: 172#{$u}
+      position: absolute
+      left: 50%
+      top: 50%
+      margin: -86#{$u} 0 0 -86#{$u}
+  .conclusion
+    position: absolute
+    width: 100%
+    top: 64%
+    font-size: 14#{$u}
+    line-height: 25#{$u}
+    vertical-align: baseline
+    text-align: center
+    strong
+      font-size: 18#{$u}
+      line-height: 25#{$u}
+      vertical-align: baseline
+      color: #fff275
+      font-weight: bold
+    cite
+      display: inline-block
+      border-radius: 1#{$u}
+      padding: 3#{$u}
+      margin: 0 4#{$u} 0 4#{$u}
+      background-color: #fff
+      font-size: 13#{$u}
+      line-height: 13#{$u}
+      vertical-align: baseline
+      color: #271833
+  .links
+    position: absolute
+    top: 78%
+    text-align: center
+    margin: 0 auto
+    left: 0
+    right: 0
+    a
+      display: inline-block
+      width: 64#{$u}
+      font-size: 12#{$u}
+      text-align: center
+      color: #fff
+      text-decoration: none
+      &:before
+        content: ''
+        display: inline-block
+        width: 58#{$u}
+        height: 58#{$u}
+        background-repeat: no-repeat
+        background-size: 100% 100%
+        margin-bottom: 8#{$u}
+      &.again:before
+        background-image: url("image/again.png")
+      &.download:before
+        background-image: url("image/ciyo.png")
+      &.share:before
+        background-image: url("image/wechat.png")
+      &:nth-child(2)
+        margin-left: 36.5#{$u}
+      &:last-child
+        margin-left: 68#{$u}
+      &:nth-child(3)
+        margin-left: 36.5#{$u}
+
+.wechat-mask
+  display: none
+  position: fixed
+  top: 0
+  width: 320#{$u}
+  height: 10000#{$u}
+  z-index: 99
+  background-color: rgba(0, 0, 0, 0.8)
+  .wechat-share-intro1
+    display: block
+    width: 234.5#{$u}
+    height: 200#{$u}
+    position: absolute
+    top: 8#{$u}
+    right: 8#{$u}
+  .wechat-share-intro2
+    display: block
+    width: 265#{$u}
+    height: 69#{$u}
+    position: absolute
+    top: 250#{$u}
+    left: 20#{$u}
+  .wechat-download-intro
+    display: block
+    width: 194.5#{$u}
+    height: 54#{$u}
+    position: absolute
+    top: 140#{$u}
+    left: 103#{$u}

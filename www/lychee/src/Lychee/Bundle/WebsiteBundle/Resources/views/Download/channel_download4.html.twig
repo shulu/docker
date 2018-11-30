@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>{{ title }}</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        html body {
+            background-color: #fff;
+        }
+        .bg {
+            background-size: 100%;
+            background-repeat: no-repeat;
+            width: 100%;
+            position: relative;
+            background-image: url("http://qn.ciyocon.com/web/promotion/bg3.jpg");
+            padding-top: 56.25%;
+        }
+        .btn {
+            display: block;
+            background-size: 100%;
+            background-repeat: no-repeat;
+            position: absolute;
+            width: 10.21%;
+            padding-top: 3.33%;
+            left: 26%;
+        }
+        .ios-btn {
+            background-image: url("http://qn.ciyocon.com/web/promotion/btn_ios.png");
+            top: 73.15%;
+        }
+        .android-btn {
+            background-image: url("http://qn.ciyocon.com/web/promotion/btn_android.png");
+            top: 65.93%;
+        }
+        .qrcode {
+            position: absolute;
+            width: 13.23%;
+            top: 59.63%;
+            left: 37.3%;
+            background-color: #fff;
+        }
+        .qrcode img {
+            width: 90%;
+            height: auto;
+            margin: 5%;
+        }
+        @media screen and (max-aspect-ratio: 1/1), screen and (max-width: 400px) {
+            .bg {
+                background-image: url("http://qn.ciyocon.com/web/promotion/bg2_m.jpg?v=2");
+                padding-top: 177.87%;
+            }
+            .btn {
+                width: 36.67%;
+                padding-top: 11.2%;
+                left: 2%;
+            }
+            .ios-btn {
+                top: 30.81%;
+            }
+            .android-btn {
+                top: 23.31%;
+            }
+            .qrcode {
+                width: 33.87%;
+                top: 41.15%;
+                left: 4%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="bg">
+    <a class="btn ios-btn" href="{{ userAgent().wechat ? wechat_link : iphone_link }}"></a>
+    <a class="btn android-btn" href="{{ userAgent().wechat ? wechat_link : android_link }}"></a>
+    <div class="qrcode"></div>
+</div>
+<script src="http://qn.ciyocon.com/web/common/qrcode.min.js"></script>
+<script>
+    new QRCode(document.getElementsByClassName("qrcode")[0], "{{ url('download_app') }}{{ package is empty ? '' : '?n='~package }}");
+</script>
+{% if userAgent().ios or userAgent().android %}
+    <script>
+        {% set link = userAgent().wechat ? wechat_link : (userAgent().ios ? iphone_link: android_link)  %}
+        window.onload=function() {
+            try {
+                location.href = '{{ link }}';
+            } catch (err) {}
+        };
+    </script>
+{% endif %}
+{{ include('LycheeWebsiteBundle::googleAnalytics.html.twig') }}
+</body>
+</html>
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

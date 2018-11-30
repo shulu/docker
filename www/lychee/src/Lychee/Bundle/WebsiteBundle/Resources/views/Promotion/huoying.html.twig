@@ -1,0 +1,104 @@
+{% extends 'LycheeWebsiteBundle::base.html.twig' %}
+
+{% block meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="{{ block('title') }}">
+{% endblock %}
+
+{% block title %}敢亮么！你的忍道{% endblock %}
+
+{% set userAgent = app.request.server.get('HTTP_USER_AGENT') %}
+{#{% set isWechat = userAgent matches '/MicroMessenger/i' %}#}
+{% set isAndroid = userAgent matches '/Android/i' %}
+{% set isIOS = userAgent matches '/\\(i[^;]+;( U;)? CPU.+Mac OS X/' %}
+{% set inApp = userAgent matches '/ciyocon/i' %}
+
+{% block styles %}
+    {% spaceless %}
+        {% if isAndroid or isIOS %}
+            <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/promotion/huoying/mobile.css') }}" />
+        {% else %}
+            <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/promotion/huoying/desktop.css') }}" />
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block scripts %}
+    {% include 'LycheeWebsiteBundle::wechat.html.twig' %}
+    <script src="{{ asset('bundles/lycheewebsite/common/script/jquery-2.1.1.min.js') }}"></script>
+    <script>
+        var userAgent = navigator.userAgent;
+        var inApp = /ciyocon/i.test(userAgent) === true;
+
+        function goto(link, fallbackLink) {
+            if (inApp) {
+                window.location.href = link;
+            } else {
+                window.location.href = fallbackLink;
+            }
+        }
+
+        $(function(){
+            wxSetupShare({
+                title: '火影原版周边，满地捡得到！',
+                content: '是时候任性一次了！把火影玩出脑洞，领火影原版奖品！',
+                link: window.location.href
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    {% spaceless %}
+    <div class="banner"></div>
+    <div class="intro"></div>
+    <div class="rules">
+        <ol>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ol>
+    </div>
+    <div class="award">
+        <ol>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ol>
+    </div>
+    <div class="schedule">
+        <p class="event_time">2014.12.4--2014.12.18</p>
+        <p class="award_time">2014.12.20</p>
+        <a href="javascript: goto('erciyuan://?action=1&tid={{ topicId }}', '{{ url('download_app') }}');">我也要参加</a>
+    </div>
+    <div class="photos">
+        <ul>
+            {% for post in posts %}
+            <li>
+                <a href="javascript: goto('erciyuan://?action=2&pid={{ post.id }}', '{{ path('share_post', {'postId': post.id}) }}');">
+                    <img src="{{ post.image_url | resizeImage(97, 97) }}"/>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="javascript: goto('erciyuan://?action=1&tid={{ topicId }}', '{{ url('download_app') }}');">查看更多&nbsp;&gt;</a>
+    </div>
+    <div class="about"></div>
+    {% if not inApp %}
+        <div class="info-banner">
+            <div class="download">
+                <img class="app-icon" src="{{ ciyo.app_icon }}" />
+                <span class="app-title">{{ ciyo.app_name }}</span>
+                <span class="app-desc">{{ ciyo.app_slogan }}</span>
+                <a class="app-download-button" href="{{ url('download_app') }}"></a>
+            </div>
+            <div class="wechat-account">微信公众号:ciyocon</div>
+        </div>
+    {% endif %}
+    {% endspaceless %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_list_blacklist' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_list_blacklist') }}">黑名单</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_list_graylist' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_list_graylist') }}">灰名单</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_list_user' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_list_user') }}">用户名单</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_list_vip' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_list_vip') }}">VIP名单</a>
+    </li>
+{% endblock %}
+
+{% block body %}{% endblock %}

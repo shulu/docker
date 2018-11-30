@@ -1,0 +1,91 @@
+{
+    "name": "symfony/framework-standard-edition",
+    "license": "MIT",
+    "type": "project",
+    "description": "The \"Symfony Standard Edition\" distribution",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "symfony/symfony": "2.8.0",
+        "doctrine/orm": "~2.5",
+        "doctrine/doctrine-bundle": "~1.5",
+        "twig/extensions": "~1.0",
+        "symfony/assetic-bundle": "~2.8",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.10",
+        "sensio/framework-extra-bundle": "~3.0",
+        "snc/redis-bundle": "~2.0",
+        "leaseweb/memcache-bundle": "v2.1.10",
+        "predis/predis": "~1.0",
+        "qiniu/php-sdk": "v6.1.10",
+        "phpunit/phpunit": "4.1.*",
+        "egulias/email-validator": ">=1.2",
+        "jms/di-extra-bundle": "dev-master",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "sensio/distribution-bundle": "v5.0.*",
+        "sensio/generator-bundle": "~2.3",
+        "guzzlehttp/guzzle": "^6.2",
+        "jms/debugging-bundle": "dev-master",
+        "nelmio/api-doc-bundle": "@stable",
+        "jpush/jpush": "3.1.2",
+        "kartik-v/bootstrap-fileinput": "~4.1",
+        "stojg/crop": "~1.2",
+        "friendsofsymfony/elastica-bundle": "~3.0",
+        "patchwork/jsqueeze": "~1.0",
+        "xiaosier/libweibo": "dev-master",
+        "php-amqplib/rabbitmq-bundle": "v1.11.*",
+        "facebook/graph-sdk": "^5.6"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Lychee\\Component\\Composer\\ScriptHandler::buildBootstrap",
+            "Lychee\\Component\\Composer\\ScriptHandler::clearCache",
+            "Lychee\\Component\\Composer\\ScriptHandler::installAssets",
+            "Lychee\\Component\\Composer\\ScriptHandler::installRequirementsFile",
+            "Lychee\\Component\\Composer\\ScriptHandler::dumpAssetic"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Lychee\\Component\\Composer\\ScriptHandler::buildBootstrap",
+            "Lychee\\Component\\Composer\\ScriptHandler::clearCache",
+            "Lychee\\Component\\Composer\\ScriptHandler::installAssets",
+            "Lychee\\Component\\Composer\\ScriptHandler::installRequirementsFile",
+            "Lychee\\Component\\Composer\\ScriptHandler::dumpAssetic"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "web",
+        "symfony-cache-warmup": true,
+        "lychee-apps": ["api", "admin", "website"],
+        "incenteev-parameters": [
+            {
+                "file": "app/config/parameters.yml"
+            },
+            {
+                "file": "app/admin/config/parameters.yml"
+            },
+            {
+                "file": "app/api/config/parameters.yml"
+            },
+            {
+                "file": "app/website/config/parameters.yml"
+            }
+        ],
+        "branch-alias": {
+            "dev-master": "2.4-dev"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
+}

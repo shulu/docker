@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+
+<section code="4">
+    <group>
+        <error name="CommentNotExist">comment with id {commentId} not exist</error>
+        <error name="NotYourOwnComment"></error>
+        <error name="CanNotReplyYourself"></error>
+        <error name="ContentInvalid"/>
+        <error name="AnnotationTooLong">annotation is too long, it should have {limit} characters or less.</error>
+        <error name="AnnotationError">annotation must with json format</error>
+    </group>
+</section>

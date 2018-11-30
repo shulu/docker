@@ -1,0 +1,92 @@
+{% extends 'LycheeWebsiteBundle::base.html.twig' %}
+
+{% block meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="{{ block('title') }}">
+{% endblock %}
+
+{% block title %}带次元酱去漫展{% endblock %}
+
+{% set userAgent = app.request.server.get('HTTP_USER_AGENT') %}
+{#{% set isWechat = userAgent matches '/MicroMessenger/i' %}#}
+{% set isAndroid = userAgent matches '/Android/i' %}
+{% set isIOS = userAgent matches '/\\(i[^;]+;( U;)? CPU.+Mac OS X/' %}
+
+{% block styles %}
+    {% spaceless %}
+        {% if isAndroid or isIOS %}
+            <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/promotion/manzhan/style.css') }}" />
+        {% else %}
+            <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/promotion/manzhan/style_desktop.css') }}" />
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('bundles/lycheewebsite/common/script/jquery-2.1.1.min.js') }}"></script>
+    <script>
+        function goto(link, fallbackLink) {
+            var userAgent = navigator.userAgent;
+            var inApp = /ciyocon/i.test(userAgent) === true;
+
+            if (inApp) {
+                window.location.href = link;
+            } else {
+                window.location.href = fallbackLink;
+            }
+        }
+
+        $(function(){
+            $('.photos li img').each(function(i, e){
+                e.onload = function(){
+                    if (e.width > e.height) {
+                        $(e).addClass('wide');
+                    } else {
+                        $(e).addClass('tall');
+                    }
+                };
+            });
+        });
+    </script>
+{% endblock %}
+
+
+{% block body_attributes %}
+    {%- if closed is defined and closed == true %}
+        class="closed"
+    {% endif -%}
+{% endblock %}
+
+
+{% block body %}
+    {% spaceless %}
+    <div class="banner"></div>
+    <div class="rule"></div>
+    <div class="award"></div>
+    <div class="schedule">
+        <span>活动时间为10月1日—10月7日</span>
+        <a href="{{ path('ciyuanjiang_manzhan_closed') }}">查看结果</a>
+    </div>
+    <div class="photos">
+        <a href="javascript: goto('erciyuan://?action=1&tid={{ topicId }}', '{{ url('download_app') }}');">查看更多&nbsp;&gt;</a>
+        <ul>
+            {% for post in posts %}
+            <li>
+                <a href="javascript: goto('erciyuan://?action=2&pid={{ post.id }}', '{{ path('share_post', {'postId': post.id}) }}');">
+                    <img src="{{ post.image_url | resizeImage(92, 92) }}"/>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="javascript: goto('erciyuan://?action=1&tid={{ topicId }}', '{{ url('download_app') }}');">查看更多&nbsp;&gt;</a>
+    </div>
+    <div class="statement">
+        <p class="tips">如果点击链接无反应，请在浏览器中打开此网页</p>
+        <p>本次活动解释权归次元所有</p>
+    </div>
+
+    {% endspaceless %}
+{% endblock %}

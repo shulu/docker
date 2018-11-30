@@ -1,0 +1,148 @@
+<li class="post">
+	<style>
+		{% set topic_color = post.topic.color is defined and post.topic.color is not empty ? post.topic.color|cssColor : '#fd86ea' %}
+		.from-topic span, .vote .state, .schedule .-time, .full-text::after {
+			color: {{ topic_color }};
+		}
+		.author .-title, .vote::after, .schedule::after, .link::after {
+			background-color: {{ topic_color }};
+		}
+	</style>
+	<div class="author">
+		<div class="-avatar">
+			<img src="{{ avatar(post.author.avatar_url) | resizeImage(120, 120) }}" alt="">
+		</div>
+		{% if post.author.certificate is defined %}
+			<div class="i_verified"><img src="{{ asset('bundles/lycheewebsite/home/images/i_verified.png') }}"></div>
+		{% endif %}
+		<span class="-name">{{ post.author.nickname }}</span>
+		{% if post.author.level <= 2 %}
+			{% set levelClass = 'cloud-gray' %}
+		{% elseif post.author.level > 2 and post.author.level <= 5 %}
+			{% set levelClass = 'star-gray' %}
+		{% elseif post.author.level > 5 and post.author.level <= 8 %}
+			{% set levelClass = 'star-silver' %}
+		{% elseif post.author.level > 8 and post.author.level <= 12 %}
+			{% set levelClass = 'moon-gray' %}
+		{% elseif post.author.level > 12 and post.author.level <= 16 %}
+			{% set levelClass = 'moon-silver' %}
+		{% elseif post.author.level > 16 and post.author.level <= 20 %}
+			{% set levelClass = 'moon-golden' %}
+		{% elseif post.author.level > 20 and post.author.level <= 25 %}
+			{% set levelClass = 'sun-gray' %}
+		{% elseif post.author.level > 25 and post.author.level <= 30 %}
+			{% set levelClass = 'sun-silver' %}
+		{% elseif post.author.level > 30 and post.author.level <= 35 %}
+			{% set levelClass = 'sun-golden' %}
+		{% elseif post.author.level > 35 %}
+			{% set levelClass = 'sun-purple' %}
+		{% endif %}
+		<div class="-level {{ levelClass }}">{{ post.author.level }}</div>
+	</div>
+	<div class="time">{{ timeStr(post.create_time) }}</div>
+	<a class="follow" href="http://www.ciyo.cn/products#ciyoapp">关注</a>
+
+	<a href="{{ url('share_post', {'postId': post.id}) }}">
+		<div class="content">
+			<p>{{ post.content | nl2br }}</p>
+		</div>
+		{% set annotation = post.annotation|default([]) %}
+
+		{% if annotation.resource_link is defined and annotation.resource_title is defined %}
+			<div class="link">
+				<div class="title">{{ annotation.resource_title }}</div>
+			</div>
+		{% endif %}
+
+		{% if post.schedule is defined and post.schedule is not empty %}
+			{% set schedule = post.schedule %}
+			{% set startTime = date(schedule.start_time) %}
+			{% set endTime = date(schedule.end_time) %}
+			{% set cancelled = schedule.cancelled is defined and schedule.cancelled %}
+			{% set ended = endTime <= date('now') %}
+			<div class="schedule">
+				<div class="title">{{ schedule.name }}</div>
+				<div class="-time theme-color">时间：{{ startTime|date('Y-m-d H:i') }}</div>
+				<div class="joiner-count"><b>{{ schedule.joiner_count }}</b>人参加</div>
+			</div>
+		{% endif %}
+
+		{% if post.voting is defined and post.voting is not empty %}
+			<div class="vote">
+				<div class="title">{{ post.voting.title }}</div>
+				<div class="state theme-color">投票进行中</div>
+				<div class="joiner-count"><b>{{ post.voting.vote_count }}</b>人参加</div>
+			</div>
+		{% endif %}
+
+		{% if annotation.multi_photos is defined and annotation.multi_photos is not empty %}
+			{% set images = annotation.multi_photos %}
+		{% elseif post.image_url is defined and post.image_url is not empty %}
+			{% set images = [post.image_url] %}
+		{% else %}
+			{% set images = [] %}
+		{% endif %}
+
+		{% set imgWidth = images|length > 1 ? 200 : 640 %}
+		{% set imgHeight = images|length > 1 ? 200 : 0 %}
+		{% set tmpImages = [] %}
+		{% for img in images %}
+			{% set tmpImages = tmpImages|merge([{url: img|resizeImage(imgWidth, imgHeight)}]) %}
+		{% endfor %}
+		{% set images = tmpImages %}
+
+		{% if annotation.multi_photo_gif_index is defined and annotation.multi_photo_gif_index is not empty %}
+			{% set tmpImgs = [] %}
+			{% for i in annotation.multi_photo_gif_index|default([]) %}
+				{% if images[i] is defined %}
+					{% set tmpImgs = tmpImgs|merge([{url: images[i].url, gif: true}]) %}
+				{% else %}
+					{% set tmpImgs = tmpImgs|merge(images[i]) %}
+				{% endif %}
+			{% endfor %}
+			{% set images = tmpImgs %}
+		{% endif %}
+
+		{% if annotation.multi_photo_widths is defined and annotation.multi_photo_heights is defined and images|length == annotation.multi_photo_widths|length and annotation.multi_photo_widths|length == annotation.multi_photo_heights|length %}
+			{% set tmpImgs = [] %}
+			{% for w in annotation.multi_photo_widths %}
+				{% set i = loop.index0 %}
+				{% set h = annotation.multi_photo_heights[loop.index0]|default(0) %}
+				{% if images[i] is defined and w > 0 and (h / w >= 1.5) %}
+					{% set image = images[i]|merge({long: true}) %}
+					{% set tmpImgs = tmpImgs|merge([image]) %}
+				{% else %}
+					{% set tmpImgs = tmpImgs|merge([images[i]]) %}
+				{% endif %}
+			{% endfor %}
+			{% set images = tmpImgs %}
+		{% endif %}
+
+		{% if images is not empty %}
+			<ul class="images">
+				{% for image in images %}
+					<li{{ image.gif is defined and image.gif ? ' class="img-gif"' : (image.long is defined and image.long ? ' class="img-long"' : '') }}><img src="{{ image.url }}"/></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
+		{% if post.video_url is defined and post.video_url is not empty %}
+			<div class="video">
+				<img src="{{ annotation.video_cover|default('')  }}"/>
+			</div>
+		{% endif %}
+
+		<div class="topic-name">
+			<span class="theme-background-color" style="background-color: #{{ post.topic.color }}">
+				{{ post.topic.title }}
+			</span>
+		</div>
+		<a href="javascript:;" class="share"></a>
+		<a href="javascript:;" class="like">
+			<span>{{ post.liked_count }}</span>
+		</a>
+		<a href="javascript:;" class="comment">
+			<span>{{ post.commented_count }}</span>
+		</a>
+	</a>
+</li>

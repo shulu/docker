@@ -1,0 +1,96 @@
+{% extends 'LycheeAdminBundle:Channel:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="{{ path('lychee_admin_channel_appchannelpackage') }}">渠道包</a></li>
+        <li role="presentation" class="active"><a href="#">标题</a></li>
+    </ul>
+    <button type="button" id="create_title_btn" class="btn btn-primary" data-toggle="modal"
+            data-target="#create_title_form">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>代码</th>
+                <th>标题</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for title in titles %}
+                    <tr>
+                        <td>{{ title.code }}</td>
+                        <td>{{ title.title }}</td>
+                        <td>
+                            <button class="btn btn-danger delete-title" data-id="{{ title.id }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="create_title_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">创建标题</h4>
+                    <form role="form" method="post" enctype="multipart/form-data"
+                          action="{{ path('lychee_admin_channel_createappchanneltitle') }}">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="code">代码</label>
+                                <input type="text" name="code" id="code" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title">标题</label>
+                                <input type="text" name="title" id="title" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.delete-title').click(function () {
+                var titleId = $(this).data('id');
+                if (confirm('确定删除?')) {
+                    var $form = $('<form method="post"></form>');
+                    $form.attr('action', '{{ path("lychee_admin_channel_deleteappchanneltitle") }}');
+                    $form.append('<input type="hidden" name="id" value="' + titleId + '">');
+                    $('body').append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .nav-tabs { margin-bottom: 10px; }
+    </style>
+{% endblock %}

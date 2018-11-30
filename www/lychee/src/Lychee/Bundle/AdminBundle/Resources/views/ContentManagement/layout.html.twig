@@ -1,0 +1,19 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentmanagement_posttag' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentmanagement_posttag') }}">标签</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentmanagement_topposts' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentmanagement_topposts') }}">置顶帖子</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentmanagement_postfavor' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentmanagement_postfavor') }}">收藏帖子</a>
+    </li>
+{% endblock %}
+
+{% block body %}
+    <div class="post-manager">
+        {% block bodyInner %}{% endblock %}
+    </div>
+{% endblock %}

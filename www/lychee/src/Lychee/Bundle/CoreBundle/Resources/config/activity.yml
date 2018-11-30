@@ -1,0 +1,20 @@
+services:
+    lychee.module.activity:
+        class: Lychee\Module\Activity\ActivityService
+        arguments: ['@doctrine']
+
+    lychee.task.old_active_users:
+        class: Lychee\Module\Activity\Task\OldActiveUsers
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.module.activity.event_subscriber:
+        class: Lychee\Module\Activity\EventSubscriber
+        arguments:
+            - '@lychee.module.activity'
+            - '@lychee.module.topic'
+            - '@lychee.module.post'
+        tags:
+            - {name: kernel.event_subscriber}

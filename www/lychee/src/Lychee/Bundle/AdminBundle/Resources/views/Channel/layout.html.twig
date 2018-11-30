@@ -1,0 +1,9 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') matches '/channel/' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_channel_appchannelpackage') }}">APP渠道管理</a>
+    </li>
+{% endblock %}
+
+{% block body %}{% endblock %}

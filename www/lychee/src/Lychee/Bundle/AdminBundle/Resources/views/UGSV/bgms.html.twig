@@ -1,0 +1,246 @@
+{% extends 'LycheeAdminBundle:UGSV:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#create_bgm">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <div class="clearfix">
+        <div class="col-lg-4 pull-right">
+            <form>
+                <div class="input-group">
+                    <input type="text" name="query" class="form-control" placeholder="歌曲名、作者或ID" value="{{ query|default('') }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </span>
+                </div><!-- /input-group -->
+            </form>
+        </div><!-- /.col-lg-6 -->
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>ID</th>
+                    <th>歌曲名</th>
+                    <th>封面</th>
+                    <th>作者</th>
+                    <th>长度</th>
+                    <th>大小</th>
+                    <th>使用次数</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% set num = firstSortNum %}
+            {% for item in items %}
+
+                    <tr id="item_{{ item.id }}" class="item-tr" data-id="{{ item.id }}">
+                        <td>
+                            {{ num }}
+                            {% set num = num + 1 %}
+                        </td>
+                        <td>{{ item.id }}</td>
+                        <td>
+                            <a href="{{ item.src }}" target="_blank">
+                                {{ item.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <img src="{{ item.cover|default(item.cover)|resizeImage(0, 50) }}" alt="topic-{{ item.id }}" class="topic-img"/>
+                        </td>
+                        <td>{{ item.singerName }}</td>
+                        <td>{{ item.duration }}</td>
+                        <td>{{ item.size }}</td>
+                        <td>{{ item.useCount }}</td>
+                        <td>{{ item.createTime|date('Y-m-d H:i') }}</td>
+                        <td>
+                        <button type="button" class="btn btn-default edit-item" data-item-id="{{ item.id }}" >
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                            <button class="btn btn-default position-up" data-item-id="{{ item.id }}">
+                                <span class="glyphicon glyphicon-arrow-up"></span>
+                            </button>
+                            <button class="btn btn-default position-down" data-item-id="{{ item.id  }}">
+                                <span class="glyphicon glyphicon-arrow-down"></span>
+                            </button>
+                            <button class="btn btn-default position-top" data-item-id="{{ item.id  }}">
+                                置顶
+                            </button>
+                            <button class="btn btn-default position-bottom" data-item-id="{{ item.id }}">
+                                置底
+                            </button>
+                            <button class="btn btn-danger delete-item" data-item-id="{{ item.id  }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+    {{ helper.newpage(paginator, app.request.get('_route'), query) }}
+
+    {{ include('LycheeAdminBundle:UGSV:bgmForm.html.twig', {
+        'bgmName': '',
+        'formPath': path('lychee_admin_ugsv_createbgm'),
+        'fetchUrl': path('lychee_admin_ugsv_fetchbgm')
+    }) }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style>
+        tr.danger {
+            opacity: 0.5;
+        }
+        .load-more-wrap { margin-bottom: 20px; }
+        .topic-img { max-height: 80px; max-width: 80px; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        var $createBgmModal;
+        var $bgmNameInput;
+        var $bgmIdInput;
+        var $bgmDurationMInput;
+        var $bgmDurationSInput;
+        var $bgmSingerNameInput;
+        var $originCoverWrap;
+        var $originCover;
+        var $audioInput;
+        var $bgmSrcWrap;
+
+        $(document).ready(function () {
+
+            var $imageInput = $("#bgm_cover");
+            var fileinputConfig = {
+                allowedFileTypes: ['image'],
+                showUpload: false
+            };
+            $imageInput.fileinput(fileinputConfig);
+
+            $audioInput = $("#bgm_src");
+            var fileinputConfig = {
+                allowedFileTypes: ['audio'],
+                showUpload: false
+            };
+            $audioInput.fileinput(fileinputConfig);
+
+
+            $createBgmModal = $("#create_bgm");
+            $bgmIdInput = $("#bgm_id");
+            $bgmNameInput = $("#bgm_name");
+            $bgmSingerNameInput = $('#bgm_singer_name');
+            $bgmDurationMInput = $("#bgm_duration_m");
+            $bgmDurationSInput = $("#bgm_duration_s");
+            $originCoverWrap = $("#origin_cover_wrap");
+            $originCover = $('#origin_cover');
+            $bgmSrcWrap = $('#bgm_src_wrap');
+
+            $createBgmModal.on('hidden.bs.modal', function (e) {
+
+                $createBgmModal.find('form').find('input[name]').val('');
+                $originCoverWrap.hide();
+                $bgmSrcWrap.show();
+            });
+
+
+
+            $(".edit-item").click(function () {
+
+                $bgmSrcWrap.hide();
+                $.ajax($('#bgm_fetch_url').val(), {
+                    type: "get",
+                    dataType: "json",
+                    data: {
+                        id: $(this).data("item-id")
+                    },
+                    success: function (data) {
+                        var bgm = data;
+                        $createBgmModal.modal();
+                        $bgmNameInput.val(bgm.name);
+                        $bgmSingerNameInput.val(bgm.singerName);
+                        $bgmIdInput.val(bgm.id);
+                        if (bgm.cover) {
+                            $originCover.attr("src", bgm.cover);
+                            $originCoverWrap.show();
+                        }
+
+                        if (bgm.duration>0) {
+                            $bgmDurationMInput.val(parseInt(bgm.duration/60));
+                            $bgmDurationSInput.val(bgm.duration%60);
+                        }
+                    }
+                });
+                return false;
+
+            });
+
+            $(".delete-item").click(function () {
+                if (confirm("确认删除？")) {
+                    var id = $(this).data("item-id");
+                    $.post("{{ path('lychee_admin_ugsv_removebgm') }}", {
+                        id: id
+                    }, function() {
+                        $('#item_' + id).remove();
+                    }, 'json');
+                }
+
+                return false;
+            });
+            $('.position-up').click(function() {
+                var upItemId = $(this).data('item-id');
+                var $upElem = $('#item_' + upItemId);
+                var $downElem = $upElem.prev();
+                if ($downElem.hasClass('item-tr')) {
+                    $downElem.before($upElem.clone(true));
+                    $upElem.remove();
+                    $.post('{{ path('lychee_admin_ugsv_switchbgm') }}', {
+                        ids: [$upElem.data('id'), $downElem.data('id')]
+                    }, function() {}, 'json');
+                }
+            });
+            $('.position-down').click(function() {
+                var downItemId = $(this).data('item-id');
+                var $downElem = $('#item_' + downItemId);
+                var $upElem = $downElem.next();
+                if ($upElem.hasClass('item-tr')) {
+                    $upElem.after($downElem.clone(true));
+                    $downElem.remove();
+                    $.post('{{ path('lychee_admin_ugsv_switchbgm') }}', {
+                        ids: [$upElem.data('id'), $downElem.data('id')]
+                    }, function() {}, 'json');
+                }
+            });
+            $('.position-top').click(function() {
+                var $form = $('<form method="post"></form>');
+                $form.attr('action', '{{ path("lychee_admin_ugsv_topbgm") }}');
+                $form.append('<input type="hidden" name="id" value="' + $(this).data('item-id') + '">');
+                $('body').append($form);
+                $form.submit();
+            });
+            $('.position-bottom').click(function() {
+                var $form = $('<form method="post"></form>');
+                $form.attr('action', '{{ path("lychee_admin_ugsv_bottombgm") }}');
+                $form.append('<input type="hidden" name="id" value="' + $(this).data('item-id') + '">');
+                $('body').append($form);
+                $form.submit();
+            });
+        });
+    </script>
+{% endblock %}

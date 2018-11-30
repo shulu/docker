@@ -1,0 +1,58 @@
+services:
+  lychee.module.payment.product_manager:
+    class: Lychee\Module\Payment\ProductManager
+    arguments: ['@doctrine']
+
+  lychee.module.payment.transaction:
+    class: Lychee\Module\Payment\TransactionService
+    arguments: ['@doctrine']
+
+  lychee.module.payment.purchase_recorder:
+    class: Lychee\Module\Payment\PurchaseRecorder
+    arguments: ['@doctrine']
+
+  lychee.module.payment.alipay:
+    class: Lychee\Module\Payment\ThridParty\Alipay\AlipayRequester
+    arguments:
+        - "%ciyocon_alipay_app_id%"
+        - "%ciyocon_alipay_seller_id%"
+        - "%ciyocon_alipay_business_private_key%"
+        - "%ciyocon_alipay_public_key%"
+
+  lychee.module.payment.alipay.yiciyuan:
+    class: Lychee\Module\Payment\ThridParty\Alipay\AlipayRequester
+    arguments:
+      - "%yiciyuan_alipay_app_id%"
+      - "%yiciyuan_alipay_seller_id%"
+      - "%yiciyuan_alipay_business_private_key%"
+      - "%yiciyuan_alipay_public_key%"
+
+  lychee.module.payment.wechat:
+    class: Lychee\Module\Payment\ThridParty\Wechat\WechatRequester
+    arguments: ['@logger']
+
+  lychee.module.payment.qpay:
+    class: Lychee\Module\Payment\ThridParty\Qpay\QpayRequester
+    arguments: ['@logger']
+
+  lychee.module.payment.ciyocoin_purchase_recorder:
+    class: Lychee\Module\Payment\CiyoCoinPurchaseRecorder
+    arguments: ['@doctrine', '@lychee.module.account']
+
+  lychee.task.check_iap_cancel:
+    class: Lychee\Module\Payment\Task\CheckIAPCancel
+    calls:
+      - [setContainer, ['@service_container']]
+    tags:
+      - {name: lychee.task}
+
+  lychee.task.check_unfinished_trade:
+    class: Lychee\Module\Payment\Task\CheckUnfinishedTrade
+    calls:
+      - [setContainer, ['@service_container']]
+    tags:
+      - {name: lychee.task}
+
+  lychee.module.payment.iap_refund_manager:
+    class: Lychee\Module\Payment\PaymentIAPRefundManager
+    arguments: ['@doctrine']

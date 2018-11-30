@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>次元社</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=none"/>
+	<link rel="stylesheet" type="text/css" href="http://qn.ciyocon.com/web/common/swiper_3.3.1/swiper.min.css">
+	<link rel="stylesheet" type="text/css" href="{{ asset('bundles/lycheewebsite/home/styles/style-mobile.min.css') }}">
+	<style type="text/css">
+		.ciyo-bullet {
+			opacity: 1;
+			background-color: #d7dce1;
+			width: 8px;
+			height: 8px;
+			display: inline-block;
+			border-radius: 100%;
+			margin: 0 5px;
+			cursor: pointer;
+		}
+		.ciyo-bullet-active {
+			opacity: 1;
+			background-color: #24c7fc;
+		}
+		@media screen and (max-width: 320px) {
+			.swiper-container-horizontal > .swiper-pagination-bullets {
+				bottom: 7px;
+			}
+		}
+	</style>
+</head>
+<body>
+<div class="logo">
+	<img src="{{ asset('bundles/lycheewebsite/home/images/logo-mobile.png') }}" alt="">
+</div>
+<div class="side-menu">
+	<div class="menue-icon" onclick="showHideMenu(this)"></div>
+	<ul>
+		<li><a href="{{ path('products') }}#ciyoapp">次元社</a></li>
+		<li><a href="{{ path('products') }}#emoticon">次元颜文字</a></li>
+	</ul>
+</div>
+<nav>
+	<ul>
+		{% for group in groups %}
+			<li data-url="/home_posts?mobile&group={{ group.name()|e('url') }}" onclick="onGroupClick(this)"{{ loop.first ? ' class="active"' }}>{{ group.name() }}</li>
+		{% endfor %}
+	</ul>
+</nav>
+<div class="banner swiper-container">
+	<ul class="swiper-wrapper">
+		{% for banner in banners %}
+			<li class="swiper-slide">
+				<a href="{{ banner.url }}">
+					<img src="{{ banner.image }}"/>
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+	<div class="swiper-pagination"></div>
+</div>
+<ul class="posts">
+	{% include 'LycheeWebsiteBundle:Home:timeline-mobile.html.twig' with {posts: posts, subjscts: subjects} %}
+</ul>
+<a href="{{ url('download_app') }}" class="more">
+	<p>打开次元社APP，查看更多帖子！</p>
+</a>
+<div class="copyright">Copyright © Silver Times. All rights reserved. </div>
+<div class="pc"><a href="/?desktop">前往电脑版</a></div>
+<div class="download">
+	<div class="icon">
+		<img src="{{ ciyo.app_icon | resizeImage(120, 120) }}" alt="">
+	</div>
+	<p>{{ ciyo.app_name }}</p>
+	<p>{{ ciyo.app_slogan }}</p>
+	<a href="{{ url('download_app') }}">马上下载</a>
+</div>
+<script type="text/javascript" src="http://qn.ciyocon.com/web/common/swiper_3.3.1/swiper.min.js"></script>
+<script type="text/javascript">
+	(function(o) {
+		function addPostContentOverflowClas() {
+			var pList = document.querySelectorAll('.content p');
+			for (var i = 0; i < pList.length; i++) {
+				if (pList[i].offsetHeight > 72) {
+					pList[i].className = "content-overflow";
+					pList[i].parentNode.style.minHeight = 92 + 'px';
+					pList[i].parentNode.className = pList[i].parentNode.className + ' full-text';
+				}
+			}
+		}
+		function adjustSingleImageSize() {
+			function adjustImageSize(img) {
+				if (img.naturalWidth <= 0) {
+					img.onload = function(){adjustImageSize(img);};
+					return;
+				}
+				var parent = img.parentElement;
+				if (img.naturalWidth > parent.clientWidth &&
+						img.clientHeight < parent.clientHeight) {
+					parent.style.paddingTop = img.clientHeight + 'px';
+				}
+				else if (img.naturalWidth < parent.clientWidth) {
+					parent.style.width = img.naturalWidth + 'px';
+					if (img.clientHeight < parent.clientHeight) {
+						parent.style.paddingTop = img.clientHeight + 'px';
+					}
+				}
+				else {
+					// 按照css的默认样式显示图片
+				}
+			}
+
+			var images = document.querySelectorAll('.images li:only-child img');
+			for (var i = 0; i < images.length; i++) {
+				adjustImageSize(images[i]);
+			}
+		}
+		function adjustMutipleImageSize() {
+			function adjustEachImageSize(img) {
+				if (img.naturalWidth <= 0) {
+					img.onload = function(){adjustEachImageSize(img);};
+					return;
+				}
+				var parent = img.parentElement;
+
+				if (img.naturalWidth > img.naturalHeight) {
+					img.style.width = "auto";
+					img.style.height = "100%";
+				}
+				else if(img.naturalWidth < img.naturalHeight) {
+					img.style.width = "100%";
+					img.style.height = "auto";
+				}
+				else {
+					//按默认宽高100%
+				}
+			}
+
+			var images = document.querySelectorAll('.images li:not(:only-child) img');
+			for (var i = 0; i < images.length; i++) {
+				adjustEachImageSize(images[i]);
+			}
+		}
+
+		function newSwiper() {
+			var swiper = new Swiper('.special-activity', {
+				slidesPerView: 1.4,
+				centeredSlides: true,
+				paginationClickable: true,
+				spaceBetween: 10,
+				loop: true,
+				loopAdditionalSlides: 10,
+				grabCursor: true
+			});
+		}
+
+		var swiper = new Swiper('.banner', {
+			pagination: '.swiper-pagination',
+			slidesPerView: 1,
+			centeredSlides: true,
+			paginationClickable: true,
+			loop: true,
+			grabCursor: true,
+			bulletClass:'ciyo-bullet',
+			bulletActiveClass: 'ciyo-bullet-active',
+			autoplay: 2500,
+			autoplayDisableOnInteraction: true
+		});
+		function showHideMenu(obj) {
+			if (document.querySelector('.side-menu ul').style.display === '') {
+				obj.classList.add('click-menu');
+				document.querySelector('.side-menu ul').style.display = 'block';
+			}
+			else {
+				obj.classList.remove('click-menu');
+				document.querySelector('.side-menu ul').style.display = '';
+			}
+		}
+		function addActiveStateForGroup(group) {
+			var groups = document.querySelectorAll('nav ul li');
+			console.log(groups);
+			for (var i = 0; i < groups.length; i++) {
+				if (groups[i] == group) {
+					groups[i].className = 'active';
+				}
+				else {
+					groups[i].className = '';
+				}
+			}
+		}
+		function getHtmlFake(url, cb) {
+			var html = '<li class="post"><div class="author"><div class="-avatar"><img src="test-images/avatar.png" alt=""></div><span class="-name">肥肥子</span><span class="-level">Lv11</span><span class="-title theme-background-color">副领主</span></div><div class="time"><span class="date">04月16日</span>21:05</div><a href="javascript:;"><div class="content"><p>猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...</p></div></a><a href="javascript:;"><div class="link"><div class="title">【诚实动漫预告】海贼王（更新重新...</div><div class="from theme-color">来自<b>bilibili</b></div><div class="click"><b>2799</b>点击</div></div></a><ul class="images"><li><img src="test-images/post-img.png" alt=""></li></ul><a href="javascript:;"><div class="video"><img src="test-images/video-img.png" alt=""></div></a><span class="topic-name">喵星人日常</span><a href="javascript:;" class="share"></a><a href="javascript:;" class="comment"><span>2456</span></a><a href="javascript:;" class="like"><span>1534</span></a></li><li class="post"><div class="author"><div class="-avatar"><img src="test-images/avatar.png" alt=""></div><span class="-name">肥肥子</span><span class="-level">Lv11</span><span class="-title theme-background-color">副领主</span></div><div class="time"><span class="date">04月16日</span>21:05</div><a href="javascript:;"><div class="content"><p>猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...</p></div></a><a href="javascript:;"><div class="link"><div class="title">【诚实动漫预告】海贼王（更新重新...</div><div class="from theme-color">来自<b>bilibili</b></div><div class="click"><b>2799</b>点击</div></div></a><ul class="images"><li><img src="test-images/post-img.png" alt=""></li></ul><a href="javascript:;"><div class="video"><img src="test-images/video-img.png" alt=""></div></a><span class="topic-name">喵星人日常</span><a href="javascript:;" class="share"></a><a href="javascript:;" class="comment"><span>2456</span></a><a href="javascript:;" class="like"><span>1534</span></a></li><li class="post"><div class="author"><div class="-avatar"><img src="test-images/avatar.png" alt=""></div><span class="-name">肥肥子</span><span class="-level">Lv11</span><span class="-title theme-background-color">副领主</span></div><div class="time"><span class="date">04月16日</span>21:05</div><a href="javascript:;"><div class="content"><p>猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...</p></div></a><a href="javascript:;"><div class="link"><div class="title">【诚实动漫预告】海贼王（更新重新...</div><div class="from theme-color">来自<b>bilibili</b></div><div class="click"><b>2799</b>点击</div></div></a><ul class="images"><li><img src="test-images/post-img.png" alt=""></li></ul><a href="javascript:;"><div class="video"><img src="test-images/video-img.png" alt=""></div></a><span class="topic-name">喵星人日常</span><a href="javascript:;" class="share"></a><a href="javascript:;" class="comment"><span>2456</span></a><a href="javascript:;" class="like"><span>1534</span></a></li><li class="special-activity swiper-container"><a class="-title" href="javascript:;">专题活动</a><ul class="swiper-wrapper"><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li><li class="swiper-slide"><a href="javascript:;"><img src="test-images/banner-activity.png"></a></li></ul></li><li class="post"><div class="author"><div class="-avatar"><img src="test-images/avatar.png" alt=""></div><span class="-name">肥肥子</span><span class="-level">Lv11</span><span class="-title theme-background-color">副领主</span></div><div class="time"><span class="date">04月16日</span>21:05</div><a href="javascript:;"><div class="content"><p>猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...</p></div></a><a href="javascript:;"><div class="link"><div class="title">【诚实动漫预告】海贼王（更新重新...</div><div class="from theme-color">来自<b>bilibili</b></div><div class="click"><b>2799</b>点击</div></div></a><ul class="images"><li><img src="test-images/post-img.png" alt=""></li></ul><a href="javascript:;"><div class="video"><img src="test-images/video-img.png" alt=""></div></a><span class="topic-name">喵星人日常</span><a href="javascript:;" class="share"></a><a href="javascript:;" class="comment"><span>2456</span></a><a href="javascript:;" class="like"><span>1534</span></a></li><li class="post"><div class="author"><div class="-avatar"><img src="test-images/avatar.png" alt=""></div><span class="-name">肥肥子</span><span class="-level">Lv11</span><span class="-title theme-background-color">副领主</span></div><div class="time"><span class="date">04月16日</span>21:05</div><a href="javascript:;"><div class="content"><p>猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...</p></div></a><a href="javascript:;"><div class="link"><div class="title">【诚实动漫预告】海贼王（更新重新...</div><div class="from theme-color">来自<b>bilibili</b></div><div class="click"><b>2799</b>点击</div></div></a><ul class="images"><li><img src="test-images/post-img.png" alt=""></li></ul><a href="javascript:;"><div class="video"><img src="test-images/video-img.png" alt=""></div></a><span class="topic-name">喵星人日常</span><a href="javascript:;" class="share"></a><a href="javascript:;" class="comment"><span>2456</span></a><a href="javascript:;" class="like"><span>1534</span></a></li><li class="post"><div class="author"><div class="-avatar"><img src="test-images/avatar.png" alt=""></div><span class="-name">肥肥子</span><span class="-level">Lv11</span><span class="-title theme-background-color">副领主</span></div><div class="time"><span class="date">04月16日</span>21:05</div><a href="javascript:;"><div class="content"><p>猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...猫主子今天心情不好，把屎盆子弄翻_(:∠)balabalabbh简单的交流空间设计离开的借口辣椒粉即热肌肤肌肤抵抗力就当减肥了手a...</p></div></a><a href="javascript:;"><div class="link"><div class="title">【诚实动漫预告】海贼王（更新重新...</div><div class="from theme-color">来自<b>bilibili</b></div><div class="click"><b>2799</b>点击</div></div></a><ul class="images"><li><img src="test-images/post-img.png" alt=""></li></ul><a href="javascript:;"><div class="video"><img src="test-images/video-img.png" alt=""></div></a><span class="topic-name">喵星人日常</span><a href="javascript:;" class="share"></a><a href="javascript:;" class="comment"><span>2456</span></a><a href="javascript:;" class="like"><span>1534</span></a></li>';
+			if (cb !== undefined) {
+				cb(html);
+			}
+		}
+		function getHtmlXHR(url, cb) {
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', url, true);
+			xhr.send();
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						cb(xhr.responseText);
+					}
+				}
+			};
+		}
+		var getHtml = getHtmlXHR;
+		var loading = false;
+		function getPosts() {
+			return document.querySelector('.posts');
+		}
+		function getUrlByGroup(obj) {
+			return obj.getAttribute('data-url');
+		}
+		function onGroupClick(obj) {
+			if (obj.className !== 'active' && !loading) {
+				loading = true;
+				addActiveStateForGroup(obj);
+				getPosts().innerHTML = '';
+				getPosts().classList.add('loading');
+				var url = getUrlByGroup(obj);
+				// var url = '';
+				if (url === '' || url === undefined || url === null) {
+					getPosts().classList.remove('loading');
+					getPosts().innerHTML = '已无更多内容';
+					loading = false;
+					return;
+				}
+				getHtml(url, function(html) {
+					getPosts().classList.remove('loading');
+					getPosts().innerHTML = html;
+					newSwiper();
+					addPostContentOverflowClas();
+					adjustSingleImageSize();
+					adjustMutipleImageSize();
+					loading = false;
+				});
+			}
+		}
+		o.showHideMenu = showHideMenu;
+		o.onGroupClick = onGroupClick;
+		newSwiper();
+		addPostContentOverflowClas();
+		adjustSingleImageSize();
+		adjustMutipleImageSize();
+	}(window));
+</script>
+</body>
+</html>
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

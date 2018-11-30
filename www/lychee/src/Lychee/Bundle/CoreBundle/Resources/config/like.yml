@@ -1,0 +1,33 @@
+services:
+    lychee.module.like:
+        class: Lychee\Module\Like\LikeService
+        arguments:
+            - '@doctrine'
+            - '@lychee.module.post'
+            - '@lychee.event_dispatcher_async'
+            - '@lychee.module.comment'
+            - '@memcache.default'
+            - '@service_container'
+
+    lychee.module.like.robot:
+        class: Lychee\Module\Like\RobotService
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+
+    lychee.module.robot.like_post:
+        class: Lychee\Module\Robot\OperationService
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+            - 'robot_post_liker'
+            - 'robot_like_post_task'
+            - '@lychee.module.like.robot'
+            - 'likePost'
+
+    lychee.consumer.post.like:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.like'
+            - 'asyncAfterLikePost'

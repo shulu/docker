@@ -1,0 +1,14 @@
+load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+
+require 'capifony_symfony2'
+
+after "deploy:finalize_update" do
+    run "touch #{latest_release}/var/api/logs/prod.log"
+    run "chmod -R 777 #{latest_release}/var"
+end
+
+after "deploy:create_symlink" do
+    run "sudo service php-fpm restart"
+end
+
+load 'app/config/deploy'

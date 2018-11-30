@@ -1,0 +1,58 @@
+.container .content {
+    padding-top: 20px;
+}
+.container .main .tab li {
+    padding: 0 10px;
+}
+.pull-right {
+    float: right;
+}
+.container .main {
+    width: 100%;
+}
+
+/* /reports */
+.today-increment {
+    border-radius: 5px; border: 1px solid #a2c2d3; background-color: #fff;
+}
+.report-title {
+    border-bottom: 1px solid #a2c2d3; font-size: 20px; line-height: 38px; padding-left: 20px;
+}
+.today-increment-detail {
+    position: relative;
+    overflow: auto;
+    zoom: 1;
+}
+.today-increment-detail > div {
+    float: left;
+    width: 33.2%;
+    padding: 40px 0;
+    text-align: center;
+    font-size: 18px;
+}
+.today-increment-detail > div:first-child {
+    border-right: 1px dashed #a2c2d3;
+}
+.today-increment-detail > div:nth-child(2) {
+}
+.today-increment-detail > div:last-child {
+    border-left: 1px dashed #a2c2d3;
+}
+.today-increment-detail p {
+    line-height: 100%;
+}
+.today-increment-detail > div p:nth-child(2) {
+    font-size: 26px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.today-increment-detail > div p:last-child {
+    color: #87919a;
+}
+.graphic {
+    border-radius: 5px; border: 1px solid #a2c2d3; background-color: #fff;
+    margin-top: 20px;
+}
+.graphic-detail {
+    padding: 20px;
+}

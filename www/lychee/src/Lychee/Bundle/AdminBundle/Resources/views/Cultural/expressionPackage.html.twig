@@ -1,0 +1,149 @@
+{% extends 'LycheeAdminBundle:Cultural:layout.html.twig' %}
+
+{% block body %}
+<button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#create_package" style="margin-bottom: 15px;">
+    <span class="glyphicon glyphicon-plus"></span>
+</button>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>封面图</th>
+            <th>下载链接</th>
+            <th>更新时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for package in expressionPackages %}
+            <tr>
+                <td>{{ package.id }}</td>
+                <td>{{ package.name }}</td>
+                <td><img src="{{ package.coverImage|resizeImage(50, 0) }}" alt="{{ package.id }}"></td>
+                <td><a href="{{ package.downloadUrl }}" target="_blank">{{ package.downloadUrl }}</a></td>
+                <td>{{ package.lastModifiedTime|date('Y-m-d H:i') }}</td>
+                <td>
+                    {% if package.deleted %}
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('lychee_admin_cultural_showexpressions', {packageId: package.id}) }}">查看</a>
+                    <span>&nbsp;</span>
+                    <a href="#" class="edit-package" data-package-id="{{ package.id }}" data-package-name="{{ package.name }}">编辑</a>
+                    <span>&nbsp;</span>
+                    {% if package.deleted %}
+                        <a href="#" class="recover-package" data-package-id="{{ package.id }}">恢复</a>
+                    {% else %}
+                        <a href="#" class="delete-package" data-package-id="{{ package.id }}">删除</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="create_package" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">上传表情包</h4>
+            </div>
+            <form role="form" method="post" action="{{ path('lychee_admin_cultural_createexpressionpackage') }}"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="package_id" id="package_id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="package_name">名称</label>
+                        <input type="text" class="form-control" id="package_name" name="package_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="cover_image">封面 (图片格式，文件不大于1MB)</label>
+                        <input type="file" name="cover_image" id="cover_image" class="cover-image">
+                    </div>
+                    <div class="form-group">
+                        <label for="package_file">表情包 (zip格式，文件不大于6MB)</label>
+                        <input type="file" name="package_file" id="package_file" class="expression-package">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">确 定</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}<link rel="stylesheet" href="{{ asset_url }}" />{% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}<script type="text/javascript" src="{{ asset_url }}"></script>{% endjavascripts %}
+    <script>
+        $(document).ready(function () {
+            $(".delete-package").click(function () {
+                if (confirm("确定删除？")) {
+                    var $form = $("<form></form>");
+                    $form.attr("method", "post");
+                    $form.attr("action", "{{ path('lychee_admin_cultural_removepackage') }}");
+                    var $input = $('<input type="hidden" name="package_id">');
+                    $input.val($(this).data('package-id'));
+                    $form.append($input);
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+                return false;
+            });
+            $(".recover-package").click(function () {
+                if (confirm("确定恢复？")) {
+                    var $form = $("<form></form>");
+                    $form.attr("method", "post");
+                    $form.attr("action", "{{ path('lychee_admin_cultural_recoverpackage') }}");
+                    var $input = $('<input type="hidden" name="package_id">');
+                    $input.val($(this).data('package-id'));
+                    $form.append($input);
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+                return false;
+            });
+            $(".cover-image").fileinput({
+                allowedFileTypes: ['image'],
+                showUpload: false,
+                maxFileSize: 1024
+            });
+            $(".expression-package").fileinput({
+                allowedFileExtensions: ['zip'],
+                showUpload: false,
+                maxFileSize: 6144
+            });
+            var $createPackageModal = $('#create_package');
+            var $packageId = $('#package_id');
+            var $packageName = $('#package_name');
+            $createPackageModal.on('hidden.bs.modal', function(e) {
+                $packageId.val('');
+                $packageName.val('');
+                $('#cover_image, #package_file').fileinput('clear');
+            });
+            $('.edit-package').click(function() {
+                $packageId.val($(this).data('package-id'));
+                $packageName.val($(this).data('package-name'));
+                $createPackageModal.modal('show');
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:layout.html.twig' %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="{{ app.request.get('type') is null? 'active' }}">
+            <a href="{{ path('lychee_admin_manualintervention_editcolumn', {columnId: column.id}) }}">栏目</a>
+        </li>
+        <li role="presentation" class="{{ 'element' == app.request.get('type')? 'active' }}">
+            <a href="{{ path('lychee_admin_manualintervention_editcolumn', {columnId: column.id, type: 'element'}) }}">元素</a>
+        </li>
+    </ul>
+    <div class="col-sm-8" style="margin-top: 30px;">
+    {% if app.request.get('type') is null %}
+        <form class="form-horizontal" method="post" action="{{ path('lychee_admin_manualintervention_editcolumninfo') }}">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">栏目类型</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="column_name" value="{{ typeName }}" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="column_id" value="{{ column.id }}">
+                <label class="col-sm-2 control-label">栏目名称</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="column_name" value="{{ column.name }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">保 存</button>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <button type="button" id="create_item_btn" class="btn btn-primary" data-toggle="modal"
+                data-target="#create_item_form">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <ol class="sortable column-element">
+            {% for element in elements %}
+                <li data-id="{{ element.elementId }}">
+                    <span class="glyphicon glyphicon-move sortable-move pull-left"></span>
+                    <a class="pull-left element-link" target="_blank"
+                       href="{{ path('lychee_admin_contentaudit_postdetail', {id: element.elementId}) }}">{{ element.elementId }}</a>
+                    <span class="element-content">{{ element.recommendationReason }}</span>
+                    <a href="#" class="pull-right delete-item" data-element-id="{{ element.elementId }}">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="create_item_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加元素</h4>
+                    <form role="form" method="post" action="{{ path('lychee_admin_manualintervention_addcolumnelement') }}" enctype="multipart/form-data">
+                        <input type="hidden" name="column_id" id="column_id" value="{{ column.id }}">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="app_id">元素ID</label>
+                                <input type="text" name="element_id" id="element_id" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="recommendation_reason">推荐语</label>
+                                <input type="text" name="recommendation_reason" id="recommendation_reason" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">封面</label>
+                                <input type="file" name="image" id="image" class="form-control">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style>
+        .column-element {
+            padding: 0;
+            margin: 30px 0 0;
+        }
+        .column-element li {
+            width: 600px;
+            list-style: none;
+            border: 1px solid;
+            margin: 5px 0;
+            padding: 6px 10px 0;
+        }
+        .element-link {
+            margin-left: 5px;
+            width: 20%;
+        }
+        .element-content {
+            display: inline-block;
+            width: 50%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {%  javascripts '@LycheeAdminBundle/Resources/public/js/jquery.sortable.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@fileinput_js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            var columnId = $('#column_id').val();
+            $('.sortable').sortable().bind('sortupdate', function() {
+                var $lists = $('.column-element').find('li');
+                var orderList = [];
+                $lists.each(function(index, elem) {
+                    orderList.push($(elem).data('id'));
+                });
+                $.ajax('{{ path("lychee_admin_manualintervention_orderelement") }}', {
+                    data: {
+                        elements: orderList,
+                        column_id: columnId
+                    },
+                    type: 'post',
+                    dataType: 'json',
+                    success: function() {}
+                });
+            });
+            $('.delete-item').click(function() {
+                if (confirm('确定删除？')) {
+                    var $form = $('<form method="post"></form>');
+                    $form.attr('action', '{{ path('lychee_admin_manualintervention_removecolumnelement') }}');
+                    $form.append('<input type="hidden" name="column_id" value="' + columnId + '">');
+                    $form.append('<input type="hidden" name="element_id" value="' + $(this).data('element-id') + '">');
+                    $form.submit();
+                }
+
+                return false;
+            });
+            $("#image").fileinput({
+                allowedFileTypes: ['image'],
+                showUpload: false
+            });
+        });
+    </script>
+{% endblock %}

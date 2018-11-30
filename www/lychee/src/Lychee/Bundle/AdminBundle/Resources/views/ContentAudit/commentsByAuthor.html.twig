@@ -1,0 +1,84 @@
+{% extends 'LycheeAdminBundle:ContentAudit:layout.html.twig' %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="{{ path('lychee_admin_contentaudit_userdetail', {userId: authorId}) }}">资料</a></li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_postlistbyauthor', {authorId: authorId}) }}">帖子</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_managertopics', {managerId: authorId}) }}">领主次元</a>
+        </li>
+        <li role="presentation" class="active"><a href="#">用户评论</a></li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_rechargedetail', {authorId: authorId}) }}">用户充值明细</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_exchangedetail', {authorId: authorId}) }}">用户兑换明细</a>
+        </li>
+    </ul>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>内容</th>
+                    <th>创建时间</th>
+                    <th>帖子ID</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <td>{{ comment.content }}</td>
+                    <td>{{ comment.createTime|date('Y-m-d H:i:s') }}</td>
+                    <td>
+                        <a href="{{ path('lychee_admin_contentaudit_postdetail', {id: comment.postId}) }}" target="_blank">
+                            {{ comment.postId }}
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger delete-comment" data-cid="{{ comment.id }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <nav>
+        <ul class="pager">
+            {% if cursor > 0 %}
+                <li class="previous">
+                    <a href="{{ path('lychee_admin_contentaudit_commentsbyauthor', {authorId: authorId, cursor: prevCursor}) }}">
+                        <span aria-hidden="true">&larr;</span> 上一页
+                    </a>
+                </li>
+            {% endif %}
+            {% if nextCursor %}
+                <li class="next">
+                    <a href="{{ path('lychee_admin_contentaudit_commentsbyauthor', {authorId: authorId, cursor: nextCursor, prev_cursor: cursor}) }}">
+                        下一页 <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('.delete-comment').click(function() {
+                if (confirm('确定删除评论?')) {
+                    var $form = $('<form method="post" action="{{ path('lychee_admin_contentaudit_deletecomment') }}"></form>');
+                    $form.append('<input type="hidden" name="id" value="' + $(this).data('cid') + '">');
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

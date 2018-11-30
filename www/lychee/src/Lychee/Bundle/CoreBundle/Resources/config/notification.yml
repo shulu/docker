@@ -1,0 +1,91 @@
+parameters:
+
+services:
+    lychee.module.notification.official:
+        class: Lychee\Module\Notification\OfficialNotificationService
+        arguments:
+            - '@doctrine'
+            - '@lychee.module.notification.counting'
+
+    lychee.module.notification.counting:
+        class: Lychee\Module\Notification\NotificationCountingService
+        arguments:
+            - '@doctrine'
+            - '@lychee.module.post'
+
+    lychee.module.notification:
+        class: Lychee\Module\Notification\NotificationService
+        arguments:
+            - '@doctrine'
+            - '@lychee.module.notification.counting'
+            - '@lychee.module.topic'
+            - '@lychee.module.account'
+            - '@lychee.module.notification.push'
+            - '@lychee.module.post'
+            - '@lychee.module.topic.core_member'
+
+    lychee.module.notification.event_subscriber:
+        class: Lychee\Module\Notification\EventSubscriber
+        arguments:
+            - '@lychee.module.notification.counting'
+            - '@lychee.module.notification'
+            - '@lychee.module.account'
+            - '@lychee.module.post'
+            - '@lychee.module.comment'
+            - '@lychee.module.relation'
+            - '@lychee.module.im'
+            - '@lychee.module.notification.push'
+            - '@jpush.client'
+        tags:
+            - {name: kernel.event_subscriber}
+
+    lychee.module.notification.push_setting:
+        class: Lychee\Module\Notification\Push\PushSettingManager
+        lazy: true
+        arguments:
+            - '@doctrine'
+            - ~
+
+    lychee.module.notification.push:
+        class: Lychee\Module\Notification\Push\PushService
+        arguments:
+            - '@old_sound_rabbit_mq.ciyo.push_producer'
+            - '@lychee.module.relation'
+            - '@lychee.module.notification.push_setting'
+            - '@doctrine'
+
+    lychee.module.notification.pusher.jpush:
+        class: Lychee\Module\Notification\Push\JPushPusher
+        arguments:
+            - '@jpush.client'
+            - '@doctrine'
+            - ~
+            - '@lychee.module.account'
+            - '@lychee.module.relation'
+            - '@lychee.module.comment'
+            - '@lychee.module.notification.push_setting'
+            - '@?logger'
+            - '@lychee.module.im.group'
+
+    jpush.client:
+        class: JPush\JPushClient
+        arguments: [%jpush_appkey%, %jpush_master_secret%]
+
+    lychee.task.push_official_notification:
+        class: Lychee\Module\Notification\Task\pushOfficialNotification
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.calculate_official_notification_views:
+        class: Lychee\Module\Notification\Task\OfficialNotificationViewsTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.clear_old_notification:
+        class: Lychee\Module\Notification\Task\ClearOldNotificationTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}

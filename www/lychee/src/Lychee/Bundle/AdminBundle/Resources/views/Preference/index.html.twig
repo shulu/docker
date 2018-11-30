@@ -1,0 +1,24 @@
+{% extends 'LycheeAdminBundle:Preference:layout.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('lychee_admin_preference_modifyprofile') }}" method="post">
+        <table class="table table-bordered">
+            <tr>
+                <td>Email</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>昵称</td>
+                <td>
+                    <input type="text" class="form-control" name="nickname" value="{{ user.name }}">
+                </td>
+            </tr>
+            <tr>
+                <td>注册时间</td>
+                <td>{{ user.createTime|date('Y-m-d H:i') }}</td>
+            </tr>
+        </table>
+        <input type="hidden" name="id" value="{{ user.id }}">
+        <button type="submit" class="btn btn-primary">保 存</button>
+    </form>
+{% endblock %}

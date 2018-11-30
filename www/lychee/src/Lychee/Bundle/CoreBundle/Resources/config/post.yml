@@ -1,0 +1,103 @@
+services:
+    lychee.module.post:
+        class: Lychee\Module\Post\PostService
+        arguments:
+            - '@doctrine'
+            - '@memcache.default'
+            - '@lychee.module.post.id_generator'
+            - '@lychee.module.topic'
+            - '@lychee.module.account'
+            - '@lychee.event_dispatcher_async'
+            - '@lychee.module.post.sticky'
+            - '@lychee.module.schedule'
+            - '@service_container'
+
+    lychee.module.post.id_generator:
+        class: Lychee\Component\IdGenerator\RedisIdGenerator
+        arguments: ['@snc_redis.idgen', '@=1404057600', "post"]
+
+    lychee.module.post.sticky:
+        class: Lychee\Module\Post\StickyService
+        arguments:
+            - '@doctrine'
+
+    lychee.module.post.exposure_recorder:
+        class: Lychee\Module\Post\PostExposureRecorder
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+
+    lychee.task.clear_post_exposure_record:
+        class: Lychee\Module\Post\Task\ClearPostExposureTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.settle_post_lately_likes:
+        class: Lychee\Module\Post\Task\SettleLatelyLikeTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.clear_post_lately_like_record:
+        class: Lychee\Module\Post\Task\ClearLatelyLikesTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.module.post.audit_event_subscriber:
+        class: Lychee\Module\Post\AuditEventSubscriber
+        arguments:
+            - '@service_container'
+        tags:
+            - {name: kernel.event_subscriber}
+
+    lychee.consumer.post.create:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.post'
+            - 'asyncAfterCreate'
+
+    lychee.consumer.post.delete:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.post'
+            - 'asyncAfterDelete'
+
+    lychee.consumer.post.pass_audit:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.post'
+            - 'asyncAfterPassAudit'
+
+    lychee.consumer.post.reject_audit:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.post'
+            - 'asyncAfterRejectAudit'
+
+    lychee.consumer.post.exposure:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.post.exposure_recorder'
+            - 'asyncAfterExposure'
+
+    lychee.consumer.short_video.stop_play:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.post'
+            - 'asyncAfterStopPlayShortVideo'
+
+    lychee.component.url_replacer:
+        class: Lychee\Component\Content\UrlReplacer
+        arguments:
+            - 'http://hanman.lzhhhhh.com/?upid=1029'

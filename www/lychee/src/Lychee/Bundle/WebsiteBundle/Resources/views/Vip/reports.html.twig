@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/lycheewebsite/home/styles/style.min.css') }}">
+    <title>粉丝走势 - VIP用户平台</title>
+    {% stylesheets '@LycheeWebsiteBundle/Resources/public/vip/styles/vip.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style type="text/css">
+        body {
+            background-color: #f9f9f9;
+            background-image: url({{ asset('bundles/lycheewebsite/home/images/homepage_bg.png') }});
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+        }
+        .theme-background-color {
+            background-color: #24c7fc;
+        }
+        .theme-color {
+            color: #24c7fc;
+        }
+        .post .link:after,
+        .post .schedule:after,
+        .post .vote:after {
+            background-color: #24c7fc;
+        }
+        .full-text:after {
+            color: #24c7fc;
+        }
+    </style>
+</head>
+<body>
+{{ include('LycheeWebsiteBundle:Vip:header.html.twig') }}
+<div class="user-info">
+    {{ include('LycheeWebsiteBundle:Vip:navigation.html.twig') }}
+    <div class="today-increment">
+        <div class="report-title">今日增长</div>
+        <div class="today-increment-detail">
+            <div>
+                <p>新关注数</p>
+                <p>{{ todayFollowerCount }}</p>
+                <p>昨日关注数: {{ yesterdayFollowerCount }}</p>
+            </div>
+            <div>
+                <p>取消关注数</p>
+                <p>{{ todayUnFollowerCount }}</p>
+                <p>昨日取消关注数: {{ yesterdayUnFollowerCount }}</p>
+            </div>
+            <div>
+                <p>净增关注数</p>
+                <p>{{ todayGrowth }}</p>
+                <p>昨日净增关注数: {{ yesterdayGrowth }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="graphic">
+        <div class="report-title">走势图</div>
+        <div class="graphic-detail">
+            <select name="dates" id="dates">
+                <option value="7">最近7天</option>
+                <option value="14">最近14天</option>
+            </select>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</div>
+{% javascripts '@LycheeWebsiteBundle/Resources/public/jquery-2.1.4.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% javascripts '@LycheeWebsiteBundle/Resources/public/vip/js/Chart.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $dates = $('#dates');
+        var initDates = $dates.val();
+        var $chart = $('#myChart');
+        var getTrend = function(dates) {
+            var renderTrend = function(data) {
+                var blueColor = function(alpha) {
+                    if (typeof alpha === "undefined") {
+                        alpha = '1';
+                    }
+                    return 'rgba(36, 199, 252, ' + alpha.toString() + ')';
+                };
+                var ctx = $chart.get(0).getContext('2d');
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: '新关注人数',
+                            fillColor: blueColor(0.5),
+                            pointColor: blueColor,
+                            strokeColor: blueColor,
+                            pointStrokeColor: "#fff",
+                            data: data.data
+                        }]
+                    }
+                });
+            };
+            $.get("{{ path('lychee_website_vip_gettrend') }}", {
+                dates: dates
+            }, function(data) {
+                if (data) {
+                    renderTrend(data);
+                }
+            }, "json");
+        };
+        $dates.change(function() {
+            getTrend($(this).val());
+        });
+        getTrend(initDates);
+    });
+</script>
+{{ include('LycheeWebsiteBundle:Vip:logoutjs.html.twig') }}
+</body>
+</html>
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>
+
+

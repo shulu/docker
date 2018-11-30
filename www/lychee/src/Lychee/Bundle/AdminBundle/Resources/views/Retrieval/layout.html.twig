@@ -1,0 +1,25 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_retrieval_users' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_retrieval_users') }}">用户</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_retrieval_posts' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_retrieval_posts') }}">帖子</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_retrieval_topics' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_retrieval_topics') }}">{{ topic_name }}</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_retrieval_comments' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_retrieval_comments') }}">评论</a>
+    </li>
+    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+    <li class="{% if currentPath matches '/customize_topic/' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_retrieval_customizecontent',
+            {type: constant('Lychee\\Bundle\\AdminBundle\\Entity\\CustomizeContent::TYPE_TOPIC')}) }}">自定义次元</a>
+    </li>
+    <li class="{% if currentPath matches '/customize_user/' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_retrieval_customizecontent',
+            {type: constant('Lychee\\Bundle\\AdminBundle\\Entity\\CustomizeContent::TYPE_USER')}) }}">自定义用户</a>
+    </li>
+{% endblock %}

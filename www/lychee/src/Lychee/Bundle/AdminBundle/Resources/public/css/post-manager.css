@@ -1,0 +1,29 @@
+#container { margin-top: 20px; }
+.card {
+    display: inline-block;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    max-width: 252px;
+    box-shadow: #d3d3d3 1px 1px 8px;
+}
+.card:hover { box-shadow: #0088CC 0 0 9px; }
+.card-deleted { opacity: .4; }
+.topic { border-bottom: 1px solid #d3d3d3; padding: 5px; }
+.topic span:first-child {
+    float: left;
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.content { padding: 5px; width: 250px; }
+.image { width: 100%; margin-bottom: 5px; }
+.image:hover { cursor: pointer; }
+.author img { height: 40px; width: 40px; float: left; margin-right: 5px; }
+.author p { margin-bottom: 0; }
+.author .create-time { font-size: 12px; color: #777; }
+.text { word-wrap: break-word; }
+.operation button { float: right; }
+.all-loaded { display: none; }
+.all-loaded p { text-align: center; }
+.glyphicon-heart { color: red; }

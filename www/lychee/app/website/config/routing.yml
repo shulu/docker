@@ -1,0 +1,9 @@
+lychee_website:
+    resource: "@LycheeWebsiteBundle/Resources/config/routing.yml"
+    prefix:   /
+
+#_lychee_api:
+#    resource: "@LycheeApiBundle/Resources/config/routing.yml"
+
+_lychee_core:
+    resource: "@LycheeCoreBundle/Resources/config/routing.yml"

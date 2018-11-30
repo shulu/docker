@@ -1,0 +1,188 @@
+{% extends 'LycheeAdminBundle:List:layout.html.twig' %}
+
+{% block body %}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_vip" title="添加VIP用户">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <div class="clearfix">
+        <div class="col-lg-4 pull-right">
+            <form>
+                <div class="input-group">
+                    <input type="text" name="query" class="form-control" placeholder="用户ID或昵称" value="{{ app.request.get('query')|default('') }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </span>
+                </div><!-- /input-group -->
+            </form>
+        </div><!-- /.col-lg-6 -->
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">用户名</th>
+                <th class="text-center">头像</th>
+                <th class="text-center">认证话语</th>
+                <th class="text-center">粉丝数</th>
+                <th class="text-center">最后发帖时间</th>
+                <th class="text-center">帖子数</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for userId, vip in vips %}
+                {% set user = users[userId] %}
+                <tr>
+                    <td class="text-center">
+                        <a href="{{ path('lychee_admin_inquiry_userdetail', {userId: user.id}) }}" target="_blank">
+                            {{ user.id }}
+                        </a>
+                    </td>
+                    <td class="text-center">{{ user.nickname }}</td>
+                    <td class="text-center">
+                        <img src="{{ user.avatarUrl|resizeImage(50, 50) }}" alt="">
+                    </td>
+                    <td class="text-center">{{ vip.certificationText }}</td>
+                    <td class="text-center">{{ followersCount[userId] }}</td>
+                    <td class="text-center">{{ latestPostTime[userId] is defined? latestPostTime[userId]|date('Y-m-d H:i'):'' }}</td>
+                    <td class="text-center">{{ userCounts[userId] is defined? userCounts[userId].postCount:'0' }}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-default edit-certificationtext" data-user-id="{{ userId }}" data-user-certificationtext="{{ vip.certificationText }}" data-toggle="modal" data-target="#edit_certificationtext" title="修改VIP用户认证话语">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger removie-vip" data-id="{{ userId }}" title="删除用户">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li>
+                    <a href="{{ path('lychee_admin_list_vip', {query: query, page: 1}) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% if pageCount < 1 %}{% set pageCount = 1 %}{% endif %}
+                {% for p in 1..min(10, pageCount) %}
+                    <li class="{{ p==page? 'active' }}">
+                        <a href="{{ path('lychee_admin_list_vip', {query: query, page: p}) }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+                <li>
+                    <a href="{{ path('lychee_admin_list_vip', {query: query, page: pageCount}) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="add_vip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加VIP帐号</h4>
+                </div>
+                <form role="form" method="post" action="{{ path('lychee_admin_list_addvip') }}">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="user_id">用户ID</label>
+                            <input type="text" class="form-control" id="user_id" name="user_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="certification_text">认证话语</label>
+                            <input type="text" class="form-control" id="certification_text" name="certification_text" placeholder="最多40个字">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">添 加</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit_certificationtext" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">修改VIP用户认证话语</h4>
+                </div>
+                <form role="form" >
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="new_certification_text">认证话语(最多40字)</label>
+                            <input type="text" class="form-control" id="new_certification_text" name="certification_text">
+                            <input type="hidden" class="form-control" id="vip_user_id" name="vip_user_id">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="edit_certification">修改</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('.removie-vip').click(function() {
+                if (!confirm("确定删除?")) {
+                    return false;
+                }
+                var userId = $(this).data('id');
+                var $form = $('<form method="post"></form>');
+                $form.attr('action', '{{ path("lychee_admin_list_removevip")|escape("js") }}');
+                $form.append('<input type="hidden" name="user_id" value="' + userId + '" />');
+                $('body').append($form);
+                $form.submit();
+                return false;
+            });
+            $('.edit-certificationtext').click(function () {
+                $('#new_certification_text').val($(this).data('user-certificationtext'));
+                $('#vip_user_id').val($(this).data('user-id'));
+            });
+            $('#edit_certification').click(function () {
+                if ($('#new_certification_text').val().length >= 40) {
+                    alert("认证语不能超过40个字");
+                    return false;
+                }
+                $.ajax({
+                    url: '{{ path("lychee_admin_list_editcertification") }}',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        new_certification_text: $('#new_certification_text').val(),
+                        vip_user_id: $('#vip_user_id').val()
+                    },
+                    success: function (data) {
+                        if(data=="success") {
+                            alert("修改成功");
+                        }
+                        else {
+                            alert("修改失败，请重来");
+                        }
+                        window.location.href = '{{ path("lychee_admin_list_vip") }}';
+                    },
+                    error: function (data) {
+                        console.error(data);
+                    }
+                });
+                $('#edit_certificationtext').modal('hide');
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

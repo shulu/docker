@@ -1,0 +1,11 @@
+<ul class="tab">
+    <li class="{% if app.request.get('_route') == 'lychee_website_vip_reports' %}active{% endif %}" id="fans">
+        <a href="{{ path('lychee_website_vip_reports') }}">粉丝走势</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_website_vip_userinfo' %}active{% endif %}" id="user_info">
+        <a href="{{ path('lychee_website_vip_userinfo') }}">个人资料</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_website_vip_sender' %}active{% endif %}" id="send_post">
+        <a href="{{ path('lychee_website_vip_sender') }}">发帖</a>
+    </li>
+</ul>

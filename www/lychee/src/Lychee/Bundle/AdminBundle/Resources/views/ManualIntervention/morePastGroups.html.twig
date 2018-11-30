@@ -1,0 +1,19 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:layout.html.twig' %}
+{% import 'LycheeAdminBundle:ManualIntervention:helper.html.twig' as helper %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        div.page-header { margin-top: 25px; margin-bottom: 10px; padding-bottom: 5px; }
+        div.page-header h4 { margin-bottom: 5px; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ helper.groupTable(pastGroups) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ helper.groupEvents() }}
+{% endblock %}

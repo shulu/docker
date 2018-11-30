@@ -1,0 +1,9 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_notification_official' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_notification_official') }}">官方通知</a>
+    </li>
+{% endblock %}
+
+{% block body %}{% endblock %}

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection"content="telephone=no, email=no" />
+    <title>[次元社_二次元短视频社]:@{{ userData.nickname|escape|trim }}的主页</title>
+    <meta name="Keywords" content="[次元社_二次元短视频社区]:@{{ userData.nickname|escape|trim }}的主页"/>
+    <meta name="Description" content="[次元社_二次元短视频社区]:@{{ userData.nickname|escape|trim }}的主页"/>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style type="text/css">
+        html{
+        }
+        body{
+            font-family: 'Microsoft YaHei','\5FAE\8F6F\96C5\9ED1','Hiragino Sans GB', tahoma,arial,sans-serif;
+            margin:0;
+            padding:0 0 70px 0;
+            width:100%;
+        }
+        #userpanel{
+            background-image: linear-gradient(-225deg, #33E1FD 0%, #13C0F8 100%);
+            width:100%;
+            padding-top:66px;
+        }
+        #usermainpanel{
+            margin:0px 12px 0px 12px;
+            background: #FFFFFF;
+            border-radius: 9px;
+            padding-top:56px;
+        }
+
+
+        #usericon{
+            position: absolute;
+            top:27px;
+            width:100%;
+            height:159px;
+            margin:0 auto;
+        }
+        #usericon img{
+            width:80px;
+            height:80px;
+            margin:0 auto;
+            border-radius:50%;
+            display:block;
+            border:2px solid #ffffff;
+            overflow:hidden;
+        }
+
+        #usernickname{
+            font: inherit;
+            font-size: 18px;
+            font-weight:bold;
+            color: #333333;
+            letter-spacing: 0;
+            text-align: center;
+            line-height: 36px;
+        }
+
+        .level {
+            width:40px;
+            height:18px;
+            line-height:18px;
+            text-indent:4px;
+            font-weight:normal;
+
+            display: inline-block;
+            background-repeat:no-repeat;
+            background-size: auto 18px;
+            background-position: center;
+            vertical-align: middle;
+            font-size: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        .cloud-gray {
+            background-image: url(http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_cloud_gray.png);
+        }
+        .moon-golden {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_moon_golden.png');
+        }
+        .moon-gray {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_moon_gray.png');
+        }
+        .moon-silver {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_moon_silver.png');
+        }
+        .star-gray {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_star_gray.png');
+        }:
+        .star-silver {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_star_silver.png');
+        }
+        .sun-golden {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_sun_golden.png');:
+        }
+        .sun-gray {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_sun_gray.png');
+        }
+        .sun-purple {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_sun_purple.png');
+        }
+        .sun-silver {
+            background-image: url('http://www.ciyo.cn/bundles/lycheewebsite/home/images/level_sun_silver.png');
+        }
+        #userinfo2{
+            text-align:center;
+            font-size:14px;
+            line-height:12px;
+            height:16px;
+            color: #AAAAAA;
+            vertical-align: middle;
+        }
+        #userinfo2 img{
+            width:16px;
+            height:16px;
+            display:inline-block;
+            vertical-align: middle;
+        }
+
+        #usersignature{
+            text-align:center;
+            font-size: 14px;
+            color: #333333;
+            line-height:20px;
+            margin:10px 20px;
+        }
+
+        #userfollow{
+            margin:10px 20px 0;
+            padding-bottom:10px;
+            text-align:center;
+            vertical-align: middle;
+        }
+        #userfollow span strong{
+            font-size: 20px;
+            color: #333333;
+            line-height: 20px;
+            display:inline-table;
+        }
+        #userfollow span span{
+            font-size: 12px;
+            line-height: 12px;
+            font-weight:normal;
+            margin:auto 0px;
+            color: #AAAAAA;
+            display:inline-block;
+            vertical-align: middle;
+        }
+
+        #nav{
+            height:50px;
+            line-height:50px;
+            width:100%;
+        }
+        #nav section{
+            width:50%;
+            opacity: 0.5;
+            text-align:center;
+            color: #FFFFFF;
+            display:inline;
+            float:left;
+            height:100%;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #nav .current{
+            opacity: 1;
+            background:url('http://qn.ciyocon.com/h5/homeshare/bg/triangle.png') no-repeat center bottom;
+            background-size:21px 9px;
+        }
+
+        .contentlist{
+            display:none;
+            background-image: linear-gradient(-225deg, #33E1FD 0%, #13C0F8 100%);
+        }
+        .contentlist .content{
+            width:100%;
+            border-radius: 9px 9px 0 0;
+            background: #FFFFFF;
+            padding-top:9px;
+            padding-bottom:9px;
+            margin:0px;
+        }
+        .empty{
+            height:100%;
+            min-height:400px;
+            width:100%;
+            text-align:center;
+            line-height:100%;
+            color: #979797;
+            font-size:13px;
+            margin-top:90px;
+        }
+        section.cur{
+            display:block;
+        }
+        .post_panel{
+            border-bottom:6px solid #F2F5F6;
+            padding:18px 9px 0px;
+            background: #FFFFFF;
+        }
+        .post_time{
+            font-size: 12px;
+            line-height: 12px;
+            color: #AAAAAA;
+            display:block;
+            height:14px;
+        }
+        .post_content{
+            font-size: 16px;
+            line-height: 22px;
+            color: #333333;
+            display:block;
+            margin:9px 0px;
+        }
+        .post_content .posts_image{
+            margin-top:3px;
+
+        }
+        .post_content .posts_image img{
+            width:111px;
+            height:111px;
+        }
+        .post_ciyo{
+            background: rgba(19,192,248,0.10);
+            border-radius: 12px;
+            font-size: 11px;
+            color: #13C0F8;
+            text-align: center;
+            line-height: 11px;
+            display:table-cell;
+            vertical-align: middle;
+            padding:6px 9px;
+        }
+        .post_action{
+            margin-top:12px;
+            border-top:1px solid #D8D8D8;
+            padding-top:10px;
+            display:block;
+            height:35px;
+        }
+        .post_like{
+            font-size: 12px;
+            line-height: 19px;
+            vertical-align: middle;
+            color: #979797;
+            text-indent:20px;
+            background:url('http://qn.ciyocon.com/h5/homeshare/bg/post_like.png') no-repeat left;
+            background-size:18px 19px;
+            display:inline-block;
+            margin-left:10px;
+        }
+        .post_comment{
+            font-size: 12px;
+            line-height: 19px;
+            vertical-align: middle;
+            color: #979797;
+            text-indent:20px;
+            background:url('http://qn.ciyocon.com/h5/homeshare/bg/post_comment.png') no-repeat left;
+            background-size:18px 19px;
+            display:inline-block;
+            margin-left:15%;
+        }
+        .post_share{
+
+        }
+        #video{
+        }
+        .video{
+            width:33.3%;
+            height:166px;
+            float:left;
+            text-align:center;
+            background:#ffffff;
+            position: relative;
+        }
+        .video img{
+            border-radius: 6px;
+            margin:6px auto 0px;
+            width:98%;
+            height:160px;
+        }
+        .video span{
+            position: relative;
+            left:-40px;
+            bottom:30px;
+            display:inline-block;
+            color:#fff;
+            font-size:12px;
+            text-align:center;
+            text-indent: 20px;
+            background:url('http://qn.ciyocon.com/h5/homeshare/bg/video_like1.png') no-repeat left center ;
+            background-size:14px 12px;
+            text-shadow:2px 2px 5px #333333;
+        }
+        .end{
+            position:fixed;
+            width:100%;
+            background:#fff;
+            height:70px;
+            bottom:0px;
+        }
+        footer{
+            position:fixed;
+            bottom:0px;
+            width:100%;
+            height:66px;
+            background: #fff;
+            box-shadow: 0 -4px 4px 0 rgba(19,192,248,0.10);
+            display:block;
+            vertical-align: center;
+            line-height:66px;
+            border-radius: 10px 10px 0 0;
+        }
+        footer img{
+            width:124px;
+            height:40px;
+            margin-top:14px;
+            margin-left:15px;
+        }
+        footer button{
+            background-image: linear-gradient(to right, #1EDFFE 0%, #13C0F8 100%);
+            box-shadow: 0 6px 6px 0 rgba(30,191,243,0.20);
+            border-radius: 30px;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 14px;
+            position:absolute;
+            right:5%;
+            top:14px;
+            height:40px;
+            padding:0 14px;
+            border:0px;
+        }
+        .j{cursor:pointer;}
+    </style>
+</head>
+
+<body>
+<section id="userpanel">
+    <div id="usericon" class="j"><img src="{{ userData.avatar_url }}"/></div>
+    <div id="usermainpanel">
+        <div id="usernickname" class="j">{{ userData.nickname|escape|trim }}
+            {% if userData.level <= 2 %}
+                {% set levelClass = 'cloud-gray' %}
+            {% elseif userData.level > 2 and userData.level <= 5 %}
+                {% set levelClass = 'star-gray' %}
+            {% elseif userData.level > 5 and userData.level <= 8 %}
+                {% set levelClass = 'star-silver' %}
+            {% elseif userData.level > 8 and userData.level <= 12 %}
+                {% set levelClass = 'moon-gray' %}
+            {% elseif userData.level > 12 and userData.level <= 16 %}
+                {% set levelClass = 'moon-silver' %}
+            {% elseif userData.level > 16 and userData.level <= 20 %}
+                {% set levelClass = 'moon-golden' %}
+            {% elseif userData.level > 20 and userData.level <= 25 %}
+                {% set levelClass = 'sun-gray' %}
+            {% elseif userData.level > 25 and userData.level <= 30 %}
+                {% set levelClass = 'sun-silver' %}
+            {% elseif userData.level > 30 and userData.level <= 35 %}
+                {% set levelClass = 'sun-golden' %}
+            {% elseif userData.level > 35 %}
+                {% set levelClass = 'sun-purple' %}
+            {% endif %}
+            <div class="level {{ levelClass }} j">{{ userData.level }}</div>
+        </div>
+        <div id="userinfo2">{% if userData.gender == 'male' %}<img  class="j" src="http://qn.ciyocon.com//icons/boy.2x.png"/>{% elseif userData.gender == 'female' %}<img src="http://qn.ciyocon.com//icons/girl.2x.png"  class="j"/>{% endif %} {{ userData.location|escape|trim }}{% if userData.location != '' and userData.age != null %}·{% endif %}{% if userData.age != null %}{{ userData.age|escape|trim }}岁{% endif %}</div>
+        <div id="usersignature" class="j">{{ userData.signature|escape|trim }}</div>
+        <div id="userfollow">
+            <span  class="j">
+                <strong>{{ userData.followers_count|default(0) }}</strong> <strong><span>粉丝</span></strong> <strong>{{ userData.followees_count|default(0) }}</strong> <strong><span>关注</span></strong>
+            </span>
+        </div>
+    </div>
+    <div id="nav">
+        <section class="current">帖子</section>
+        <section>视频</section>
+    </div>
+</section>
+<section id="text" class="contentlist cur">
+    <section class="content">
+        {% for post in posts %}
+        <section class="post_panel">
+            <div class="post_time">{{ timeStr(post.create_time) }}</div>
+            <div class="post_content j">{{ post.content | nl2br }}
+                {% if annotation.multi_photos is defined and annotation.multi_photos is not empty %}
+                    {% set images = annotation.multi_photos %}
+                {% elseif post.image_url is defined and post.image_url is not empty %}
+                    {% set images = [post.image_url] %}
+                {% else %}
+                    {% set images = [] %}
+                {% endif %}
+
+                {% set imgWidth = images|length > 1 ? 200 : 640 %}
+                {% set imgHeight = images|length > 1 ? 200 : 0 %}
+                {% set tmpImages = [] %}
+                {% for img in images %}
+                    {% set tmpImages = tmpImages|merge([{url: img|resizeImage(imgWidth, imgHeight)}]) %}
+                {% endfor %}
+                {% set images = tmpImages %}
+
+                {% if annotation.multi_photo_gif_index is defined and annotation.multi_photo_gif_index is not empty %}
+                    {% set tmpImgs = [] %}
+                    {% for i in annotation.multi_photo_gif_index|default([]) %}
+                        {% if images[i] is defined %}
+                            {% set tmpImgs = tmpImgs|merge([{url: images[i].url, gif: true}]) %}
+                        {% else %}
+                            {% set tmpImgs = tmpImgs|merge(images[i]) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set images = tmpImgs %}
+                {% endif %}
+
+                {% if annotation.multi_photo_widths is defined and annotation.multi_photo_heights is defined and images|length == annotation.multi_photo_widths|length and annotation.multi_photo_widths|length == annotation.multi_photo_heights|length %}
+                    {% set tmpImgs = [] %}
+                    {% for w in annotation.multi_photo_widths %}
+                        {% set i = loop.index0 %}
+                        {% set h = annotation.multi_photo_heights[loop.index0]|default(0) %}
+                        {% if images[i] is defined and w > 0 and (h / w >= 1.5) %}
+                            {% set image = images[i]|merge({long: true}) %}
+                            {% set tmpImgs = tmpImgs|merge([image]) %}
+                        {% else %}
+                            {% set tmpImgs = tmpImgs|merge([images[i]]) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set images = tmpImgs %}
+                {% endif %}
+
+                {% if images is not empty %}
+                    <div class="posts_image j">
+                        {% for image in images %}
+                            <img src="{{ image.url }}/>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </div>
+            <span class="post_ciyo j">{{ post.topic.title }}</span>
+            <div class="post_action">
+                <span class="post_like j">{{ post.liked_count }}</span>
+                <span class="post_comment j">{{ post.commented_count }}</span>
+                <span class="post_share j"></span>
+            </div>
+        </section>
+        {% else %}
+            <div class="empty">TA还没有发布帖子哦</div>
+        {% endfor %}
+    </section>
+</section>
+<section id="video" class="contentlist">
+    <section class="content">
+        {% for video in videos %}
+                <section class="video j">
+                    <img src="{{ video.image_url }}/>
+                    <span>{{ video.liked_count }}</span>
+                </section>
+        {% else %}
+            <div class="empty">TA还没有发布视频哦</div>
+        {% endfor %}
+    </section>
+</section>
+<footer>
+    <img class="j" src="http://qn.ciyocon.com/app/icons/v2/logo.png?v2"/>
+    <button class="j">打开看看</button>
+</footer>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#nav > section').click(function(){
+            if($(this).hasClass('current')) return false;
+            $('#nav > section').toggleClass('current');
+            $('.contentlist').toggle();
+        });
+        $('.j').click(function(){
+            var url='http://sj.qq.com/myapp/detail.htm?apkName=com.infothinker.erciyuan';
+            window.location.href=url;
+            return false;
+        })
+    });
+</script>
+</html>
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

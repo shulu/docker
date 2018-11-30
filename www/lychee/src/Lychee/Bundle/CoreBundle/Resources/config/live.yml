@@ -1,0 +1,6 @@
+services:
+    lychee.module.live:
+        class: Lychee\Module\Live\LiveService
+        arguments:
+            - '@doctrine'
+            - ~

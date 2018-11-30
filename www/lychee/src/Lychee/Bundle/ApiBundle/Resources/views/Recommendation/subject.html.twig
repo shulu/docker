@@ -1,0 +1,4 @@
+<div class="subject">
+    <h2><span>专题：{{ subject.name }}</span><a href="javascript:go('subject_list', null, {{ index + 1 }})">更多</a></h2>
+    <a href="javascript:go('subject', {{ subject.id }}, {{ index + 1 }})"><img class="-image" src="{{ subject.banner_url }}" /></a>
+</div>

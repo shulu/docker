@@ -1,0 +1,29 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<title>调查问卷</title>
+	<link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/operation/questionnaire/style1.css') }}" />
+</head>
+<body class="conclusion">
+
+{% if conclusion == 0 %}
+<p>答题完毕！<br/>掉落奖励次元酱的感谢×1</p>
+{% else %}
+{% set i = conclusion > 0 and conclusion < 5 ? conclusion : 4 %}
+<img class="banner" src="http://qn.ciyocon.com/web/operation/questionnaire/banner2.png"/>
+<img class="desc" src="http://qn.ciyocon.com/web/operation/questionnaire/c{{ i }}.png"/>
+{% endif %}
+<img class="logo" src="{{ 'http://qn.ciyocon.com/web/common/logo2.png'|resizeImage(100, 0) }}"/>
+</body>
+{% if alert is defined and alert is not empty %}
+<script>
+	alert('{{ alert|e('js') }}');
+</script>
+{% endif %}
+</html>
+{% endspaceless %}
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

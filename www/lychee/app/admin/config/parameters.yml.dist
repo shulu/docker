@@ -1,0 +1,8 @@
+parameters:
+    mailer_transport: smtp
+    mailer_host: smtp.qq.com
+    mailer_user: servicio@ciyocon.com
+    mailer_password: null
+
+    topic_name: '次元'
+    future_data: true

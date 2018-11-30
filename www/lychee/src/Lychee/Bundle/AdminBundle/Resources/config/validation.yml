@@ -1,0 +1,27 @@
+Lychee\Module\Recommendation\Entity\RecommendationGroup:
+    properties:
+        type:
+            - NotBlank: ~
+Lychee\Module\Recommendation\Entity\RecommendationItem:
+    properties:
+        targetId:
+            - NotBlank: ~
+
+Lychee\Module\Recommendation\Entity\Banner:
+    properties:
+        position:
+            - Regex: '/^\d+$/'
+
+Lychee\Module\ContentManagement\Entity\Sticker:
+    properties:
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 3
+                max: 20
+                minMessage: "贴纸名称至少3个字"
+                maxMessage: "贴纸名称最多不超过20个字"
+        isNew:
+            - Range:
+                min: 0
+                max: 1

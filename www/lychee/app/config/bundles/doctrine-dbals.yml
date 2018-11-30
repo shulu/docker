@@ -1,0 +1,22 @@
+parameters:
+  dbal.wrapper: 'Lychee\Component\Database\DefaultConnection'
+  dbal.host: "%core_database_host%"
+  dbal.port: "%core_database_port%"
+  dbal.user: "%core_database_user%"
+  dbal.password: "%core_database_password%"
+
+doctrine:
+  dbal:
+    connections:
+      payment: {dbname: "ciyo_payment", wrapper_class: "%dbal.wrapper%", host: "%dbal.host%", port: "%dbal.port%", user: "%dbal.user%", password: "%dbal.password%"}
+      report: {dbname: "ciyo_report", wrapper_class: "%dbal.wrapper%", host: "%dbal.host%", port: "%dbal.port%", user: "%dbal.user%", password: "%dbal.password%"}
+      favorite: {dbname: "ciyo_favorite", wrapper_class: "%dbal.wrapper%", host: "%dbal.host%", port: "%dbal.port%", user: "%dbal.user%", password: "%dbal.password%"}
+      live: {dbname: "ciyo_live", wrapper_class: "%dbal.wrapper%", host: "%dbal.host%", port: "%dbal.port%", user: "%dbal.user%", password: "%dbal.password%"}
+      extramessage: {dbname: "ciyo_extramessage", wrapper_class: "%dbal.wrapper%", host: "%dbal.host%", port: "%dbal.port%", user: "%dbal.user%", password: "%dbal.password%"}
+  orm:
+    entity_managers:
+      payment: {connection: payment}
+      report: {connection: report}
+      favorite: {connection: favorite}
+      live: {connection: live}
+      extramessage: {connection: extramessage}

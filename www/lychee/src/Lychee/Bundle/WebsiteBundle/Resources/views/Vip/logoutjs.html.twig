@@ -1,0 +1,11 @@
+<script>
+    $(document).ready(function () {
+        $('.logout').click(function () {
+            var $form = $('<form method="post"></form>');
+            $form.attr('action', '{{ url("lychee_website_vip_logout") }}');
+            $('body').append($form);
+            $form.submit();
+            return false;
+        });
+    });
+</script>

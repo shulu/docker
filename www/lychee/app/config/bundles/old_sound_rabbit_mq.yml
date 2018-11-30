@@ -1,0 +1,273 @@
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     '%rabbit_mq_host%'
+            port:     %rabbit_mq_port%
+            user:     '%rabbit_mq_user%'
+            password: '%rabbit_mq_password%'
+            vhost:    '/'
+            lazy:     true
+            connection_timeout: 3
+            read_write_timeout: 3
+            keepalive: false
+            heartbeat: 0
+        consumers:
+            host:     '%rabbit_mq_host%'
+            port:     %rabbit_mq_port%
+            user:     '%rabbit_mq_user%'
+            password: '%rabbit_mq_password%'
+            vhost:    '/'
+            lazy:     false
+            connection_timeout: 10
+            read_write_timeout: 20
+            keepalive: false
+            heartbeat: 0
+    producers:
+        ciyo.push:
+            connection: default
+            exchange_options: {name: 'ciyo.push', type: topic}
+            queue_options:    {name: 'ciyo.push'}
+        event:
+            connection: default
+            exchange_options: {name: 'event', type: direct}
+            queue_options:    {name: 'event'}
+        topic_announce:
+            connection: default
+            exchange_options: {name: 'topic_announce', type: topic}
+            queue_options:    {name: 'topic_announce'}
+        topic_deletion:
+            connection: default
+            exchange_options: {name: 'defer', type: direct}
+            queue_options:
+                name: 'topic_deletion_defer'
+                routing_keys: ['topic_deletion']
+                arguments:
+                    x-message-ttl: ['I', 60000]
+                    x-dead-letter-exchange: ['S', 'topic_deletion']
+                    x-dead-letter-routing-key: ['S', 'topic_deletion']
+        topic_visit:
+            connection: default
+            exchange_options: {name: 'topic_visit', type: fanout}
+            queue_options:    {name: 'topic_visit', durable: false}
+        clean_user_posts:
+            connection: default
+            exchange_options: {name: 'defer', type: direct}
+            queue_options:
+                name: 'clean_user_posts_defer'
+                routing_keys: ['clean_user_posts']
+                arguments:
+                    x-message-ttl: ['I', 10000]
+                    x-dead-letter-exchange: ['S', 'clean_user_posts']
+                    x-dead-letter-routing-key: ['S', 'clean_user_posts']
+        post.create:
+            connection: default
+            exchange_options: {name: 'post.create', type: fanout}
+            queue_options:    {name: 'post.create', durable: false}
+
+        post.delete:
+            connection: default
+            exchange_options: {name: 'post.delete', type: fanout}
+            queue_options:    {name: 'post.delete', durable: false}
+
+        post.pass_audit:
+            connection: default
+            exchange_options: {name: 'post.pass_audit', type: fanout}
+            queue_options:    {name: 'post.pass_audit', durable: false}
+
+        post.reject_audit:
+            connection: default
+            exchange_options: {name: 'post.reject_audit', type: fanout}
+            queue_options:    {name: 'post.reject_audit', durable: false}
+
+        post.like:
+            connection: default
+            exchange_options: {name: 'post.like', type: fanout}
+            queue_options:    {name: 'post.like', durable: false}
+
+        user.login:
+            connection: default
+            exchange_options: {name: 'user.login', type: fanout}
+            queue_options:    {name: 'user.login', durable: false}
+
+        user.register:
+            connection: default
+            exchange_options: {name: 'user.register', type: fanout}
+            queue_options:    {name: 'user.register', durable: false}
+
+        user.like:
+            connection: default
+            exchange_options: {name: 'user.like', type: fanout}
+            queue_options:    {name: 'user.like', durable: false}
+
+        user.follow:
+            connection: default
+            exchange_options: {name: 'user.follow', type: fanout}
+            queue_options:    {name: 'user.follow', durable: false}
+
+        comment.create:
+            connection: default
+            exchange_options: {name: 'comment.create', type: fanout}
+            queue_options:    {name: 'comment.create', durable: false}
+
+        post.exposure:
+            connection: default
+            exchange_options: {name: 'post.exposure', type: fanout}
+            queue_options:    {name: 'post.exposure', durable: false}
+
+        short_video.stop_play:
+            connection: default
+            exchange_options: {name: 'short_video.stop_play', type: fanout}
+            queue_options:    {name: 'short_video.stop_play', durable: false}
+
+        recommendable_topic.create:
+            connection: default
+            exchange_options: {name: 'recommendable_topic.create', type: fanout}
+            queue_options:    {name: 'recommendable_topic.create', durable: false}
+
+        recommendable_topic.delete:
+            connection: default
+            exchange_options: {name: 'recommendable_topic.delete', type: fanout}
+            queue_options:    {name: 'recommendable_topic.delete', durable: false}
+
+        topic.update:
+            connection: default
+            exchange_options: {name: 'topic.update', type: fanout}
+            queue_options:    {name: 'topic.update', durable: false}
+
+    consumers:
+        event:
+            connection: consumers
+            exchange_options: {name: 'event', type: direct}
+            queue_options:    {name: 'event'}
+            idle_timeout:     300
+            qos_options:      {prefetch_size: 0, prefetch_count: 2, global: false}
+            callback:         lychee.event_consumer
+        topic_announce:
+            connection: consumers
+            exchange_options: {name: 'topic_announce', type: topic}
+            queue_options:    {name: 'topic_announce'}
+            idle_timeout:     300
+            callback:         lychee.module.topic.announce
+        topic_deletion:
+            connection: consumers
+            exchange_options: {name: 'topic_deletion', type: direct}
+            queue_options:    {name: 'topic_deletion', routing_keys: ['topic_deletion']}
+            idle_timeout:     300
+            callback:         lychee.module.topic.deletor
+        topic_visit:
+            connection: consumers
+            exchange_options: {name: 'topic_visit', type: fanout}
+            queue_options:    {name: 'topic_visit', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.topic_visit
+        clean_user_posts:
+            connection: consumers
+            exchange_options: {name: 'clean_user_posts', type: direct}
+            queue_options:    {name: 'clean_user_posts', routing_keys: ['clean_user_posts']}
+            idle_timeout:     300
+            callback:         lychee.module.account.posts_cleaner
+        post.create.follow_topic:
+            connection: consumers
+            exchange_options: {name: 'post.create', type: fanout}
+            queue_options:    {name: 'post.create.follow_topic', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.post.create.follow_topic
+        post.create:
+            connection: consumers
+            exchange_options: {name: 'post.create', type: fanout}
+            queue_options:    {name: 'post.create', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.post.create
+        post.delete:
+            connection: consumers
+            exchange_options: {name: 'post.delete', type: fanout}
+            queue_options:    {name: 'post.delete', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.post.delete
+        post.pass_audit:
+            connection: consumers
+            exchange_options: {name: 'post.pass_audit', type: fanout}
+            queue_options:    {name: 'post.pass_audit', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.post.pass_audit
+        post.reject_audit:
+            connection: consumers
+            exchange_options: {name: 'post.reject_audit', type: fanout}
+            queue_options:    {name: 'post.reject_audit', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.post.reject_audit
+        post.like:
+            connection: consumers
+            exchange_options: {name: 'post.like', type: fanout}
+            queue_options:    {name: 'post.like', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.post.like
+        user.login:
+            connection: consumers
+            exchange_options: {name: 'user.login', type: fanout}
+            queue_options:    {name: 'user.login', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.user.login
+        user.register:
+            connection: consumers
+            exchange_options: {name: 'user.register', type: fanout}
+            queue_options:    {name: 'user.register', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.user.register
+        user.follow:
+            connection: consumers
+            exchange_options: {name: 'user.follow', type: fanout}
+            queue_options:    {name: 'user.follow', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.user.follow
+        comment.create:
+            connection: consumers
+            exchange_options: {name: 'comment.create', type: fanout}
+            queue_options:    {name: 'comment.create', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.comment.create
+        post.exposure:
+            connection: consumers
+            exchange_options: {name: 'post.exposure', type: fanout}
+            queue_options:    {name: 'post.exposure', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.post.exposure
+        short_video.stop_play:
+            connection: consumers
+            exchange_options: {name: 'short_video.stop_play', type: fanout}
+            queue_options:    {name: 'short_video.stop_play', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.short_video.stop_play
+        recommendable_topic.create:
+            connection: consumers
+            exchange_options: {name: 'recommendable_topic.create', type: fanout}
+            queue_options:    {name: 'recommendable_topic.create', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.recommendable_topic.create
+        recommendable_topic.delete:
+            connection: consumers
+            exchange_options: {name: 'recommendable_topic.delete', type: fanout}
+            queue_options:    {name: 'recommendable_topic.delete', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.recommendable_topic.delete
+        topic.update:
+            connection: consumers
+            exchange_options: {name: 'topic.update', type: fanout}
+            queue_options:    {name: 'topic.update', durable: false}
+            idle_timeout:     300
+            callback:         lychee.consumer.topic.update
+
+#    multiple_consumers:
+#        async:
+#            connection: default
+#            exchange_options: {name: 'async', type: direct}
+#            idle_timeout: 300
+#            queues:
+#                topic_deletion:
+#                    name: topic_deletion
+#                    callback: lychee.module.topic.deletor
+#                    routing_keys: [topic_deletion]
+#                clean_user_posts:
+#                    name: clean_user_posts
+#                    callback: lychee.module.account.posts_cleaner
+#                    routing_keys: [clean_user_posts]

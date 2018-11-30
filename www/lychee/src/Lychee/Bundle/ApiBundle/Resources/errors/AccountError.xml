@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+
+<section code="5">
+    <group>
+        <error name="UserNotExist">user with id {userId} not exist</error>
+        <error name="UserFrozen"/>
+    </group>
+    <group>
+        <error name="SignatureInvalid"/>
+        <error name="RenameOnceInTwentyFourHour" display="每次修改昵称后需要等待24小时才能再次修改"/>
+    </group>
+</section>

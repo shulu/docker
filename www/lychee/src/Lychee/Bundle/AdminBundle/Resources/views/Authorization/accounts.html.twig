@@ -1,0 +1,92 @@
+{% extends 'LycheeAdminBundle:Authorization:layout.html.twig' %}
+
+{% block body %}
+    <button type="button" id="create_operation_account" class="btn btn-primary" data-toggle="modal" data-target="#create_account_form">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>Email/手机号</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for account in accounts %}
+                <tr>
+                    <td>{{ account.id }}</td>
+                    <td>{{ account.nickname }}</td>
+                    <td>{{ account.email }}/{{ account.phone }}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger delete-operation-account" account_id="{{ account.id }}">
+                        <span class="glyphicon glyphicon-trash"></span></button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="create_account_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加运营帐号</h4>
+                </div>
+                <form role="form" method="post" action="{{ path('lychee_admin_authorization_addoperationaccount') }}">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="keywords">搜索</label>
+                            <input type="text" class="form-control" id="keywords" placeholder="关键字">
+                        </div>
+                        <div class="form-group">
+                            <label for="accounts">结果</label>
+                            <select multiple id="accounts" name="accounts[]" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">保 存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $("#keywords").on("keyup", function() {
+	            $.get("{{ path('lychee_admin_authorization_searchaccount') }}", {
+		            keyword: $(this).val()
+	            }, function(data) {
+		            if (data) {
+			            var $accounts = $("#accounts");
+			            $accounts.empty();
+			            for (var index in data) {
+				            $accounts.append('<option value="' + data[index].id + '">' + data[index].nickname + '</option>');
+			            }
+		            }
+	            });
+            });
+
+            $(".delete-operation-account").on("click", function() {
+                if (window.confirm("确定删除？")) {
+                    $.post("{{ path('lychee_admin_authorization_deleteoperationaccount') }}", {
+                        id: $(this).attr("account_id")
+                    }, function(data) {
+                        if (data.result == true) {
+                            window.location.href = "{{ path('lychee_admin_authorization_accounts') }}";
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentaudit_reportposts' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentaudit_reportposts') }}">举报审核</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentaudit_topicaudit' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentaudit_topicaudit') }}">次元审批</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentaudit_antirubbish' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentaudit_antirubbish') }}">垃圾信息审核</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentaudit_imgreview' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentaudit_imgreview') }}">图片复审</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentaudit_rejectimgreview' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentaudit_rejectimgreview') }}">已删图片复审</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentaudit_imgreviewauditconfig' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentaudit_imgreviewauditconfig') }}">图片审核配置</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_contentaudit_classification' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_contentaudit_classification', {type: 0}) }}">分类热帖</a>
+    </li>
+
+{% endblock %}
+
+{% block body %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .data-arrow { border: none; border-radius: 0; box-shadow: none; text-align: center; }
+        @media (max-width: 768px) {
+            .affix {
+                position: static !important;
+            }
+        }
+    </style>
+{% endblock %}

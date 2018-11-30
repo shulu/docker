@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>分享了{{ nikeName }}的直播</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=none"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/lycheewebsite/live/styles/style.min.css') }}">
+</head>
+<body>
+<div class="live">
+    <div class="author">
+        {% if avatar %}
+            <div class="-avatar">
+                <img src="{{ avatar }}" alt="">
+            </div>
+        {% endif %}
+        {% if nikeName %}
+            <span class="-name">{{ nikeName }}</span>
+        {% endif %}
+        {% if level %}
+            {% if level <= 2 %}
+                {% set levelClass = 'cloud-gray' %}
+            {% elseif level > 2 and level <= 5 %}
+                {% set levelClass = 'star-gray' %}
+            {% elseif level > 5 and level <= 8 %}
+                {% set levelClass = 'star-silver' %}
+            {% elseif level > 8 and level <= 12 %}
+                {% set levelClass = 'moon-gray' %}
+            {% elseif level > 12 and level <= 16 %}
+                {% set levelClass = 'moon-silver' %}
+            {% elseif level > 16 and level <= 20 %}
+                {% set levelClass = 'moon-golden' %}
+            {% elseif level > 20 and level <= 25 %}
+                {% set levelClass = 'sun-gray' %}
+            {% elseif level > 25 and level <= 30 %}
+                {% set levelClass = 'sun-silver' %}
+            {% elseif level > 30 and level <= 35 %}
+                {% set levelClass = 'sun-golden' %}
+            {% elseif level > 35 %}
+                {% set levelClass = 'sun-purple' %}
+            {% endif %}
+            <div class="-level {{ levelClass }}">{{ level }}</div>
+        {% endif %}
+    </div>
+    {% if liveName %}
+        <div class="live-name">{{ liveName }}</div>
+    {% endif %}
+    {% if onlineUsers %}
+    <div class="online-count"><span>{{ onlineUsers }}</span>人在看</div>
+    {% endif %}
+    <div class="state">直播</div>
+    {% if avatar %}
+        <div class="cover">
+            <img src="{{ avatar }}">
+        </div>
+    {% endif %}
+    <a class="open" onclick="openApp()">打开次元社看直播</a>
+    <div class="download">
+        <div class="icon">
+            <img src="{{ asset('bundles/lycheewebsite/live/images/app-icon.png') }}" alt="">
+        </div>
+        <p>次元社</p>
+        <p>二次元短视频社区</p>
+        <a href="{{ url('download_app') }}">马上下载</a>
+    </div>
+</div>
+<script type="text/javascript">
+    var openApp = function () {
+        var userAgentStr = "{{ userAgent }}";
+        if (userAgentStr.indexOf('iPhone') !== -1 || userAgentStr.indexOf('iPod') !== -1) {
+            window.location.href = '{{ host }}/share/redirect?action=view_live&uid={{ uid }}';
+        }
+        else if (userAgentStr.indexOf('Android') !== -1) {
+            window.location.href = 'erciyuan://?action=view_live&uid={{ uid }}';
+            window.setTimeout(function () {
+                window.location.href = '{{ path("download_app") }}';
+            }, 2000);
+        }
+        else {
+            window.location.href = '{{ path("products") }}';
+        }
+    };
+</script>
+</body>
+</html>
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

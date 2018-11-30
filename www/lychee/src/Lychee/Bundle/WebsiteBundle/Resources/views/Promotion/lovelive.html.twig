@@ -1,0 +1,65 @@
+{% extends 'LycheeWebsiteBundle::base.html.twig' %}
+
+{% block meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="{{ block('title') }}">
+{% endblock %}
+
+{% block title %}成都LoveLive!舞团 全员入驻！{% endblock %}
+
+{% set userAgent = app.request.server.get('HTTP_USER_AGENT') %}
+{#{% set isWechat = userAgent matches '/MicroMessenger/i' %}#}
+{% set isAndroid = userAgent matches '/Android/i' %}
+{% set isIOS = userAgent matches '/\\(i[^;]+;( U;)? CPU.+Mac OS X/' %}
+
+{% block styles %}
+    {% spaceless %}
+        {% if isAndroid or isIOS %}
+            <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/promotion/lovelive/mobile.css') }}" />
+        {% else %}
+            <link rel="stylesheet" href="{{ asset('bundles/lycheewebsite/promotion/lovelive/desktop.css') }}" />
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('bundles/lycheewebsite/common/script/jquery-2.1.1.min.js') }}"></script>
+    <script>
+        function goto(link, fallbackLink) {
+            var userAgent = navigator.userAgent;
+            var inApp = /ciyocon/i.test(userAgent) === true;
+
+            if (inApp) {
+                window.location.href = link;
+            } else {
+                window.location.href = fallbackLink;
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    {% spaceless %}
+    <div class="banner"></div>
+    <div class="about"><a href="javascript: goto('erciyuan://?action=1&tid={{ topicId }}', '{{ url('download_app') }}');"></a></div>
+    <div class="members"></div>
+    <div class="photos">
+        <ul>
+            {% for post in posts %}
+            <li>
+                <a href="javascript: goto('erciyuan://?action=2&pid={{ post.id }}', '{{ path('share_post', {'postId': post.id}) }}');">
+                    <img src="{{ post.image_url | resizeImage(97, 97) }}"/>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="javascript: goto('erciyuan://?action=1&tid={{ topicId }}', '{{ url('download_app') }}');">查看更多&nbsp;&gt;</a>
+    </div>
+    <div class="notice">
+
+    </div>
+    {% endspaceless %}
+{% endblock %}

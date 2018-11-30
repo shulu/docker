@@ -1,0 +1,74 @@
+{% spaceless %}
+<div class="footer">
+	<div class="clearfix">
+		<div class="ciyocon">
+			<div class="-name">次元社</div>
+			<ul>
+				<li><a href="{{ path('about-us') }}">关于我们</a></li>
+				<li><a href="{{ path('join-us') }}">加入我们</a></li>
+				<li><a href="{{ path('about-us') }}#contact-us">商务合作</a></li>
+				<li><a href="https://shop155638961.taobao.com">次元社周边</a></li>
+			</ul>
+		</div>
+		<div class="partner">
+			<div class="-name">合作伙伴</div>
+			<ul>
+				<li class="bilibili"></li>
+				<li class="acfun"></li>
+				<li class="acg"></li>
+				<li class="manyouyou"></li>
+				<li class="moeyu"></li>
+				<li class="myc"></li>
+				<li class="yaca"></li>
+				<li class="yuanzi"></li>
+				<li class="erciyuanxiaowo"></li>
+				<li class="jiongjiong"></li>
+				<li class="lingyao"></li>
+				<li class="tangxin"></li>
+				<li class="tiantianmeng"></li>
+				<li class="tuopuzhi"></li>
+				<li class="xuxiangguan"></li>
+				<li class="youku"></li>
+				<li class="tudou"></li>
+				<li class="yinghuochong"></li>
+				<li class="a-3"></li>
+			</ul>
+		</div>
+		<ul class="contact">
+			<li>
+				<a href="{{ url('download_app') }}">
+					<div class="download">手机端下载</div>
+					<div class="qrcode" data-qrcode-url="{{ url('download_app') }}">
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="http://weibo.com/u/5205688209">
+					<div class="weibo">微博</div>
+					<div class="qrcode" data-qrcode-url="http://weibo.com/u/5205688209">
+					</div>
+				</a>
+			</li>
+			<li>
+				<div class="wechat">微信</div>
+				<div class="-qrcode">
+					<img src="http://qn.ciyocon.com/web/common/qrcode_wechat_1280.jpg" alt="">
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="web-copy-right">Copyright © Silver Times. All rights reserved.</div>
+	<div class="record-number">粤ICP备14064193号</div>
+</div>
+<script type="text/javascript" src="http://qn.ciyocon.com/web/common/qrcode.min.js"></script>
+<script type="text/javascript">
+	(function(){
+		var qrcodeList = document.getElementsByClassName("qrcode");
+		for (var i = 0; i < qrcodeList.length; i++) {
+			var qrcode = new QRCode(qrcodeList[i], {
+				text: qrcodeList[i].getAttribute('data-qrcode-url')
+			});
+		}
+	}());
+</script>
+{% endspaceless %}

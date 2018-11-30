@@ -1,0 +1,64 @@
+{% extends 'LycheeAdminBundle:ContentManagement:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <div id="container"></div>
+    <div class="all-loaded"><p class="bg-info">全部载入完毕</p></div>
+    {{ helper.tagForm(tags) }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/css/post-manager.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts filter='?jsqueeze' output='js/post-manager.js'
+        '@LycheeAdminBundle/Resources/public/js/handlebars-v2.0.0.js'
+        '@LycheeAdminBundle/Resources/public/js/waterfall.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            var $container = $("#container");
+            var page = 1;
+            var tagId = {{ tagId }};
+            $container.waterfall({
+                itemCls: 'card',
+                dataType: 'json',
+                colWidth: 250,
+                gutterWidth: 15,
+                gutterHeight: 15,
+                path: function() {
+                    var url = '/content/post/tag/' + tagId + '/' + page;
+                    page += 1;
+                    return url;
+                },
+                callbacks: {
+                    renderData: function (data, dataType) {
+                        var tpl, template;
+                        if ('json' === dataType) {
+                            if (data.total > 0) {
+                                tpl = $('#waterfall-tpl').html();
+                                template = Handlebars.compile(tpl);
+
+                                return template(data);
+                            } else {
+                                $container.waterfall("pause", function() {
+                                    $(".all-loaded").show();
+                                });
+                            }
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    {{ include('LycheeAdminBundle:ContentManagement:postCard.html.twig') }}
+{% endblock %}

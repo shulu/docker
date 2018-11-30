@@ -1,0 +1,21 @@
+parameters:
+#    lychee_website.example.class: Lychee\Bundle\WebsiteBundle\Example
+
+services:
+#    lychee_website.example:
+#        class: %lychee_website.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    wechat.jssdk:
+        class: Lychee\Bundle\WebsiteBundle\Wechat\JsSDK
+        arguments:
+            - %wechat_mp_app_id%
+            - %wechat_mp_app_secret%
+            - %kernel.cache_dir%
+
+    lychee_website.twig_extension:
+        class: Lychee\Bundle\WebsiteBundle\Twig\Extension
+        calls:
+            - [setContainer, ['@service_container']]
+        public: false
+        tags:
+            - { name: twig.extension }

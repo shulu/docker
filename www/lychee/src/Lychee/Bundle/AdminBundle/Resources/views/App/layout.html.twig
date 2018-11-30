@@ -1,0 +1,29 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .col-md-11.col-sm-10 {
+            padding-left: 2%;
+        }
+    </style>
+{% endblock %}
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_app_emoticon' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_app_emoticon') }}">上传颜文字</a>
+    </li>
+    <li class="{% if app.request.get('_route') matches '/expression/' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_app_expressionpackage') }}">表情管理</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_app_sharelinkwhitelist' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_app_sharelinkwhitelist') }}">分享网站</a>
+    </li>
+    {#<li class="{% if app.request.get('_route') == 'lychee_admin_app_sticker' %}active{% endif %}">#}
+        {#<a href="{{ path('lychee_admin_app_sticker') }}">贴纸管理</a>#}
+    {#</li>#}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_app_androiddownloadlink' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_app_androiddownloadlink') }}">Android下载链接</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_app_androidautoupdate' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_app_androidautoupdate') }}">Android自动更新</a>
+    </li>
+
+{% endblock %}

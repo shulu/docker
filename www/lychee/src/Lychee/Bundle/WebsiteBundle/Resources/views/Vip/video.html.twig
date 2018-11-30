@@ -1,0 +1,67 @@
+<form id="form" action="{{ path('lychee_website_vip_sendpost') }}" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="post_type" value="{{ constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_VIDEO') }}">
+  <div class="row clearfix">
+    <div class="col1">正文</div>
+    <div class="col2">
+      <textarea id="content" name="content" placeholder="2000字以内"></textarea>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col1">视频链接</div>
+    <div class="col2">
+      <input type="text" name="video_url" id="video_url" placeholder="只支持A站B站链接">
+      {#<a class="query">查询</a>#}
+    </div>
+  </div>
+  {#<div class="row clearfix">#}
+    {#<div class="col1">视频封面</div>#}
+    {#<div class="col2">#}
+      {#<img src="" id="video_cover">#}
+      {#<input type="hidden" name="video_cover">#}
+    {#</div>#}
+  {#</div>#}
+  <div class="row clearfix">
+    <div class="col1">视频封面</div>
+    <div class="col2">
+      <div class="file-upload">
+        <img id="preview_image" src="">
+        <span id="filename"></span><span id="upload">本地上传<input type="file" name="new_video_cover" id="Uploadfile" onchange="localLoadImage(event)"></span>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col1">次元</div>
+    <div class="col2">
+      {{ include('LycheeWebsiteBundle:Vip:topicSelector.html.twig', {'topics': topics}) }}
+    </div>
+  </div>
+  <button class="form-submit">提交</button>
+</form>
+<script>
+  $(document).ready(function() {
+    $('.query').click(function() {
+      var videoUrl = $('#video_url').val();
+      var $videoCover = $('#video_cover');
+      if (videoUrl) {
+        $.ajax('{{ path("lychee_website_vip_fetchvideocover") }}', {
+          type: 'post',
+          dataType: 'json',
+          data: {
+            url: videoUrl
+          },
+          success: function(data) {
+            console.log(data.img);
+            if (data.img) {
+              $videoCover.attr('src', data.img);
+              $videoCover.next().val(data.img);
+            } else {
+              alert("无法获取视频封面");
+            }
+          },
+          error: function() {}
+        });
+      }
+      return false;
+    });
+  });
+</script>

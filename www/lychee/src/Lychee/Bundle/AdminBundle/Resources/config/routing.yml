@@ -1,0 +1,22 @@
+lychee_admin_upload_success:
+    path: /upload_success
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'LycheeAdminBundle::uploadSuccess.html.twig'
+
+lychee_admin_manualintervention_new_specialsubject:
+    path: /manual_intervention/special_subject/new
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'LycheeAdminBundle:ManualIntervention:new_specialsubject.html.twig'
+
+lychee_admin_topic_error:
+    path: /topic/error
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'LycheeAdminBundle:Topic:error.html.twig'
+lychee_admin_error:
+    path: /error
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'LycheeAdminBundle::error.html.twig'

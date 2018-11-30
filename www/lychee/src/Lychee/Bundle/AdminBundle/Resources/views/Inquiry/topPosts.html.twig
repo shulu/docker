@@ -1,0 +1,113 @@
+{% extends 'LycheeAdminBundle:Inquiry:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        th { text-align: center; }
+        a.operation { white-space: nowrap; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户</th>
+                    <th>原帖</th>
+                    <th>{{ topic_name }}</th>
+                    <th>创建时间</th>
+                    <th>内容</th>
+                    <th>图片</th>
+                    <th>视频</th>
+                    <th>音频</th>
+                    <th>网页</th>
+                    <th>状态</th>
+                    <th>操作者</th>
+                    <th><span class="glyphicon glyphicon-wrench"></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('lychee_admin_contentaudit_postdetail', {id: post.id}) }}" target="_blank">
+                                {{ post.id }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('lychee_admin_contentaudit_userdetail', {userId: post.authorId}) }}" target="_blank">
+                                {{ authors[post.authorId].nickname }}
+                            </a>
+                        </td>
+                        <td>{{ post.repostedId }}</td>
+                        <td>
+                            <a href="{{ path('lychee_admin_inquiry_detail', {topicId: post.topicId}) }}" target="_blank">
+                                {{ topics[post.topicId].title }}
+                            </a>
+                        </td>
+                        <td>{{ post.createTime|date('Y-m-d H:i') }}</td>
+                        <td>{{ post.content }}</td>
+                        <td><img src="{{ post.imageUrl }}" style="max-width: 80px; max-height: 80px;"/></td>
+                        <td><a href="{{ post.videoUrl }}" target="_blank">{{ post.videoUrl }}</a></td>
+                        <td><a href="{{ post.audioUrl }}" target="_blank">{{ post.audioUrl }}</a></td>
+                        <td><a href="{{ post.siteUrl }}" target="_blank">{{ post.siteUrl }}</a></td>
+                        <td>
+                            <span class="glyphicon glyphicon-{{ post.deleted == false? 'ok' : 'remove' }}"></span>
+                        </td>
+                        <td>
+                            {% if managerLogs[post.id] is defined %}
+                                管理员
+                                [{{ managers[managerLogs[post.id].operatorId].email }}]
+                            {% else %}
+                                {% set managerId = topics[post.topicId].managerId %}
+                                {% if managerId %}
+                                    <a href="{{ path('lychee_admin_contentaudit_userdetail', {userId: managerId}) }}"
+                                       target="_blank">
+                                        {% if topicManagers[managerId].nickname %}
+                                            {{ topicManagers[managerId].nickname }}
+                                        {% else %}
+                                            {{ managerId }}
+                                        {% endif %}
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="#" class="post-top-cancel operation" value="{{ post.id }}">
+                                <span class="glyphicon glyphicon-save"></span>取消置顶
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $(".post-top-cancel").on("click", function() {
+                if (true === confirm("取消置顶本帖子？")) {
+                    $.ajax("{{ path('lychee_admin_inquiry_posttopcancel') }}", {
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            id: $(this).attr("value")
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            window.location.reload();
+                        },
+                        error: function() {
+                            alert("未知错误！");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

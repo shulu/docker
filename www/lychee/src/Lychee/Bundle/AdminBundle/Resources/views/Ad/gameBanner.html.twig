@@ -1,0 +1,111 @@
+{% extends 'LycheeAdminBundle:Ad:layout.html.twig' %}
+
+{% block body %}
+    <div class="alert alert-success" role="alert">访问量每8小时统计一次, 你现在看到的数据并非实时数据。</div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>URL</th>
+                <th>图片</th>
+                <th>标题</th>
+                <th>描述</th>
+                <th>位置</th>
+                <th>分享标题</th>
+                <th>分享正文</th>
+                <th>分享图片</th>
+                <th>分享大图</th>
+                <th>访问量</th>
+                <th>唯一访问量</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for banner in banners %}
+                <tr>
+                    <td>{{ banner.id }}</td>
+                    <td>{{ banner.url }}</td>
+                    <td><img class="banner-img" src="{{ banner.imageUrl }}" alt="{{ banner.title }}"/></td>
+                    <td>{{ banner.title }}</td>
+                    <td>{{ banner.description }}</td>
+                    <td>{{ banner.position }}</td>
+                    <td>{{ banner.shareTitle }}</td>
+                    <td>{{ banner.shareText }}</td>
+                    <td><img class="banner-img" src="{{ banner.shareImageUrl }}" alt="{{ banner.shareTitle }}"/></td>
+                    <td><img class="banner-img" src="{{ banner.shareBigImageUrl }}" alt="{{ banner.shareTitle }}"/></td>
+                    <td>{{ banner.views }}</td>
+                    <td>{{ banner.uniqueViews }}</td>
+                    <td>
+                        <button class="btn btn-danger delete-banner" bid="{{ banner.id }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <nav>
+        <ul class="pagination">
+            <li>
+                <a href="{{ path('lychee_admin_ad_gamebanner', {page: 1}) }}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% if pages == 0 %}{% set pages = 1 %}{% endif %}
+            {% for p in 1..pages %}
+                <li class="{{ p==page? 'active' }}">
+                    <a href="{{ path('lychee_admin_ad_gamebanner', {page: p}) }}">
+                        {{ p }}
+                    </a>
+                </li>
+            {% endfor %}
+            <li>
+                <a href="{{ path('lychee_admin_ad_gamebanner', {page: pages}) }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .banner-img { max-width: 160px; max-height: 92px; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $(".delete-banner").on("click", function() {
+                if (confirm("确定删除？")) {
+                    var bid = $(this).attr("bid");
+                    $.ajax("{{ path('lychee_admin_ad_deletegamebanner') }}", {
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            bid: bid
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            if (errorThrown) {
+                                alert(errorThrown);
+                            } else {
+                                alert("发生未知错误");
+                            }
+                        },
+                        success: function() {
+                            window.location.href = "{{ path(app.request.get('_route')) }}";
+                        }
+                    });
+                }
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'LycheeAdminBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+       @media screen and (max-width: 800px) {
+           .affix {
+               position: relative;
+           }
+           .nav-list {
+               background-color: transparent;
+           }
+           body {
+               padding-top: 50px;
+           }
+           .breadcrumb {
+               text-align: center;
+           }
+           .date-search {
+               width: 80%;
+           }
+           .date-search .form-group {
+               width: 70%;
+               float: left;
+           }
+           .date-search .btn-default {
+               float: right;
+           }
+           img {
+               width: 100%;
+           }
+           td img {
+               display: block;
+           }
+       }
+       td img {
+           width: 100px;
+           height: 100px;
+       }
+    </style>
+{% endblock %}
+
+{% block html_body %}
+    <div class="col-xs-12 col-md-1 col-sm-2 navbar-default nav-list">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar_list" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div role="complementary" data-spy="affix" id="navbar_list" class="affix navbar-collapse collapse">
+            <ul class="nav">
+                <li class="title">{{ title }}</li>
+                {% block left_nav %}{% endblock %}
+                <li><a href="{{ path('lychee_admin_default_index') }}">返回首页</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="col-xs-12 col-md-11 col-sm-10">
+        <ol class="breadcrumb">
+            {% block brewacrumb %}
+            <li class="active">{{ subTitle }}</li>
+            {% endblock %}
+        </ol>
+        {% block body %}{% endblock %}
+    </div>
+
+    {% javascripts '@LycheeAdminBundle/Resources/public/bootstrap/js/bootstrap.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% block javascripts %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,5 @@
+{% if future_data == true %}
+    {{ include('LycheeAdminBundle:Analysis:commentWithoutTotal.html.twig') }}
+{% else %}
+    {{ include('LycheeAdminBundle:Analysis:default_analysis.html.twig') }}
+{% endif %}

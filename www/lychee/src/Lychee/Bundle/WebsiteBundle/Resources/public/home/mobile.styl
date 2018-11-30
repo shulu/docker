@@ -1,0 +1,134 @@
+@import 'nib'
+
+global-reset()
+
+html, body
+  margin: 0 auto
+
+html
+  background-color: #45c3f5
+  background-image: url("image/bg_m2.png")
+  background-repeat: no-repeat
+  background-size: 100% auto
+
+body
+  min-width: 320px
+  //padding-bottom: 177.5%
+  padding-bottom: 100%
+  position: relative
+  font-family: Helvetica
+  color: #fff
+  background-color: transparent
+
+.banner
+  width: 76.4%
+  padding-top: 27.5%
+  position: absolute
+  margin-top: 7%
+  left: 13.4%
+  background-image: url("image/ciyo_title2.png")
+  background-repeat: no-repeat
+  background-size: 100%
+  h1
+    display: none
+
+.preview
+  width: 46.4%
+  padding-top: 97.2%
+  position: absolute
+  margin-top: 39.7%
+  left: 26.4%
+  background-image: url("image/preview_m2.png")
+  background-repeat: no-repeat
+  background-size: 100%
+
+.qrcode
+  display: none
+
+.slogan
+  width: 65.2%
+  padding-top: 25.3%
+  position: absolute
+  margin-top: 111%
+  left: 20.3%
+  background-image: url("image/slogan2.png")
+  background-repeat: no-repeat
+  background-size: 100%
+  p
+    display: none
+
+.download
+  a span
+    display: none
+  .iphone-link
+    width: 35.78%
+    padding-top: 8.75%
+    position: absolute
+    margin-top: 141.4%
+    left: 11.875%
+    background-image: url("image/iphone_btn_m2.png")
+    background-repeat: no-repeat
+    background-size: 100%
+  .android-link
+    width: 35.78%
+    padding-top: 8.75%
+    position: absolute
+    margin-top: 141.4%
+    left: 52.5%
+    background-image: url("image/android_btn_m2.png")
+    background-repeat: no-repeat
+    background-size: 100%
+
+contact-item($iconPath, $iconWidth, $iconHeight)
+  display: inline-block
+  font-size: 18px
+  font-size: 2.8vw
+  //line-height: $iconHeight
+  vertical-align: middle
+  margin-left: 10px
+  &:before
+    content: ''
+    display: inline-block
+    width: $iconWidth
+    height: $iconHeight
+    //line-height: $iconHeight
+    vertical-align: middle
+    margin-right: 4px
+    background: url($iconPath)
+    background-size: 100%
+    background-repeat: no-repeat
+
+.contact
+  width: 100%
+  position: absolute
+  margin-top: 157.66%
+  text-align: center
+  text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 1px
+  line-height: 1.2
+  h2
+    display: none
+    font-size: 16px
+    font-size: 2.5vw
+  ul
+    display: inline-block
+  li span
+    display: none
+  .-qq
+    contact-item('image/qq.png', 25px * 0.5, 25px * 0.5)
+  .-weibo
+    contact-item('image/weibo.png', 32px * 0.5, 25px * 0.5)
+  .-wechat
+    contact-item('image/wechat.png', 30px * 0.5, 25px * 0.5)
+
+@media screen and (max-width: 480px)
+  .contact h2
+    display: none
+
+.copyright
+  width: 100%
+  position: absolute
+  margin-top: 170%
+  font-size: 14px
+  font-size: 2.2vw
+  text-align: center
+  padding-bottom: 2%

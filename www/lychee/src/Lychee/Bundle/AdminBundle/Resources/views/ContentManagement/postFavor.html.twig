@@ -1,0 +1,92 @@
+{% extends 'LycheeAdminBundle:ContentManagement:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block stylesheets %}
+    <style type="text/css">
+        .card {
+            display: inline-block;
+            border: 1px solid #d3d3d3;
+            border-radius: 5px;
+            max-width: 252px;
+            box-shadow: #d3d3d3 1px 1px 8px;
+        }
+        .card:hover { box-shadow: #0088CC 0 0 9px; }
+        .card-deleted { opacity: .4; }
+        .topic { border-bottom: 1px solid #d3d3d3; padding: 5px; }
+        .topic span:first-child {
+            float: left;
+            width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .content { padding: 5px; width: 250px; }
+        .image { width: 100%; margin-bottom: 5px; }
+        .image:hover { cursor: pointer; }
+        .author img { height: 40px; width: 40px; float: left; margin-right: 5px; }
+        .author p { margin-bottom: 0; }
+        .author .create-time { font-size: 12px; color: #777; }
+        .text { word-wrap: break-word; }
+        .operation button { float: right; }
+        .all-loaded { display: none; }
+        .all-loaded p { text-align: center; }
+        .glyphicon-heart { color: red; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div id="container"></div>
+    <div class="all-loaded"><p class="bg-info">全部载入完毕</p></div>
+    {{ helper.tagForm(tags) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@LycheeAdminBundle/Resources/public/js/handlebars-v2.0.0.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/js/waterfall.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $container = $("#container");
+            $container.waterfall({
+                itemCls: 'card',
+                dataType: 'json',
+                colWidth: 250,
+                gutterWidth: 15,
+                gutterHeight: 15,
+                path: function(cursor) {
+                    cursor = $(".card").last().find(".favor_id").eq(0).val();
+                    if (typeof cursor === 'undefined') {
+                        cursor = 0;
+                    }
+
+                    return '/content/post/favor/load?cursor=' + cursor;
+                },
+                callbacks: {
+                    renderData: function (data, dataType) {
+                        var tpl, template;
+
+                        if ('json' === dataType) {
+                            if (data.total > 0) {
+                                tpl = $('#waterfall-tpl').html();
+                                template = Handlebars.compile(tpl);
+
+                                return template(data);
+                            } else {
+                                $container.waterfall("pause", function() {
+                                    $(".all-loaded").show();
+                                });
+                            }
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    {{ include('LycheeAdminBundle:ContentManagement:postCard.html.twig') }}
+{% endblock %}

@@ -1,0 +1,220 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, user-scalable=0">
+    <title>我的等级</title>
+    <link rel="stylesheet" href="{{ asset('bundles/lycheeapi/mission/style/web.css') }}" />
+</head>
+<body{% if activated %} onload="update({{ user.level }}, {{ progress }}, {{ need_exp }});"{% endif %}>
+{% if not activated %}
+    <div class="take-experience-mask">
+        <div class="take-experience">
+            <p class="experience"><i>{{ experience }}</i>元气值</p>
+            <p class="intro">由于你以前的<b style="color:#ff848b;">卓越贡献</b>，次元酱发放一大坨<i style="color:#acd373;">元气值</i><img src="{{ asset('bundles/lycheeapi/mission/image/sun.png') }}">给你！以后还要大家一起努力！</p>
+            <a href="javascript:activate();">获取</a>
+        </div>
+    </div>
+{% endif %}
+<div class="profile">
+    <div class="user">
+        <img class="avatar" width="110" src="{{ avatar(user.avatarUrl) | resizeImage(110, 110) }}" />
+        <span class="nickname">{{ user.nickname }}</span>
+        <span class="level">LV{{ user.level }}</span>
+    </div>
+    <div class="experience">
+        <div class="progress-bar"><div class="progress-bar-value"></div></div>
+        <span class="current-level">当前<i>LV1</i></span>
+        <span class="next-level"><i>LV2</i></span>
+        <span class="need">还需<i>0</i>元气值</span>
+    </div>
+</div>
+<div class="about">
+    <a name="about"></a>
+    <h2>次元养成计划</h2>
+    <ul>
+        <li>在次元里玩耍的每一天，都是次元众和次元一起成长的见证。</li>
+        <li>点赞、发帖、评论……每一个举动都将获得元气值，你的等级也会随之增长。在未来，元气值和等级将解锁更多玩法和福利！</li>
+        <li>开启新的征途吧！少年！</li>
+    </ul>
+</div>
+<div class="how-to">
+    <a name="how-to"></a>
+    <h2>如何获得元气值</h2>
+
+    <div>
+        <p>首次完成新手任务获得大量元气值，每天做任务升级更快喔(*≧ε≦*)ノ。</p>
+        <h3>新手任务</h3>
+        <ul>
+            <li class="mission{{ filled_profile ? ' finished' }}">
+                <h4>1. 丰富个人资料</h4>
+                <img src="{{ asset('bundles/lycheeapi/mission/image/task_cyq1_2.png') }}">
+                <span>添加个人头像、签名和年龄获得<i>30元气值</i></span>
+            </li>
+            <li class="mission{{ follow_topics ? ' finished' }}">
+                <h4>2. 入驻次元</h4>
+                <img src="{{ asset('bundles/lycheeapi/mission/image/task_cyq3_2.png') }}">
+                <span>入驻5个次元获得<i>50元气值</i></span>
+            </li>
+        </ul>
+        <h3>每日任务</h3>
+        <table class="daily-mission">
+            <thead>
+            <tr><th>奖励行为</th><th>经验值/次</th><th>次数上限</th></tr>
+            </thead>
+            <tbody>
+            <tr><th>点赞帖子</th><td>1</td><td>20</td></tr>
+            <tr><th>评论帖子</th><td>2</td><td>10</td></tr>
+            <tr><th>发布帖子</th><td>10</td><td>5</td></tr>
+            <tr><th>每日登录</th><td>10</td><td>1</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="privilege">
+    <a name="privilege"></a>
+    <h2>用户等级特权</h2>
+    <div>
+        <p>等级代表你在次元的地位和成长，未来将解锁更多等级特权。满足等级条件将获得增加创建次元的次数，民那赶快升级吧！！</p>
+        <table class="privilege-table">
+            <thead>
+            <tr><th>行为</th><th>等级</th><th>特权(次)</th></tr>
+            </thead>
+            <tbody>
+            <tr><th rowspan="6">创建新次元</th></tr>
+            <tr><td>10</td><td>2</td></tr>
+            <tr><td>20</td><td>2</td></tr>
+            <tr><td>30</td><td>2</td></tr>
+            <tr><td>40</td><td>2</td></tr>
+            <tr><td>50</td><td>2</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="level-icons">
+    <a name="level-icons"></a>
+    <h2>等级图标说明</h2>
+    <div>
+        <p>不同等级范围有不同的小图标哦~快快升级获得我们最尊贵又神秘的紫太阳图标吧！！</p>
+        <table class="icons-table">
+            <thead><tr><th>图标</th><th>等级</th></tr></thead>
+            <tbody>
+                <tr><td class="icon level-cloud-gray"></td><td>1~2级</td></tr>
+                <tr><td class="icon level-star-gray"></td><td>3~5级</td></tr>
+                <tr><td class="icon level-star-silver"></td><td>6~8级</td></tr>
+                <tr><td class="icon level-moon-gray"></td><td>9~12级</td></tr>
+                <tr><td class="icon level-moon-silver"></td><td>13~16级</td></tr>
+                <tr><td class="icon level-moon-golden"></td><td>17~20级</td></tr>
+                <tr><td class="icon level-sun-gray"></td><td>21~25级</td></tr>
+                <tr><td class="icon level-sun-silver"></td><td>26~30级</td></tr>
+                <tr><td class="icon level-sun-golden"></td><td>31~35级</td></tr>
+                <tr><td class="icon level-sun-purple"></td><td>36级及以上</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+{% endspaceless %}
+<script>
+    function getByClass(c){
+        return document.getElementsByClassName(c)[0];
+    }
+
+    function update(level, progress, need) {
+        level = parseInt(level);
+        progress = parseInt(progress);
+        if (level < 1 || level > 99 || progress < 0 || progress > 100) {
+            return;
+        }
+
+        if (level == 99) {
+            getByClass('next-level').style.display = 'none';
+            getByClass('need').style.display = 'none';
+            getByClass('progress-bar-value').style.width = '100%';
+        } else {
+            getByClass('next-level').style.display = 'inline-block';
+
+            var needElem = getByClass('need');
+            needElem.getElementsByTagName('i')[0].innerHTML = parseInt(need);
+            needElem.style.left = progress + '%';
+            needElem.style.webkitTransform = 'translateX(-' + progress + '%)';
+            needElem.style.MozTransform = 'translateX(-' + progress + '%)';
+            needElem.style.opacity = 0;
+            needElem.style.display = 'inline-block';
+
+            setTimeout(function(){
+                getByClass('need').style.opacity = 1;
+            }, 1000);
+
+            getByClass('progress-bar-value').style.width = progress + '%';
+        }
+
+        var myLevel = getByClass('level');
+        var currentLevel = getByClass('current-level').getElementsByTagName('i')[0];
+        var nextLevel = getByClass('next-level').getElementsByTagName('i')[0];
+
+        myLevel.innerHTML = 'LV' + level;
+        currentLevel.innerHTML = 'LV' + level;
+        nextLevel.innerHTML = 'LV' + (level + 1);
+    }
+
+
+    function requestActivate(callback) {
+        if (typeof callback != 'function') {
+            return;
+        }
+        var accessToken = '{{ access_token }}';
+        var http = new XMLHttpRequest();
+        http.onreadystatechange = function(){
+            if (http.readyState == 4) {
+                if (http.status == 200) {
+                    var res = JSON.parse(http.responseText);
+                    if (res['errors'] != undefined) {
+                        callback(false);
+                    } else {
+                        callback(res);
+                    }
+                } else {
+                    callback(false);
+                }
+            }
+        };
+        http.open('POST', '/mission/activate?access_token='+accessToken, true);
+        http.send(null);
+    }
+
+    function notifyLevelUp(level, experience) {
+        try {
+            var userAgent = navigator.userAgent;
+            var inApp = /ciyocon/i.test(userAgent) === true;
+            if (inApp) {
+                window.location = 'erciyuan://?action=levelup&level='+level+'&experience='+experience;
+            }
+        } catch (e) {
+            //do nothing
+        }
+    }
+
+    function activate() {
+        var mask = getByClass('take-experience-mask');
+        var a = mask.getElementsByTagName('a')[0];
+        var oldHref = a.href;
+        var oldHTML = a.innerHTML;
+        a.href = 'javascript:void(0);';
+        a.innerHTML = 'loading...';
+
+        requestActivate(function(res){
+            if (res !== false) {
+                mask.parentNode.removeChild(mask);
+                update(res['level'], res['progress'], res['need_exp']);
+                notifyLevelUp(res['level'], {{ experience ?: 0 }});
+            } else {
+                alert('网络错误，请重试');
+                a.href = oldHref;
+                a.innerHTML = oldHTML;
+            }
+        });
+    }
+</script>
+</html>

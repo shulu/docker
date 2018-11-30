@@ -1,0 +1,264 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <button type="button" id="create_item_btn" class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#create_item_form">
+        <span class="glyphicon glyphicon-plus"></span>
+        <span>栏目</span>
+    </button>
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="{{ app.request.get('type') is null? 'active' }}">
+            <a href="{{ path('lychee_admin_manualintervention_column') }}">已发布</a>
+        </li>
+        <li role="presentation" class="{{ 'unpublished' == app.request.get('type')? 'active' }}">
+            <a href="{{ path('lychee_admin_manualintervention_column', {type: 'unpublished'}) }}">未发布</a>
+        </li>
+        <li role="presentation" class="{{ 'deleted' == app.request.get('type')? 'active' }}">
+            <a href="{{ path('lychee_admin_manualintervention_column', {type: 'deleted'}) }}">已删除</a>
+        </li>
+    </ul>
+    {% if app.request.get('type') is null %}
+        {{ helper.recommendColumns('次元', constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_TOPIC'), topicColumns) }}
+        {{ helper.recommendColumns('帖子', constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_POST'), postColumns) }}
+        {{ helper.recommendColumns('用户', constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_USER'), userColumns) }}
+        {{ helper.recommendColumns('评论', constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_COMMENT'), commentColumns) }}
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>类型</th>
+                    <th>创建日期</th>
+                    <th width="1%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for column in columns %}
+                    <tr>
+                        <td>{{ column.id }}</td>
+                        <td>{{ column.name }}</td>
+                        <td>
+                            {% if column.type == constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_POST') %}帖子
+                            {% elseif column.type == constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_TOPIC') %}次元
+                            {% elseif column.type == constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_USER') %}用户
+                            {% elseif column.type == constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_COMMENT') %}评论
+                            {% endif %}
+                        </td>
+                        <td>{{ column.createTime|date('Y-m-d H:i') }}</td>
+                        <td style="white-space: nowrap;">
+                            {% if column.deleted == false %}
+                                <button class="btn btn-primary publish-column" data-column-id="{{ column.id }}">
+                                    <span class="glyphicon glyphicon-send"></span>
+                                    <span>发布</span>
+                                </button>
+                                <a href="{{ path('lychee_admin_manualintervention_editcolumn', {'columnId': column.id}) }}"
+                                   class="btn btn-default">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                    <span>编辑</span>
+                                </a>
+                            {% endif %}
+                            {% if column.deleted == false %}
+                                <button class="btn btn-danger delete-item" data-column-id="{{ column.id }}">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                    <span>删除</span>
+                                </button>
+                            {% else %}
+                                <button class="btn btn-danger recover-item" data-column-id="{{ column.id }}">
+                                    <span class="glyphicon glyphicon-repeat"></span>
+                                    <span>恢复</span>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <nav>
+            {% set urlType = app.request.get('type') %}
+            <ul class="pagination">
+                {% set startPage = (page - 1) // pageCount * pageCount + 1 %}
+                {% set lastPage = startPage + pageCount - 1 %}
+                {% if page > 1 %}
+                    <li>
+                        <a href="{{ path('lychee_admin_manualintervention_column', {
+                            type: urlType,
+                            page: 1
+                        }) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('lychee_admin_manualintervention_column', {
+                            type: urlType,
+                            page: page - 1
+                        }) }}" aria-label="Previous">
+                            <span aria-hidden="true">上一页</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% for i in startPage..(lastPage > endPage? endPage:lastPage) %}
+                    <li class="{{ i == page? 'active' }}"><a href="{{ path('lychee_admin_manualintervention_column', {
+                            type: urlType,
+                            page: i
+                        }) }}">{{ i }}</a></li>
+                {% endfor %}
+                {% if page != endPage %}
+                    <li>
+                        <a href="{{ path('lychee_admin_manualintervention_column', {
+                            type: urlType,
+                            page: page + 1
+                        }) }}" aria-label="Previous">
+                            <span aria-hidden="true">下一页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('lychee_admin_manualintervention_column', {
+                            type: urlType,
+                            page: endPage
+                        }) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+    <!-- Modal -->
+    <div class="modal fade" id="create_item_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加{{ subTitle }}</h4>
+                    <form role="form" method="post" action="{{ path('lychee_admin_manualintervention_createcolumn') }}">
+                        <div class="modal-body">
+                            <p class="text-danger">新增栏目默认添加到“未发布”栏。</p>
+                            <div class="form-group">
+                                <label for="app_id">栏目名称</label>
+                                <input type="text" name="column_name" id="column_name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="app_id">栏目类型</label>
+                                <select name="column_type" id="column_type" class="form-control">
+                                    <option value="{{ constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_POST') }}"
+                                            selected>
+                                        帖子
+                                    </option>
+                                    <option value="{{ constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_TOPIC') }}">
+                                        {{ topic_name }}
+                                    </option>
+                                    <option value="{{ constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_USER') }}">
+                                        用户
+                                    </option>
+                                    <option value="{{ constant('Lychee\\Module\\Recommendation\\Entity\\Column::TYPE_COMMENT') }}">
+                                        评论
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {%  javascripts '@LycheeAdminBundle/Resources/public/js/jquery.sortable.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            $('.delete-item, .recover-item').click(function() {
+                if ($(this).hasClass('delete-item')) {
+                    var confirmStr = '确定删除？';
+                    var url = '{{ path("lychee_admin_manualintervention_removecolumn") }}';
+                } else {
+                    var confirmStr = '确定恢复？';
+                    var url = '{{ path("lychee_admin_manualintervention_recovercolumn") }}';
+                }
+                if (confirm(confirmStr)) {
+                    var $form = $('<form method="post"></form>');
+                    $form.attr('action', url);
+                    $form.append('<input type="hidden" name="column_id" value="' + $(this).data('column-id') + '">');
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+            $('.publish-column').click(function() {
+                if (confirm('确定发布？')) {
+                    var $form = $('<form method="post"></form>');
+                    $form.attr('action', '{{ path('lychee_admin_manualintervention_publishcolumn') }}');
+                    $form.append('<input type="hidden" name="column_id" value="' + $(this).data('column-id') + '">');
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+            $('.unpublish-item').click(function() {
+                if (confirm('确定下架？')) {
+                    var $form = $('<form method="post"></form>');
+                    $form.attr('action', '{{ path('lychee_admin_manualintervention_unpublishcolumn') }}');
+                    $form.append('<input type="hidden" name="column_id" value="' + $(this).data('column-id') + '">');
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+            $(".sortable").sortable({
+                handle: '.sortable-move'
+            }).bind('sortupdate', function() {
+                var $list = $(this).find('li');
+                var orderList = [];
+                $list.each(function(index, elem) {
+                    orderList.push($(elem).data('id'));
+                });
+                $.ajax('{{ path("lychee_admin_manualintervention_ordercolumn") }}', {
+                    data: {
+                        type: $(this).data('type'),
+                        columns: orderList
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function() {}
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        td {
+            vertical-align: middle !important;
+        }
+        .sortable {
+            padding: 0;
+            margin: 0;
+        }
+        .sortable li {
+            list-style: none;
+            display: block;
+            border: 1px solid;
+            width: 250px;
+            margin: 5px 0;
+            padding: 10px 5px;
+        }
+    </style>
+{% endblock %}

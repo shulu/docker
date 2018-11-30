@@ -1,0 +1,368 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>次元社</title>
+		<link rel="stylesheet" type="text/css" href="{{ asset('bundles/lycheewebsite/home/styles/style.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="http://qn.ciyocon.com/web/common/swiper_3.3.1/swiper.min.css">
+		<style>
+			.swiper-pagination-bullet {
+				background-color: #fff;
+				opacity: unset;
+			}
+			.swiper-pagination-bullet-active {
+				background-color: #24c7fc;
+			}
+			.swiper-container-horizontal > .swiper-pagination-bullets {
+				width: unset;
+				left: unset;
+				right: 20px;
+			}
+		</style>
+</head>
+<body>
+{% include 'LycheeWebsiteBundle:Home:navigation.html.twig' with {'active': 'home'} %}
+<div class="banner">
+    <div class="logo">
+        <img src="http://qn.ciyocon.com/app/icons/v2/logo.png?v2" alt="">
+    </div>
+</div>
+<div class="container">
+    <div class="content clearfix">
+        <div class="main">
+            <div class="slider swiper-container">
+                <ul class="swiper-wrapper">
+	                {% for banner in banners %}
+                    <li class="swiper-slide">
+	                    <a href="{{ banner.url }}">
+		                    <img src="{{ banner.image }}"/><div class="title">{{ banner.title }}</div>
+	                    </a>
+                    </li>
+	                {% endfor %}
+                </ul>
+	            <div class="swiper-pagination"></div>
+            </div>
+            <div class="post-categories">
+                <ul class="tab">
+	                  {% for group in groups %}
+		                  <li data-next-url="/home_posts?group={{ group.name()|e('url') }}" onclick="onGroupClick(this)"{{ loop.first ? ' class="active"' }}>{{ group.name() }}</li>
+	                  {% endfor %}
+                </ul>
+                <ul class="pannel">
+                    {% include 'LycheeWebsiteBundle:Home:posts.html.twig' with {'posts': posts} %}
+                </ul>
+                <a class="next" onclick="onNextClick()">下一页</a>
+                <a class="prev disabled-btn" onclick="onPrevClick()">上一页</a>
+            </div>
+        </div>
+        <div class="subordination">
+            <div class="scan clearfix">
+                <div class="qrcode" data-qrcode-url="{{ url('download_app') }}"></div>
+            </div>
+
+            <ul class="topic">
+                <li>推荐次元</li>
+                {% if topics is defined %}
+                {% for topic in topics %}
+                <li>
+                    <a href="{{ path('topic_invite', {topicId: topic.id}) }}">
+                        <div class="avatar">
+                            <img src="{{ topic.indexImageUrl }}" alt="">
+                        </div>
+                        <div class="name">{{ topic.title }}</div>
+                    </a>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+            <a class="return-back" onclick="scrollToTop(0)">
+                <div class="qrcode" data-qrcode-url="{{ url('download_app') }}">
+                </div>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ4AAAASCAMAAACdKZfqAAAAM1BMVEUAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIBprCkqAAAAEHRSTlMAQH+/IGAwEJ9Q74/PcK/fIGHrDAAAAl9JREFUSMfNlglu4zAMRbloX3n/044W23IS2wGmM0Af0sJQKPOL/FQL/wgLvxQVFYAJ+C0O7Q9yoLpY9fQ1Z/sIgk1CCp5pYX+DyS6JCMMn1cEZkp0jVXvs8kqIQdg/JEGUjFcFRBkkOKM94hZdAhfy5qp4Qq/+wp2VRxkUzNKU6VDhluNUixiJMs6XZnrNFGRAm9gIrxThVjiWRhdvHlyRUTDFUr0R/WgDwa0BzCMwMzcV70VuqP1Zyta18GG6Jk9JVugpJrnvmpOqBYfKxM/uFpxJM91HxlUzjTAMh4hOzBitTJTtig3zmeTe9aR3z8fwMBuRmSUxx7lpk8f08Tqeq1mB0JQnGy2NLnyyR40tvv3wladO/R4zq6q+mCDhvRvkxFE7jFEWHc86JkYF2L6jMpQveULjE/eaKjR9AcxJXjdBYLBblIrcecl7Pt2BGl6fLDtu1uRjc5iNrNLLWmakDkTVgZkp9tGYzQ00DPw+u3a70SwzO+r0qTdnVxlF8BURce23Oxk3ffSEG7GpGMfLqqelfo5qgBORWz5bup8gpYsQC2l8CmVqwnqE0PkefZryia3imoqmVBdmLrtX9GyAU/CIoK8p1sCc5D7Kiod5naREtK1hFNKj+E3PnTzw9vNiocBx9DaJOLvWi37vv2TMGiihwocB18cezcy7J9qZdP/OwttenH7Ua54vcWIVsT1Z0U95+njbvKc8s2/r9/L6ABS6/K+gpF7dbM7FHqN1yDM3967Xbw6q42iO6qFkXdn46FOF5Nr2C1KeLoIfo01PRA21/jou4BdicaLgf/AHlowZPv2faGMAAAAASUVORK5CYII=" alt="">
+            </a>
+        </div>
+    </div>
+</div>
+{% include 'LycheeWebsiteBundle:Home:footer.html.twig' %}
+<script src="http://qn.ciyocon.com/web/common/swiper_3.3.1/swiper.min.js"></script>
+<script>
+	new Swiper('.slider', {
+		speed: 300,
+		spaceBetween: 0,
+		loop: true,
+		pagination: '.swiper-pagination',
+		autoplay: 3000,
+		autoplayDisableOnInteraction: true
+	});
+</script>
+<script type="text/javascript">
+	(function(o){
+		var historyPostsHtml = [];
+		var nextPageUrl = '{{ nextUrl|e('js') }}';
+		var currentPage = 1;
+		var maxPage = 1;
+		var loading = false;
+
+
+		function addActiveForGroup(group) {
+			var tabs = document.querySelectorAll('.tab li');
+			for (var i = 0; i < tabs.length; i++) {
+				if (tabs[i] === group) {
+					tabs[i].className = 'active';
+				}
+				else {
+					tabs[i].className = '';
+				}
+			}
+		}
+		function toggleNextBtn(state) {
+			if (state) {
+				document.querySelector('.post-categories .next').className = 'next';
+			}
+			else {
+				document.querySelector('.post-categories .next').className = 'next disabled-btn';
+			}
+		}
+		function togglePrevBtn(state) {
+			if (state) {
+				document.querySelector('.post-categories .prev').className = 'prev';
+			}
+			else {
+				document.querySelector('.post-categories .prev').className = 'prev disabled-btn';
+			}
+		}
+
+		function getPannel() {
+			return document.querySelector('.post-categories .pannel');
+		}
+
+		function getPageHtmlXHR(url, cb) {
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', url, true);
+			xhr.send();
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						var nextUrl = xhr.getResponseHeader('CY-NextUrl');
+						if (nextUrl == null) {
+							nextUrl = '';
+						}
+						cb(xhr.responseText, nextUrl);
+					}
+				}
+			};
+		}
+		var getPageHtml = getPageHtmlXHR;
+
+		o.onGroupClick = function(groupE) {
+			if (groupE.className !== 'active' && !loading) {
+				loading = true;
+				addActiveForGroup(groupE);
+				scrollToTop(200);
+				getPannel().innerHTML = '';
+				getPannel().classList.add('loading');
+				var groupUrl = getUrlByGroup(groupE);
+				historyPostsHtml = [];
+				currentPage = 1;
+				maxPage = 1;
+				getPageHtml(groupUrl, function(html, nextUrl){
+					//处理html和nextUrl
+					historyPostsHtml.push(html);
+					nextPageUrl = nextUrl;
+					getPannel().classList.remove('loading');
+					getPannel().innerHTML = html;
+					addPostDescOverflowClass();
+					adjustSingleImageSize();
+					adjustMutipleImageSize();
+					togglePrevBtn(false);
+					if (nextUrl == '' || nextUrl == undefined || nextUrl == null) {
+						toggleNextBtn(false);
+					}
+					loading = false;
+				});
+			}
+		};
+
+		o.onNextClick = function() {
+			currentPage += 1;
+			if (currentPage <= maxPage && !loading) {
+				loading = true;
+				scrollToTop(200);
+				getPannel().innerHTML = '';
+				var html = historyPostsHtml[currentPage - 1];
+				getPannel().innerHTML = html;
+				addPostDescOverflowClass();
+				adjustSingleImageSize();
+				adjustMutipleImageSize();
+				togglePrevBtn(true);
+				if (currentPage === maxPage) {
+					if (nextPageUrl === '') {
+						toggleNextBtn(false);
+					}
+				}
+				loading = false;
+			} else {
+				if (nextPageUrl !== '' && !loading) {
+					loading = true;
+					scrollToTop(200);
+					getPannel().innerHTML = '';
+					getPannel().classList.add('loading');
+					togglePrevBtn(true);
+					getPageHtml(nextPageUrl, function(html, nextUrl) {
+						//处理html和nextUrl
+						historyPostsHtml.push(html);
+						nextPageUrl = nextUrl;
+						maxPage += 1;
+						if (nextUrl === '') {
+							toggleNextBtn(false);
+						}
+						getPannel().classList.remove('loading');
+						getPannel().innerHTML = html;
+						addPostDescOverflowClass();
+						adjustSingleImageSize();
+						adjustMutipleImageSize();
+						loading = false;
+					});
+				} else {
+					currentPage -= 1;
+				}
+			}
+		};
+		o.onPrevClick = function() {
+			if((currentPage - 1) >= 1 && (currentPage - 1) < maxPage && !loading) {
+				currentPage -= 1;
+				scrollToTop(200);
+				getPannel().innerHTML = '';
+				var html = historyPostsHtml[currentPage - 1];
+				getPannel().innerHTML = html;
+				toggleNextBtn(true);
+				addPostDescOverflowClass();
+				adjustSingleImageSize();
+				adjustMutipleImageSize();
+				if (currentPage === 1) {
+					togglePrevBtn(false);
+				}
+				loading = false;
+			}
+		};
+		//return url
+		function getUrlByGroup(group) {
+			return group.getAttribute('data-next-url');
+		}
+
+		function addPostDescOverflowClass() {
+			var pList = document.querySelectorAll('.desc p');
+			var bodyWidth = document.body.clientWidth;
+			var pMaxHeight = 63, minHeight = 98;
+			if (bodyWidth > 1600) {
+				pMaxHeight = 84;
+				minHeight = 124;
+			}
+			for (var i = 0; i < pList.length; i++) {
+				if (pList[i].offsetHeight > pMaxHeight) {
+					pList[i].className = "desc-overflow";
+					pList[i].parentNode.style.minHeight = minHeight + 'px';
+					pList[i].parentNode.className = pList[i].parentNode.className + ' full-text';
+				}
+			}
+		}
+
+		function adjustImageToFitSingle(img) {
+			if (img.naturalWidth <= 0) {
+				img.onload = function(){adjustImageToFitSingle(img);};
+				return;
+			}
+
+			var parent = img.parentElement;
+			if (img.naturalWidth > parent.clientWidth &&
+					img.clientHeight < parent.clientHeight) {
+				parent.style.paddingTop = img.clientHeight + 'px';
+			} else if (img.naturalWidth < parent.clientWidth) {
+				parent.style.width = img.naturalWidth + 'px';
+				if (img.clientHeight < parent.clientHeight) {
+					parent.style.paddingTop = img.clientHeight + 'px';
+				}
+			} else {
+				// 按照css的默认样式显示图片
+			}
+		}
+
+		function adjustImageToFitSquare(img) {
+			if (img.naturalWidth <= 0) {
+				img.onload = function(){adjustImageToFitSquare(img);};
+				return;
+			}
+			var parent = img.parentElement;
+
+			if (img.naturalWidth > img.naturalHeight) {
+				img.style.width = "auto";
+				img.style.height = "100%";
+			}
+			else if(img.naturalWidth < img.naturalHeight) {
+				img.style.width = "100%";
+				img.style.height = "auto";
+			}
+			else {
+				//按默认宽高100%
+			}
+		}
+
+		function adjustSingleImageSize() {
+			var images = document.querySelectorAll('.images li:only-child img');
+			for (var i = 0; i < images.length; i++) {
+				adjustImageToFitSingle(images[i]);
+			}
+		}
+
+		function adjustMutipleImageSize() {
+			var images = document.querySelectorAll('.images li:not(:only-child) img');
+			for (var i = 0; i < images.length; i++) {
+				adjustImageToFitSquare(images[i]);
+			}
+		}
+
+		function adjustTopicsImageSize() {
+			var images = document.querySelectorAll('.topic .avatar img');
+			for (var i = 0; i < images.length; i++) {
+				adjustImageToFitSquare(images[i]);
+			}
+		}
+
+		function scrollToTop(offset) {
+			document.body.scrollTop = offset;
+			window.pageYOffset = offset;
+			document.documentElement.scrollTop = offset;
+		};
+		o.scrollToTop = scrollToTop;
+
+		var offsetTop = document.querySelector('.container .return-back').offsetTop + 202;
+		o.onscroll = function() {
+			if (document.body.scrollTop > offsetTop) {
+				document.querySelector('.container .return-back').style.position = 'fixed';
+				document.querySelector('.container .return-back').style.right = '50px';
+				document.querySelector('.container .return-back').style.top = '0';
+			}
+			else {
+				document.querySelector('.container .return-back').style.position = '';
+				document.querySelector('.container .return-back').style.right = '';
+				document.querySelector('.container .return-back').style.top = '';
+			}
+		};
+
+		adjustTopicsImageSize();
+		addPostDescOverflowClass();
+		adjustSingleImageSize();
+		adjustMutipleImageSize();
+		if (nextPageUrl == '' || nextPageUrl == undefined || nextPageUrl == null) {
+			toggleNextBtn(false);
+		}
+		historyPostsHtml.push(getPannel().innerHTML);
+
+	}(window));
+</script>
+</body>
+</html>
+{% endspaceless %}
+<span style="display:none"><script src="https://s22.cnzz.com/z_stat.php?id=1273871546&web_id=1273871546" language="JavaScript"></script></span>

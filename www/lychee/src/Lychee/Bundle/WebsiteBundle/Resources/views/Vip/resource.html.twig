@@ -1,0 +1,34 @@
+{{ include('LycheeWebsiteBundle:Vip:fileTemplate.html.twig') }}
+<form id="form" action="{{ path('lychee_website_vip_sendpost') }}" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="post_type" value="{{ constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_RESOURCE') }}">
+  <div class="row clearfix">
+    <div class="col1">正文</div>
+    <div class="col2">
+      <textarea id="content" name="content" placeholder="2000字以内"></textarea>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col1">资源链接</div>
+    <div class="col2">
+      <input type="text" name="resource_url" id="resource_url" placeholder="资源链接">
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col1"><label>图片</label></div>
+    <div class="col2">
+      <div class="file-upload">
+        <img id="preview_image" src="">
+        <span id="filename"></span><span id="upload">本地上传<input type="file" name="pictures[]" id="Uploadfile" onchange="localLoadImage(event)"></span>
+      </div>
+      <a class="add-file" onclick="addFile()">+</a>
+      <a class="delete-file" onclick="deleteFile()">-</a>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col1">次元</div>
+    <div class="col2">
+      {{ include('LycheeWebsiteBundle:Vip:topicSelector.html.twig', {'topics': topics}) }}
+    </div>
+  </div>
+  <button class="form-submit">提交</button>
+</form>

@@ -1,0 +1,69 @@
+{% extends 'LycheeAdminBundle:Retrieval:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        select.filter { display: inline-block; width: 100px; }
+        #search_during_time { width: 200px; }
+        table { margin-top: 20px; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="clearfix">
+        <div class="col-md-4">
+            <label for="">检索条件：</label>
+            <select name="" id="" class="form-control filter">
+                <option value="">按点赞数</option>
+            </select>
+        </div>
+        <div class="pull-right" id="search_during_time">
+            <label for="">时间窗口：</label>
+            <select name="" id="" class="form-control filter">
+                <option value="">1小时内</option>
+            </select>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>作者</th>
+                <th>图片</th>
+                <th>正文</th>
+                <th>{{ topic_name }}</th>
+                <th>帖子链接</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for recommendedId in recommendedIds %}
+                <tr>
+                    <td>
+                        <a href="{{ path('lychee_admin_contentaudit_postdetail', {id: recommendedId}) }}" target="_blank">{{ recommendedId }}</a>
+                    </td>
+                    <td>
+                        <span class="label label-info">{{ recommendedData[recommendedId].authorId }}</span>
+                        {{ authors[recommendedData[recommendedId].authorId].nickname }}
+                    </td>
+                    <td>
+                        <img src="{{ recommendedData[recommendedId].imageUrl }}" class="post-pic" alt=""/>
+                    </td>
+                    <td>{{ recommendedData[recommendedId].content }}</td>
+                    <td>
+                        <span class="label label-success">{{ recommendedData[recommendedId].topicId }}</span>
+                        {{ topics[recommendedData[recommendedId].topicId].title }}
+                    </td>
+                    <td>
+                        <a href="http://www.ciyocon.com/web/{{ recommendedId }}" target="_blank">
+                            <span class="glyphicon glyphicon-share-alt"></span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+    {{ helper.pagination(paginator, 'lychee_admin_retrieval_posts') }}
+{% endblock %}

@@ -1,0 +1,118 @@
+fos_elastica:
+    clients:
+        default:
+            host: %core_elasticsearch_host%
+            port: %core_elasticsearch_port%
+    indexes:
+        ciyo:
+            index_name: %core_elasticsearch_index%
+            settings:
+                "index":
+                    "analysis":
+                        "tokenizer":
+                            "ik_max_word":
+                                "type": "ik"
+                                "use_smart": false
+                            "ik_smart":
+                                "type": "ik"
+                                "use_smart": true
+                        "char_filter":
+                            "cy_word_delimiter":
+                                "pattern": "([a-z])([A-Z])"
+                                "type": "pattern_replace"
+                                "replacement": "$1 $2"
+                        "filter":
+                            "cy_chinese_letter":
+                                "type": "pattern_capture"
+                                "preserve_original": "1"
+                                "patterns": ["([\\u3400-\\u4DB5\\u4E00-\\u9FA5\\u9FA6-\\u9FBB\\uF900-\\uFA2D\\uFA30-\\uFA6A\\uFA70-\\uFAD9\\uFF00-\\uFFEF\\u2E80-\\u2EFF\\u3000-\\u303F\\u31C0-\\u31EF])"]
+                        "analyzer":
+                            "cy_chinese":
+                                "type": "custom"
+                                "tokenizer": "ik_max_word"
+                                "char_filter": ["cy_word_delimiter"]
+                                "filter": ["t2s_convert"]
+                            "cy_nickname":
+                                "type": "custom"
+                                "tokenizer": "ik_smart"
+                                "char_filter": ["cy_word_delimiter"]
+                                "filter": ["t2s_convert", "word_delimiter", "cy_chinese_letter", "unique"]
+            types:
+                user:
+                    index_analyzer: cy_chinese
+                    search_analyzer: cy_chinese
+                    properties:
+                        nickname: {type: string, index_analyzer: cy_chinese, search_analyzer: cy_chinese}
+                    persistence:
+                        driver: orm
+                        model: LycheeCoreBundle:User
+                        provider:
+                            batch_size: 400
+                            service: lychee.module.search.accountProvider
+                topic:
+                    index_analyzer: cy_chinese
+                    search_analyzer: cy_chinese
+                    properties:
+                        title: {type: string, index_analyzer: cy_chinese, search_analyzer: cy_chinese}
+                        certified: {type: boolean}
+                    persistence:
+                        driver: orm
+                        model: LycheeCoreBundle:Topic
+                        provider:
+                            batch_size: 400
+                            service: lychee.module.search.accountProvider
+                post:
+                    index_analyzer: cy_chinese
+                    search_analyzer: cy_chinese
+                    properties:
+                        topic_id: {type: long}
+                        topic_private: {type: boolean}
+                        author_id: {type: long}
+                        create_time: {type: date}
+                        content: {type: string, index_analyzer: cy_chinese, search_analyzer: cy_chinese}
+                        resource: {type: string, index_analyzer: cy_chinese, search_analyzer: cy_chinese}
+                    persistence:
+                        driver: orm
+                        model: LycheeCoreBundle:Post
+                        provider:
+                            batch_size: 400
+                            service: lychee.module.search.postProvider
+                topic_follower:
+                    index_analyzer: cy_nickname
+                    search_analyzer: cy_nickname
+                    properties:
+                        topic_id: {type: long}
+                        user_id: {type: long, store: true}
+                        nickname: {type: string, index_analyzer: cy_nickname, search_analyzer: cy_nickname}
+                    persistence:
+                        driver: orm
+                        model: Lychee\Module\Topic\Entity\TopicUserFollowing
+                        provider:
+                            batch_size: 400
+                            service: lychee.module.search.topicFollowerProvider
+                superior_topic:
+                    index_analyzer: cy_chinese
+                    search_analyzer: cy_chinese
+                    properties:
+                        title: {type: string, index_analyzer: cy_chinese, search_analyzer: cy_chinese}
+                        certified: {type: boolean}
+                    persistence:
+                        driver: orm
+                        model: LycheeCoreBundle:Topic
+                        provider:
+                            batch_size: 400
+                superior_post:
+                    index_analyzer: cy_chinese
+                    search_analyzer: cy_chinese
+                    properties:
+                        topic_id: {type: long}
+                        topic_private: {type: boolean}
+                        author_id: {type: long}
+                        create_time: {type: date}
+                        content: {type: string, index_analyzer: cy_chinese, search_analyzer: cy_chinese}
+                        resource: {type: string, index_analyzer: cy_chinese, search_analyzer: cy_chinese}
+                    persistence:
+                        driver: orm
+                        model: LycheeCoreBundle:Post
+                        provider:
+                            batch_size: 400

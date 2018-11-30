@@ -1,0 +1,190 @@
+@charset "UTF-8"
+
+@import "compass/reset"
+@import "compass/css3"
+@import "compass/utilities"
+
+$u: px
+
+html, body
+  margin: 0 auto
+
+html
+  background-color: #626262
+
+body
+  background-color: #22292c
+  width: 320#{$u}
+  font-family: 'Helvetica Neue', STXihei, "华文细黑", Heiti, "黑体", "Microsoft YaHei", "微软雅黑", Tahoma, Arial, SimSun, "宋体", sans-serif
+
+.banner
+  width: 100%
+  height: 545.5#{$u}
+  background: url('image/banner.png') no-repeat
+  background-size: 100%
+
+.rule
+  width: 100%
+  height: 388#{$u}
+  background: url('image/rule.png') no-repeat
+  background-size: 100%
+
+.award
+  width: 100%
+  height: 443.5#{$u}
+  background: url('image/award.png') no-repeat
+  background-size: 100%
+
+.schedule
+  width: 100%
+  height: 130#{$u}
+  text-align: center
+  span
+    display: inline-block
+    margin: 30#{$u} 0 15#{$u} 0
+    font-size: 15#{$u}
+    line-height: 16#{$u}
+    vertical-align: middle
+    color: #fff
+    &:before
+      content: ''
+      display: inline-block
+      width: 15#{$u}
+      height: 16#{$u}
+      margin-right: 6#{$u}
+      line-height: 16#{$u}
+      vertical-align: middle
+      background: url('image/calendar_icon.png') no-repeat
+      background-size: 100%
+  a
+    display: inline-block
+    width: 222#{$u}
+    height: 40#{$u}
+    line-height: 40#{$u}
+    font-size: 16#{$u}
+    color: #fff
+    text-decoration: none
+    vertical-align: middle
+    text-align: center
+    text-shadow: rgba(0, 0, 0, 0.4) 0 1#{$u} 2#{$u}
+    background: url('image/join_btn.png') no-repeat
+    background-size: 100%
+
+.photos
+  position: relative
+  background-color: #fff
+  border-style: solid
+  border-color: transparent
+  border-width: 9#{$u} 0 9#{$u} 0
+  border-image-source: url('image/border.png')
+  border-image-slice: 18 0 18 0
+  background-clip: padding-box
+  padding-top: 42#{$u}
+  &:before
+    content: ''
+    display: block
+    width: 102#{$u}
+    height: 26#{$u}
+    position: absolute
+    top: 14#{$u}
+    left: 11#{$u}
+    background: url('image/title_3.png') no-repeat
+    background-size: 100%
+  &>a:first-of-type
+    position: absolute
+    top: 20#{$u}
+    right: 11#{$u}
+    font-size: 15#{$u}
+    color: #737373
+    text-decoration: none
+  &>a:last-of-type
+    display: block
+    width: 220#{$u}
+    height: 37#{$u}
+    margin: 5#{$u} auto 22#{$u} auto
+    border-radius: 4#{$u}
+    font-size: 15#{$u}
+    line-height: 37#{$u}
+    text-align: center
+    vertical-align: middle
+    color: #737373
+    text-decoration: none
+    background-color: #e1e1e1
+  ul
+    margin: 11#{$u} 0 0 0
+    padding-left: 11#{$u}
+    overflow-x: hidden
+  li
+    list-style: none
+    display: block
+    width: 92#{$u}
+    height: 92#{$u}
+    margin-bottom: 11#{$u}
+    float: left
+    margin-right: 11#{$u}
+    a
+      display: block
+      width: 100%
+      height: 100%
+      overflow: hidden
+      border-radius: 2#{$u}
+    img
+      width: 100%
+
+.statement
+  padding: 8#{$u}
+  font-size: 12#{$u}
+  line-height: 31#{$u}
+  vertical-align: middle
+  text-align: center
+  color: #cecece
+  .tips
+    font-size: 13#{$u}
+    color: #e66
+
+.closed
+  .banner
+    height: 673#{$u}
+    background-image: url('image/banner2.jpg')
+
+  .rule
+    display: none
+
+  .award
+    height: 424#{$u}
+    background-image: url('image/award2.jpg')
+
+  .schedule
+    display: none
+
+  .photos
+    counter-reset: photos
+    &:before
+      background: url('image/title_3_close.png') no-repeat
+      background-size: 100%
+    li
+      position: relative
+      &:before
+        counter-increment: photos
+        content: counter(photos,decimal-leading-zero)
+        display: block
+        width: 14.5#{$u}
+        height: 12#{$u}
+        position: absolute
+        bottom: 3#{$u}
+        right: -1#{$u}
+        z-index: 2
+        background-size: 100%
+        background-repeat: no-repeat
+        font-size: 9#{$u}
+        line-height: 12#{$u}
+        vertical-align: middle
+        text-align: center
+        font-weight: bold
+        padding-left: 4#{$u}
+        color: #fff
+        background-image: url('image/ranking_tab2.png')
+    @for $i from 1 through 5
+      li:nth-child(#{$i})
+        &:before
+          background-image: url('image/ranking_tab.png')
