@@ -1,0 +1,258 @@
+{% extends 'LycheeAdminBundle:Inquiry:layout.html.twig' %}
+
+{% block body %}
+    <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+        <li role="presentation" class="active"><a href="#">帖子详情</a></li>
+        <li role="presentation"><a href="{{ path('lychee_admin_inquiry_postcomments', {postId: post.id}) }}">帖子评论</a></li>
+    </ul>
+    <div class="col-md-7 col-lg-6">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="post_id" class="col-sm-2 control-label">帖子ID</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="post_id" value="{{ post.id }}" disabled>
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="type" class="col-sm-2 control-label">帖子类型</label>
+                <div class="col-sm-10" style="padding-top: 7px">
+                    <span class="label label-primary">
+                        {% if post.type == constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_RESOURCE') %}
+                            资源
+                        {% elseif post.type == constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_GROUP_CHAT') %}
+                            群聊
+                        {% elseif post.type == constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_VOTING') %}
+                            投票
+                        {% elseif post.type == constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_SCHEDULE') %}
+                            活动
+                        {% elseif post.type == constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_VIDEO') %}
+                            视频
+                        {% else %}
+                            普通
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="topic" class="col-sm-2 control-label">{{ topic_name }}</label>
+                <div class="col-sm-10">
+                    <a href="{{ path('lychee_admin_inquiry_topicdetail', {topicId: topic.id}) }}" target="_blank">
+                        {{ topic.title|default('') }}
+                    </a>
+                    {% if writable %}
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#topic_selector">修改</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="author" class="col-sm-2 control-label">用户</label>
+                <div class="col-sm-10" style="padding-top: 7px">
+                    <a href="{{ path('lychee_admin_inquiry_userdetail', {userId: author.id}) }}" target="_blank">
+                        {{ author.id }}
+                    </a>
+                    <span>{{ author.nickname }}</span>
+                    {#<input type="text" class="form-control" id="author" name="author" value="{{ author.nickname }}" disabled>#}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="create_time" class="col-sm-2 control-label">创建时间</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="create_time" name="create_time" value="{{ post.createTime|date('Y-m-d H:i') }}" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="folded" class="col-sm-2 control-label">折叠</label>
+                <div class="col-sm-10" style="padding-top: 7px">
+                    {% if post.folded %}
+                        <p><span class="label label-danger">已折叠</span></p>
+                    {% else %}
+                        <p><span class="label label-info">否</span></p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="status" class="col-sm-2 control-label">状态</label>
+                <div class="col-sm-10" style="padding-top: 7px">
+                    {% if post.deleted %}
+                        <p style="color: red;"><span class="glyphicon glyphicon-trash"></span> 已删除</p>
+                    {% else %}
+                        <p><span class="glyphicon glyphicon-ok"></span> 正常</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="content" class="col-sm-2 control-label">正文</label>
+                <div class="col-sm-10">
+                    <textarea name="content" id="content" class="form-control" rows="6">{{ post.content }}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="picture" class="col-sm-2 control-label">图片</label>
+                <div class="col-sm-10">
+                    {% for key, image in images %}
+                        <div>
+                            <img src="{{ thumbnailImages[key] }}">
+                            <input type="hidden" name="images[]" value="{{ image }}"/>
+                            {% if writable %}
+                                <button type="button" class="btn btn-danger remove-image">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            {% endif %}
+                            <br/><br/>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="video" class="col-sm-2 control-label">视频</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="video" name="video" value="{{ post.videoUrl }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="audio" class="col-sm-2 control-label">音频</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="audio" name="audio" value="{{ post.audioUrl }}">
+                </div>
+            </div>
+            <div class="form-group">
+                {% if post.type == constant('Lychee\\Bundle\\CoreBundle\\Entity\\Post::TYPE_RESOURCE') %}
+                    {% set resourceUrl = annotation.resource_link %}
+                {% else %}
+                    {% set resourceUrl = '' %}
+                {% endif %}
+                <label for="site" class="col-sm-2 control-label">网页</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="site" name="site" value="{{ resourceUrl }}">
+                </div>
+            </div>
+            {% if writable %}
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary" id="post_save_btn">
+                            <span class="glyphicon glyphicon-saved"></span>&nbsp;保&nbsp;存
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+    <div class="modal fade" id="topic_selector" tabindex="-1" role="dialog"  aria-labelledby="topic_selector_title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="topic_selector_title">修改{{ topic_name }}</h4>
+                </div>
+                <form role="form" action="{{ path('lychee_admin_contentaudit_postchangetopic') }}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="topic_search">搜索</label>
+                            <input type="text" class="form-control" id="topic_search" placeholder="输入{{ topic_name }}关键字">
+                        </div>
+                        <div class="form-group">
+                            <label for="topic_search_result" id="searching_text">结果</label>
+                            <select class="form-control" name="topic_id" id="topic_search_result" multiple>
+                                {% if topic is not null %}
+                                    <option value="{{ topic.id }}" selected>{{ topic.title }}</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="post_id" value="{{ post.id }}"/>
+                        <button type="submit" class="btn btn-primary" id="topic_selector_save_btn">保存</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            var $keyword = $("#topic_search");
+            var $searchResult = $("#topic_search_result");
+            var previousKeyword;
+            var isSearching = false;
+            var $searchingText = $("#searching_text");
+            var loadingText = ".";
+            var keyupEvent = function () {
+                var keyword = $keyword.val();
+                if ("" !== keyword && keyword !== previousKeyword) {
+                    isSearching = true;
+                    setTimeout(function() {
+                        if (true === isSearching) {
+                            if (loadingText.length < 6) {
+                                loadingText += ".";
+                            } else {
+                                loadingText = "";
+                            }
+                            $searchingText.text("搜索中" + loadingText);
+
+                            setTimeout(arguments.callee, 200);
+                        }
+                    }, 100);
+
+                    $.ajax("{{ path('lychee_admin_topic_search') }}", {
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            keyword: keyword
+                        },
+                        complete: function() {
+                            isSearching = false;
+                            setTimeout(function () {
+                                $searchingText.text("结果");
+                            }, 200);
+                        },
+                        success: function(topics) {
+                            var appendData = "";
+                            var topicIndex;
+                            for (topicIndex in topics) {
+                                appendData += '<option value="' + topicIndex + '">' + topics[topicIndex].title + '</option>';
+                            }
+                            $searchResult.empty().append(appendData);
+                        },
+                        error: function() {
+                            alert("Error Occurred.");
+                        }
+                    });
+                }
+                previousKeyword = keyword;
+            };
+            $keyword.on("keyup", function() {
+                (function (method, context) {
+                    clearTimeout(method.tID);
+                    method.tID = setTimeout(function() {
+                        // console.log(context);
+                        method.call(context);
+                    }, 500);
+                })(keyupEvent, this);
+            });
+            $("#topic_selector_save_btn").on("click", function() {
+                console.log($searchResult.find("option:selected"));
+                if (0 === $searchResult.find("option:selected").length) {
+                    alert("请选择次元");
+
+                    return false;
+                }
+            });
+            $("#post_save_btn").on("click", function() {
+                if (!confirm("确认修改？")) {
+                    return false;
+                }
+            });
+            $(".remove-image").click(function () {
+                $(this).parent().remove();
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

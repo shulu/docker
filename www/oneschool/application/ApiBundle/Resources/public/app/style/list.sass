@@ -1,0 +1,101 @@
+@charset "UTF-8"
+
+@import "compass/reset"
+@import "compass/css3"
+@import "compass/utilities"
+
+@mixin font-size-fit-screen($s, $w)
+  @media screen and (min-width: $w)
+    font-size: ($s/640px*$w)
+
+html
+  background-color: #f4f4f4
+  font-size: 34px
+  +font-size-fit-screen(34px, 320px)
+  +font-size-fit-screen(34px, 480px)
+  +font-size-fit-screen(34px, 540px)
+  +font-size-fit-screen(34px, 600px)
+  +font-size-fit-screen(34px, 640px)
+  +font-size-fit-screen(34px, 720px)
+  +font-size-fit-screen(34px, 768px)
+  +font-size-fit-screen(34px, 800px)
+  +font-size-fit-screen(34px, 1080px)
+  +font-size-fit-screen(34px, 1152px)
+  +font-size-fit-screen(34px, 1440px)
+  +font-size-fit-screen(34px, 1600px)
+  @media screen and (min-width: 9999px)
+    font-siuze: 34px
+html
+  font-size: (34vw/640vw*100vw)
+
+body
+  background-color: #f4f4f4
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+
+.app
+  position: relative
+  border-top: solid 1px #dcdcdc
+  &:last-child
+    border-bottom: solid 1px #dcdcdc
+  &::after
+    content: ''
+    display: block
+    clear: both
+  .icon
+    display: block
+    position: relative
+    width: percentage(120/640)
+    margin: percentage(20/640)
+    border-radius: 17.54%
+    float: left
+    &::before
+      content: ''
+      display: block
+      margin-top: 100%
+    img
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+  .name
+    display: block
+    font-size: 1em
+    font-weight: bold
+    color: #000
+    line-height: percentage(55/34)
+    margin-top: percentage(30/640)
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    max-width: percentage(330/640)
+  .description
+    display: block
+    font-size: 0.65em
+    font-weight: lighter
+    color: #7b7b7b
+    line-height: percentage(42/22)
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    max-width: percentage(330/640)
+  .link
+    display: block
+    position: absolute
+    top: 50%
+    +translateY(-50%)
+    right: percentage(20/640)
+    width: percentage(110/640)
+    border: solid 1px #45c3f5
+    border-radius: 6px
+    color: #45c3f5
+    text-align: center
+    font-size: 0.65em
+    padding: percentage(10/640) 0 percentage(10/640) 0
+    text-decoration: none
+    &[disabled]
+      border-color: #E3E3E3
+      color: #E3E3E3
+
+
+

@@ -1,0 +1,18 @@
+{% extends 'LycheeAdminBundle:Cultural:layout.html.twig' %}
+
+{% block brewacrumb %}
+    <li class="active">{{ subTitle }}</li>
+    <li class="active">{{ package.name }}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% for img in expressions %}
+            <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail">
+                    <img src="{{ img.imageUrl|resizeImage(200, 200) }}" alt="{{ img.id }}">
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

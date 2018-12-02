@@ -1,0 +1,79 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="active"><a href="#">帖子查询</a></li>
+{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+        <li role="presentation"><a href="{{ path('lychee_admin_contentaudit_postdetail', {id: app.request.get('postId')}) }}">帖子详情</a></li>
+        <li role="presentation" class="active"><a href="#">帖子评论</a></li>
+    </ul>
+    <p>共 {{ commentCount }} 条评论</p>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>评论内容</th>
+                    <th>评论时间</th>
+                    <th>用户</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <td>{{ comment.content }}</td>
+                    <td>{{ comment.createTime|date('Y-m-d H:i') }}</td>
+                    <td>
+                        <a href="{{ path('lychee_admin_contentaudit_userdetail', {userId: comment.authorId}) }}" target="_blank">
+                            {% set nickname = authors[comment.authorId].nickname %}
+                            {% if nickname %}
+                                {{ nickname }}
+                            {% else %}
+                                {{ comment.authorId }}
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        {% if comment.deleted == 0 %}
+                            <button type="button" class="btn btn-danger delete-comment" data-id="{{ comment.id }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        {% else %}
+                            已删除
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $(".delete-comment").on("click", function() {
+                var $deleteBtn = $(this);
+                var commentId = $(this).data("id");
+                if (true === confirm("确定删除？")) {
+                    $.ajax("{{ path('lychee_admin_contentaudit_deletecomment') }}", {
+                        type: "post",
+                        data: {
+                            id: commentId
+                        },
+                        dataType: "json",
+                        error: function() {
+                            alert("服务器发生错误！");
+                        },
+                        success: function() {
+                            $deleteBtn.parent().text('已删除');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

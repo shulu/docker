@@ -1,0 +1,186 @@
+<script>
+    $(document).ready(function(){
+        var $setTag = $('#set_tag');
+        var $tagSelector = $('.tag-selector');
+
+        $setTag.on('hidden.bs.modal', function () {
+            $tagSelector.prop('checked', false);
+        });
+        $('#tag_submit_btn').click(function() {
+            var tagIds = [];
+            var $selectedTags = $tagSelector.filter(':checked');
+            for (var i in $selectedTags) {
+                tagIds.push($selectedTags.eq(i).val());
+            }
+            $.ajax("{{ path('lychee_admin_contentmanagement_addposttotag') }}", {
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    post_id: $('#tag_post_id').val(),
+                    tag_ids: tagIds
+                },
+                success: function() {
+                    $setTag.modal('hide');
+                }
+            });
+            return false;
+        });
+    });
+    function delPost(target) {
+        var postId = $(target).attr("post_id");
+        var $posts = $(".card-" + postId);
+
+        if (!confirm("确定删除？")) {
+            return false;
+        }
+
+        $.ajax("{{ path('lychee_admin_contentaudit_freeze') }}", {
+            type: "POST",
+            dataType: "json",
+            data: {
+                post_id: postId
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (errorThrown) {
+                    alert(errorThrown);
+                } else {
+                    alert("发生未知错误");
+                }
+            },
+            success: function(data) {
+                var $btns = $posts.find(".operation button");
+                $btns.attr("disabled", "disabled");
+//                $btns.filter('.del-post').html("被 " + data.manager + " 删除");
+                $posts.addClass('card-deleted');
+            }
+        });
+    }
+
+    function showPostDetail(target) {
+        var $btn = $(target);
+        var url = "/post_manager/" + $btn.data('post-id');
+        window.open(url, "_blank");
+    }
+
+    function switchFavor(target) {
+        var postId = $(target).data("id");
+        var notFavor = $(target).find('.glyphicon-heart-empty').length;
+        if (notFavor) {
+            $('#tag_post_id').val(postId);
+            $('#set_tag').modal('show');
+        }
+        $.ajax("{{ path('lychee_admin_contentmanagement_togglepostfavor') }}", {
+            type: "post",
+            dataType: "json",
+            data: {
+                id: postId
+            },
+            success: function(data) {
+                if ("undefined" !== typeof data.deleted) {
+                    var $btns = $(".card-" + postId + " button.favor span.glyphicon");
+                    if (data.deleted === 0) {
+                        $btns.removeClass("glyphicon-heart-empty").addClass("glyphicon-heart");
+                    } else {
+                        $btns.removeClass("glyphicon-heart").addClass("glyphicon-heart-empty");
+                    }
+                }
+            }
+        });
+    }
+
+    function recommend(target) {
+        if (confirm("确定置顶？")) {
+            var postId = $(target).data("post-id");
+            $.ajax("{{ path('lychee_admin_contentmanagement_posttop') }}", {
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: postId
+                },
+                success: function (data) {
+                    alert("置顶成功");
+                    $(".card-" + postId).find("button.recommend").remove();
+                }
+            });
+        }
+
+        return false;
+    }
+
+    function cancelRecommend(target) {
+        if (confirm("确定取消置顶？")) {
+            var postId = $(target).data("post-id");
+            $.ajax("{{ path('lychee_admin_contentmanagement_posttopcancel') }}", {
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: postId
+                },
+                success: function (data) {
+                    alert("取消置顶成功");
+                    $(".card-" + postId).find("button.cancel-recommend").remove();
+                }
+            });
+        }
+
+        return false;
+    }
+</script>
+<script id="waterfall-tpl" type="text/x-handlebars-template">
+    {% raw %}
+    {{#result}}
+    {{#if deleted}}
+    <div class="card card-deleted card-{{id}}">
+        {{else}}
+        <div class="card card-{{id}}">
+            {{/if}}
+            <input type="hidden" class="post_id" value="{{id}}"/>
+            {{#if isFavor}}
+                <input type="hidden" class="favor_id" value="{{favorId}}"/>
+            {{/if}}
+            <div class="topic clearfix">
+                <span>{{topic}}</span>
+                <a class="pull-right" href="/audit/post/{{id}}" target="_blank">{{id}}</a>
+            </div>
+            <div class="content">
+                {{#if imageUrl}}
+                <img class="image" src="{{imageUrl}}" alt="无图" onclick="showPostDetail(this)" data-post-id="{{id}}">
+                {{/if}}
+                <div class="author clearfix">
+                    <span class="label label-info pull-right">{{type}}</span>
+                    <img class="author" src="{{authorAvatar}}" alt="author"/>
+                    <p><a href="/audit/user/detail/{{authorId}}">{{author}}</a></p>
+                    <p class="create-time">{{createTime}}</p>
+                </div>
+                <p class="text">{{{content}}}</p>
+                <div class="operation clearfix">
+                    {{#if deleted}}
+                    <button class="btn btn-danger" disabled>已删除</button>
+                    {{else}}
+                    <button class="btn btn-danger del-post" onclick="delPost(this)" post_id="{{id}}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                    {{/if}}
+                    <button class="btn btn-default favor" style="margin-right: 5px;" data-id="{{id}}"
+                            onclick="switchFavor(this)">
+                        {{#if isFavor}}
+                        <span class="glyphicon glyphicon-heart"></span>
+                        {{else}}
+                        <span class="glyphicon glyphicon-heart-empty"></span>
+                        {{/if}}
+                    </button>
+                    {{#if sticky}}
+                    <button class="btn btn-default cancel-recommend" onclick="cancelRecommend(this)" data-post-id="{{id}}" style="margin-right: 5px;">
+                        取消置顶
+                    </button>
+                    {{else}}
+                    <button class="btn btn-default recommend" onclick="recommend(this)" data-post-id="{{id}}" style="margin-right: 5px;">
+                        置顶
+                    </button>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        {{/result}}
+        {% endraw %}
+</script>

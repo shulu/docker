@@ -1,0 +1,18 @@
+parameters:
+
+
+services:
+    lychee.module.measurement.active_user_recorder:
+        class: Lychee\Module\Measurement\ActiveUser\ActiveUserRecorder
+        arguments: ['@snc_redis.cache']
+
+    lychee.module.measurement.client_event_recorder:
+        class: Lychee\Module\Measurement\ClientEvent\ClientEventRecorder
+        arguments: ['@doctrine']
+
+    lychee.module.measurement.settle_active_user_task:
+        class: Lychee\Module\Measurement\ActiveUser\SettleDailyActiveUserCountTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}

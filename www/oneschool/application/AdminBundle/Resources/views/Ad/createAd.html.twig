@@ -1,0 +1,151 @@
+{% extends 'LycheeAdminBundle:Ad:layout.html.twig' %}
+
+{% block body %}
+    <div class="col-sm-6 col-sm-offset-3">
+        <form class="form-horizontal" action="{{ path('lychee_admin_ad_docreatead') }}" method="post"
+              enctype="multipart/form-data" id="create_ad_form">
+            <input type="hidden" name="id" value="{{ campaign? campaign.id }}">
+            <div class="form-group">
+                <label for="link" class="col-sm-2 control-label">链接</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="link" name="link" placeholder="广告链接" value="{{ campaign? campaign.link }}">
+                </div>
+            </div>
+            {% if campaign %}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">原图</label>
+                    <div class="col-sm-10">
+                        <img src="{{ campaign.image|resizeImage(0, 200) }}">
+                    </div>
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="image" class="col-sm-2 control-label">图片</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" id="image" name="image">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="start_time" class="col-sm-2 control-label">开始时间</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control datepicker" id="start_time" name="start_time"
+                           placeholder="开始时间(包含当日)" value="{{ campaign? campaign.startTime|date('Y-m-d') }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="end_time" class="col-sm-2 control-label">结束时间</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control datepicker" id="end_time" name="end_time"
+                           placeholder="结束时间(不包含当天)" value="{{ campaign? campaign.endTime|date('Y-m-d') }}">
+                </div>
+            </div>
+            {% if campaign and campaignTopics|length > 0 %}
+                {% for ct in campaignTopics %}
+                    <div class="form-group campaign-topics">
+                        <label for="topics" class="col-sm-2 control-label">次元</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control topic-id" name="topics[]" placeholder="次元ID" value="{{ ct.topicId }}">
+                        </div>
+                        <label for="topics" class="col-sm-2 control-label">位置</label>
+                        <div class="col-sm-3">
+                            <select name="position[]" class="form-control position">
+                                {% for i in 0..20 %}
+                                    <option value="{{ i }}" {% if ct.position == i %}selected{% endif %}>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger" onclick="removeTopic(this)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="form-group campaign-topics">
+                    <label for="topics" class="col-sm-2 control-label">次元</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control topic-id" name="topics[]" placeholder="次元ID">
+                    </div>
+                    <label for="topics" class="col-sm-2 control-label">位置</label>
+                    <div class="col-sm-3">
+                        <select name="position[]" class="form-control position">
+                            {% for i in 0..20 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-1">
+                        <button type="button" class="btn btn-danger" onclick="removeTopic(this)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-primary" id="add_topic" type="button">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        添加次元
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">保 存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/bootstrap-datetimepicker.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/locales/bootstrap-datetimepicker.zh-CN.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            $("#image").fileinput({
+                allowedFileTypes: ['image'],
+                showUpload: false
+            });
+            var dd = new Date();
+            $(".datepicker").datetimepicker({
+                format: "yyyy-mm-dd",
+                language: "zh-CN",
+                todayHighlight: true,
+                startDate: dd,
+                minView: 'month',
+                autoclose: true
+            });
+            $('#add_topic').click(function() {
+                var $lastCampaignTopic = $('.campaign-topics').last();
+                var $newCampaignTopic = $lastCampaignTopic.clone();
+                $newCampaignTopic.find('.topic-id').val('');
+                $newCampaignTopic.find('.position').val('0');
+                $lastCampaignTopic.after($newCampaignTopic);
+            });
+        });
+
+        function removeTopic(that) {
+            $(that).parent().parent().remove();
+        }
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/datepicker2/css/bootstrap-datetimepicker.min.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}

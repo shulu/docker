@@ -1,0 +1,161 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:layout.html.twig' %}
+
+{% block body %}
+    <button type="button" id="create_editor_choice_topic" class="btn btn-primary pull-right" data-toggle="modal"
+            data-target="#create_editor_choice_topic_form">
+        <span class="glyphicon glyphicon-plus"></span> 新增推荐次元
+    </button>
+    <div class="editor-choice-topics clearfix">
+        <ul id="category_sortable">
+            {% for cat_id, topic_ids in editorChoiceTopics %}
+                <li class="cat-{{ cat_id }}">
+                    <h3 class="category-sort-handle" data-cat-id="{{ cat_id }}">{{ categories[cat_id].name }}</h3>
+                    <div class="sort-topics" data-cat-id="{{ cat_id }}">
+                        {% for tid in topic_ids %}
+                            <div data-topic-id="{{ tid }}">
+                                <span class="topic-title">{{ topics[tid].title }}</span>
+                                <a href="javascript:void(0);" class="remove-topic"
+                                   data-topic-id="{{ tid }}" data-cat-id="{{ cat_id }}">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="create_editor_choice_topic_form" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加{{ subTitle }}</h4>
+                </div>
+                <form role="form" method="post" action="{{ path('lychee_admin_manualintervention_addtyrorecommendationtopic') }}">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="target_id">推荐ID</label>
+                            <input type="text" name="target_id" id="target_id" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">保 存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .editor-choice-topics {
+            clear: both;
+        }
+        #category_sortable {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        #category_sortable li {
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        #category_sortable h3 {
+            margin-top: 0;
+        }
+        #category_sortable h3:hover {
+            cursor: move;
+        }
+        .sort-topics > div {
+            display: inline-block;
+            border: 1px solid #e7e7e7;
+            padding: 5px 10px;
+            margin-right: 10px;
+            cursor: move;
+        }
+        .remove-topic,
+        .remove-topic:link,
+        .remove-topic:visited,
+        .remove-topic:hover,
+        .remove-topic:active {
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts filter='?jsqueeze'
+        '@LycheeAdminBundle/Resources/public/js/jquery.fn.sortable.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function () {
+            var $categorySortable = $('#category_sortable');
+            $categorySortable.sortable({
+                handle: ".category-sort-handle",
+                onUpdate: function() {
+                    var catIds = [];
+                    $categorySortable.find('h3.category-sort-handle').each(function(index, elem) {
+                        catIds.push($(elem).data('cat-id'));
+                    });
+                    $.ajax("{{ path('lychee_admin_manualintervention_sorttyrorecommendationcat') }}", {
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            cat_ids: catIds
+                        },
+                        success: function() {},
+                        error: function() {}
+                    });
+                }
+            });
+
+            var $sortTopics = $('.sort-topics');
+            $sortTopics.sortable({
+                onUpdate: function() {
+                    var $topicsDiv = $(this.el);
+                    var topics = [];
+                    $topicsDiv.children().each(function (index, item) {
+                        topics.push($(item).data('topic-id'));
+                    });
+                    $.ajax('{{ path("lychee_admin_manualintervention_sorttyrorecommendationtopic") }}', {
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            cat_id: $topicsDiv.data('cat-id'),
+                            topic_ids: topics
+                        },
+                        success: function() {},
+                        error: function() {}
+                    });
+                }
+            });
+
+            $('.remove-topic').click(function () {
+                if (!confirm('确定删除?')) {
+                    return false;
+                }
+                var $topic = $(this).parent();
+                var topicId = $(this).data('topic-id');
+                var catId = $(this).data('cat-id');
+                var $form = $('<form method="post"></form>');
+                $form.attr("action", '{{ path("lychee_admin_manualintervention_removetyrorecommendationtopic") }}');
+                $form.append('<input type="hidden" name="cat_id" value="' + catId + '">');
+                $form.append('<input type="hidden" name="tid" value="' + topicId + '">');
+                $('body').append($form);
+                $form.submit();
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

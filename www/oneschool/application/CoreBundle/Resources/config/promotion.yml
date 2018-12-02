@@ -1,0 +1,5 @@
+services:
+    lychee.module.promotion:
+        class: Lychee\Module\Promotion\PromotionService
+        arguments:
+            - '@doctrine'

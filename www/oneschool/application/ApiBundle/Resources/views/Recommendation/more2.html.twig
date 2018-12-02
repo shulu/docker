@@ -1,0 +1,48 @@
+{% spaceless %}
+{% set postIndex = app.request.query.get('post_index', 0) %}
+{% set subbannerIndex = app.request.query.get('subbanner_index', 0) %}
+{% set subBannerGameType = constant('Lychee\\Module\\Recommendation\\Entity\\SubBanner::TYPE_GAME') %}
+{% set subBannerSubjectType = constant('Lychee\\Module\\Recommendation\\Entity\\SubBanner::TYPE_SPECIAL_SUBJECT') %}
+{% set subBannerHMap = {(subBannerGameType): '福利', (subBannerSubjectType): '专题'} %}
+{% set subBannerListLinkMap = {(subBannerGameType): 'app_list', (subBannerSubjectType): 'subject_list'} %}
+{% set subBannerLinkMap = {(subBannerGameType): 'app', (subBannerSubjectType): 'subject'} %}
+
+{% for subbanner in subbanners %}
+
+    {% set segmentPosts = posts|slice(loop.index0 * 5, 5) %}
+    {% if segmentPosts|length > 0 %}
+        {% include 'LycheeApiBundle:Recommendation:posts2.html.twig'
+            with {'posts': segmentPosts, 'postIndex': postIndex + loop.index0 * 5 } only
+        %}
+    {% endif %}
+
+    {% if subBannerHMap[subbanner.type] is defined %}
+        <div class="section subbanner">
+            <h2>{{ subBannerHMap[subbanner.type] }}</h2>
+            <h3>{{ subbanner.title }}</h3>
+            <a class="more" href="javascript:go('{{ subBannerListLinkMap[subbanner.type] }}', null, {{ subbannerIndex + loop.index }})">更多</a>
+            <a class="subject" href="javascript:go('{{ subBannerLinkMap[subbanner.type] }}', {{ subbanner.targetId }}, {{ subbannerIndex + loop.index }})">
+                <img class="-image" src="{{ subbanner.imageUrl }}" />
+            </a>
+        </div>
+    {% endif %}
+
+    {% if loop.last %}
+        {% set segmentPosts = posts|slice(loop.index0 * 5 + 5) %}
+        {% if segmentPosts|length > 0 %}
+            {% include 'LycheeApiBundle:Recommendation:posts2.html.twig'
+                with {'posts': segmentPosts, 'postIndex': postIndex + loop.index0 * 5 } only
+            %}
+        {% endif %}
+    {% endif %}
+
+{% else %}
+    {% include 'LycheeApiBundle:Recommendation:posts2.html.twig'
+        with {'posts': posts, 'postIndex': postIndex + loop.index0 * 5 } only
+    %}
+{% endfor %}
+
+{% if post_cursor > 0 %}
+    <button class="load-more" data-post-cursor="{{ post_cursor is null ? 'null' : post_cursor }}" data-post-index="{{ postIndex + posts|length }}" data-subbanner-cursor="{{ subbanner_cursor is null ? 'null' : subbanner_cursor }}" data-subbanner-index="{{ subbannerIndex + subbanners|length }}">点击加载更多</button>
+{% endif %}
+{% endspaceless %}

@@ -1,0 +1,238 @@
+{% extends 'LycheeAdminBundle:Notification:layout.html.twig' %}
+
+{% block body %}
+    <div class="alert alert-success" role="alert">访问量每8小时统计一次, 你现在看到的数据并非实时数据。</div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create_notification">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>类型</th>
+                    <th>类型ID / 网页链接</th>
+                    <th>内容</th>
+                    <th>图片</th>
+                    <th>发布时间</th>
+                    <th>推送文本</th>
+                    <th>推送平台</th>
+                    <th>推送时间</th>
+                    <th>已推送</th>
+                    <th>访问量</th>
+                    <th>唯一访问量</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in data %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.type }}</td>
+                    <td>
+                        {% if row.targetId %}
+                            {{ row.targetId }}
+                        {% else %}
+                            <a href="{{ row.url }}" target="_blank">{{ row.url }}</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ row.message }}</td>
+                    <td><img src="{{ row.image }}" alt="img-{{ row.id }}" width="240"></td>
+                    <td>{{ row.publishTime|date('Y-m-d H:i') }}</td>
+                    {% if row.id in pushData|keys %}
+                        <td>{{ pushData[row.id].message }}</td>
+                        {% if pushData[row.id].platform == 0 %}
+                            {% set platform = 'All' %}
+                        {% elseif pushData[row.id].platform == 1 %}
+                            {% set platform = 'iOS' %}
+                        {% elseif pushData[row.id].platform == 2 %}
+                            {% set platform = 'Android' %}
+                        {% else %}
+                            {% set platform = 'None' %}
+                        {% endif %}
+                        <td>{{ platform }}</td>
+                        <td>{{ pushData[row.id].pushTime|date('Y-m-d H:i') }}</td>
+                        <td>{{ pushData[row.id].pushed == 1? '推送中':(pushData[row.id].pushed == 2? '是':'否') }}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    <td>{{ row.views }}</td>
+                    <td>{{ row.uniqueViews }}</td>
+                    <td>
+                        <button class="btn btn-danger remove-notification" data-id="{{ row.id }}">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="create_notification" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加{{ subTitle }}</h4>
+                </div>
+                <form role="form" method="post" action="{{ path('lychee_admin_notification_createofficialnotification') }}"
+                      enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="type">通知类型</label>
+                            <select name="type" id="type" class="form-control">
+                                {% for key, type in officialNotificationTypes %}
+                                    {% if key matches '/POST/' %}
+                                        {% set name = '帖子' %}
+                                    {% elseif key matches '/TOPIC/' %}
+                                        {% set name = '次元' %}
+                                    {% elseif key matches '/USER/' %}
+                                        {% set name = '用户' %}
+                                    {% elseif key matches '/COMMENT/' %}
+                                        {% set name = '评论' %}
+                                    {% elseif key matches '/SITE/' %}
+                                        {% set name = '网页' %}
+                                    {% elseif key matches '/SUBJECT/' %}
+                                        {% set name = '专题' %}
+                                    {% elseif key matches '/LIVE/' %}
+                                        {% set name = '直播' %}
+                                    {% endif %}
+                                    <option value="{{ type }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sender">发送者</label>
+                            <select name="sender" id="sender" class="form-control">
+                                {% for id, account in operationAccounts %}
+                                    <option value="{{ id }}">{{ account.nickname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">内容</label>
+                            <input type="text" name="message" id="message" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="image">图片</label>
+                            <input type="file" class="form-control image" name="image" id="image">
+                        </div>
+                        <div class="form-group">
+                            <label for="">类型对应ID</label>
+                            <input type="text" name="target_id" id="target_id" class="form-control"
+                                   placeholder="此处应为数字">
+                        </div>
+                        <div class="form-group">
+                            <label for="url">网页链接</label>
+                            <input type="text" name="url" id="url" class="form-control"
+                                   placeholder="http://example.com/">
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="push" id="push" value="1"> 是否推送
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="push_time">推送时间</label>
+                            <input type="text" name="push_time" id="push_time"
+                                   class="form-control datepicker push-element" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="push_message">推送内容</label>
+                            <input type="text" name="push_message" id="push_message"
+                                   class="form-control push-element" disabled>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input name="push_platform[]" class="push-element" type="checkbox" value="2" checked
+                                       disabled>
+                                Android
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input name="push_platform[]" class="push-element" type="checkbox" value="1" checked
+                                       disabled>
+                                iOS
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="save-notification" class="btn btn-primary">保 存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/datepicker2/css/bootstrap-datetimepicker.min.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/bootstrap-datetimepicker.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@LycheeAdminBundle/Resources/public/datepicker2/js/locales/bootstrap-datetimepicker.zh-CN.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="application/javascript">
+        $(document).ready(function () {
+            var fileinputConfig = {
+                allowedFileTypes: ['image'],
+                showUpload: false
+            };
+            $(".image").fileinput(fileinputConfig);
+            $(".datepicker").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                language: "zh-CN",
+                todayHighlight: true
+            });
+            var $pushElement = $(".push-element");
+            $("#push").click(function () {
+                if (this.checked == true) {
+                    $pushElement.attr("disabled", false);
+                } else {
+                    $pushElement.attr("disabled", "disabled");
+                }
+            });
+            $(".remove-notification").click(function () {
+                if (confirm("确定删除?")) {
+                    var notificationId = $(this).data("id");
+                    var $form = $('<form></form>');
+                    $form.attr("method", "post");
+                    $form.attr("action", "{{ path('lychee_admin_notification_removeofficial') }}");
+                    $form.append('<input type="hidden" name="id" value="' + notificationId + '">');
+                    $("body").append($form);
+                    $form.submit();
+                }
+                return false;
+            });
+            $('#save-notification').click(function() {
+                if ($('#push').is(":checked") && (!$('#push_time').val() || !$('#push_message').val())) {
+                    alert('请输入推送的相关信息');
+
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

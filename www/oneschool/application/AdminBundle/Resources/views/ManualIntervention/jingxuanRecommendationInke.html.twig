@@ -1,0 +1,104 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:liveTemplate.html.twig' %}
+
+{% block list %}
+    <a href="{{ path('lychee_admin_manualintervention_addjingxuanlive') }}" id="create_jingxuan_btn" class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus"></span>
+    </a>
+    <div class="pull-right date-search">
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="sr-only">直播ID</label>
+                <input type="text" class="form-control" placeholder="直播ID" name="uid" id="uid" value="{{ app.request.get('uid')|default('') }}">
+            </div>
+            <button type="submit" class="btn btn-default">查 询</button>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <td>主播映客号</td>
+                <td>昵称</td>
+                <td>头像</td>
+                <td>封面</td>
+                <td>描述</td>
+                <td>推荐时间段</td>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if items | length > 0 %}
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.inkeUid }}</td>
+                        <td>{{ item.nikename }}</td>
+                        <td><img src="{{ item.avatar }}" alt="{{ item.nikename }}" style="width: 44px;"></td>
+                        <td><img src="{{ item.cover }}" alt="{{ item.nikename }}" style="width: 44px;"></td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.startTime | date('Y-m-d H:i') }} 至 {{ item.endTime | date('Y-m-d H:i') }}</td>
+                        <td>
+                            <a href="{{ path('lychee_admin_manualintervention_modifyjingxuanlive',
+                            {id: item.inkeUid}) }}" class="btn btn-default">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                            <button class="btn btn-danger delete-item" data-item-id="{{ item.inkeUid }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <nav>
+        <ul class="pagination">
+            <li>
+                <a href="{{ path('lychee_admin_manualintervention_jingxuanrecommendationinke', {page: 1}) }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% if pageCount < 1 %}{% set pageCount = 1 %}{% endif %}
+            {% for p in 1..min(10, pageCount) %}
+                <li class="{{ p==page? 'active' }}">
+                    <a href="{{ path('lychee_admin_manualintervention_jingxuanrecommendationinke', {page: p}) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+            <li>
+                <a href="{{ path('lychee_admin_manualintervention_jingxuanrecommendationinke', {page: pageCount}) }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            var fileinputConfig = {
+                allowedFileTypes: ['image'],
+                showUpload: false
+            };
+            $(".avatar, .cover").fileinput(fileinputConfig);
+            $(".delete-item").click(function () {
+                if (confirm("确认删除？")) {
+                    var id = $(this).data("item-id");
+                    var $form = $('<form method="POST"></form>');
+                    $form.attr("action", "{{ path('lychee_admin_manualintervention_deletejingxuanlive') }}");
+                    $form.append('<input type="hidden" name="id" value="' + id + '">');
+                    $form.append(
+                            '<input type="hidden" name="callback_url" ' +
+                            'value="{{ path(app.request.attributes.get('_route'), {page: page}) }}">'
+                    );
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'LycheeAdminBundle:Channel:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">渠道包</a></li>
+        <li role="presentation"><a href="{{ path('lychee_admin_channel_appchanneltitle') }}">标题</a></li>
+    </ul>
+    <a class="btn btn-primary" href="{{ path('lychee_admin_channel_createappchannelpackage') }}">
+        <span class="glyphicon glyphicon-plus"></span>
+    </a>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>代码</th>
+                <th>链接</th>
+                <th>更新时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for package in packages %}
+                    <tr>
+                        <td>{{ package.code }}</td>
+                        <td>{{ package.link }}</td>
+                        <td>{{ package.updateTime|date('Y-m-d H:i') }}</td>
+                        <td>
+                            <a href="{{ path('lychee_admin_channel_createappchannelpackage', {code: package.id}) }}"
+                               class="btn btn-default edit-package">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                            <button class="btn btn-danger delete-package" data-id="{{ package.id }}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.delete-package').click(function () {
+                var packageId = $(this).data('id');
+                if (confirm('确定删除?')) {
+                    var $form = $('<form method="post"></form>');
+                    $form.attr('action', '{{ path("lychee_admin_channel_deleteappchannelpackage") }}');
+                    $form.append('<input type="hidden" name="id" value="' + packageId + '">');
+                    $('body').append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .nav-tabs { margin-bottom: 10px; }
+    </style>
+{% endblock %}

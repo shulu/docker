@@ -1,0 +1,27 @@
+{% extends 'LycheeAdminBundle:WeiboRobot:layout.html.twig' %}
+
+{% block body %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>微博用户ID</th>
+                <th>Access Token</th>
+                <th>过期时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ result.uid|default('') }}</td>
+                <td>{{ result.access_token|default('') }}</td>
+                <td>{{ result.expired_in|default('')|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <a href="{{ authorizeUrl }}" target="_blank">
+            {% image '@LycheeAdminBundle/Resources/public/img/weibo_login.png' %}
+                <img src="{{ asset_url }}" alt="">
+            {% endimage %}
+        </a>
+    </div>
+{% endblock %}

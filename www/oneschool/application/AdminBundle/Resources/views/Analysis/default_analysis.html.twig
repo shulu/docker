@@ -1,0 +1,110 @@
+{% extends 'LycheeAdminBundle:Analysis:layout.html.twig' %}
+
+{% block body %}
+    <div>
+        <div class="pull-right">
+            {% set currentRouteName = app.request.get('_route') %}
+            <a href="{{ path(currentRouteName) }}">14日</a> |
+            <a href="{{ path(currentRouteName, {'limit': 30}) }}">30日</a> |
+            <a href="{{ path(currentRouteName, {'limit': 90}) }}">90日</a>
+        </div>
+        <p>每日新增</p>
+        <div class="chart-container" id="daily_count"></div>
+    </div>
+    <div>
+        {#<div class="pull-right">7日|30日</div>#}
+        <p>总量</p>
+        <div class="chart-container" id="total_count"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $("#daily_count").highcharts({
+                chart: {
+                    backgroundColor: '#EEE'
+                },
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: '每日新增{{ subTitle }}'
+                },
+                xAxis: {
+                    categories: [{{ dates|raw }}]
+                },
+                yAxis: {
+                    title: {
+                        text: '数量'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [{
+                    name: '新增{{ subTitle }}',
+                    data: [{{ daily }}]
+                }]
+            });
+            $("#total_count").highcharts({
+                chart: {
+                    backgroundColor: '#EEE',
+                    type: 'area'
+                },
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: '{{ subTitle }}总量'
+                },
+                xAxis: {
+                    categories: [{{ dates|raw }}]
+                },
+                yAxis: {
+                    title: {
+                        text: '数量'
+                    },
+                    min: {{ totalYAxisMin }}
+                },
+                plotOptions: {
+                    area: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 2,
+                            states: {
+                                hover: {
+                                    enabled: true
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: '{{ subTitle }}总量',
+                    data: [{{ total }}]
+                }]
+            });
+        });
+    </script>
+{% endblock %}

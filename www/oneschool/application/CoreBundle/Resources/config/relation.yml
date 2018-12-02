@@ -1,0 +1,34 @@
+services:
+    lychee.module.relation:
+        class: Lychee\Module\Relation\RelationService
+        arguments: ['@doctrine', '@lychee.event_dispatcher_async','@service_container']
+
+    lychee.module.relation.robot:
+        class: Lychee\Module\Relation\RobotService
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+
+    lychee.module.robot.follow_user:
+        class: Lychee\Module\Robot\OperationService
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+            - 'robot_user_follower'
+            - 'robot_user_follow_task'
+            - '@lychee.module.relation.robot'
+            - 'followUser'
+
+    lychee.task.following_bot:
+      class: Lychee\Module\Relation\Task\UserFollowingBotTask
+      calls:
+          - [setContainer, ['@service_container']]
+      tags:
+          - {name: lychee.task}
+
+    lychee.consumer.user.follow:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.relation'
+            - 'asyncAfterFollowUser'

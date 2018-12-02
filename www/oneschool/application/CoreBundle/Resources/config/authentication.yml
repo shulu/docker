@@ -1,0 +1,41 @@
+services:
+    lychee.module.authentication:
+        class: Lychee\Module\Authentication\AuthenticationService
+        arguments:
+            - '@doctrine'
+            - '@lychee.module.authentication.encoder'
+            - %sinaweibo_client_key%
+            - %qq_app_key%
+            - '@logger'
+            - '@lychee.module.authentication.token_issuer'
+
+    lychee.module.authentication.encoder:
+        class: Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder
+        public: false
+        arguments: [sha256, '@=true', '@=1']
+
+    lychee.module.authentication.phone_verifier:
+        class: Lychee\Module\Authentication\PhoneVerifier
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+
+    lychee.module.authentication.token_issuer:
+        class: Lychee\Module\Authentication\TokenIssuer
+        arguments:
+            - '@doctrine'
+            - '@memcache.default'
+
+    lychee.consumer.user.login:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.authentication'
+            - 'asyncAfterSignIn'
+
+    lychee.consumer.user.register:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.authentication'
+            - 'asyncAfterSignUp'

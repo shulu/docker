@@ -1,0 +1,97 @@
+{% extends 'LycheeAdminBundle:ContentAudit:layout.html.twig' %}
+
+{% block body %}
+<ul class="nav nav-tabs">
+    <li role="presentation"><a href="{{ path('lychee_admin_contentaudit_reportposts') }}">帖子</a></li>
+    <li role="presentation" class="active"><a href="#">评论</a></li>
+</ul>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>作者</th>
+            <th>账号状态</th>
+            <th>帖子</th>
+            <th>举报时间</th>
+            <th>正文</th>
+            <th>图片</th>
+            <th>创建时间</th>
+            <th><span class="glyphicon glyphicon-wrench"></span></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reportComment in reportComments %}
+            {% set comment = comments[reportComment.commentId] %}
+            <tr>
+                <td>{{ comment.id }}</td>
+                <td>
+                    <a href="{{ path('lychee_admin_contentaudit_userdetail', {userId: comment.authorId}) }}" target="_blank">
+                        {% if authors[comment.authorId].nickname %}
+                            {{ authors[comment.authorId].nickname }}
+                        {% else %}
+                            {{ comment.authorId }}
+                        {% endif %}
+                    </a>
+                </td>
+                <td>
+                    {% if authors[comment.authorId].frozen == 1 %}
+                        冻结
+                    {% else %}
+                        正常
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('lychee_admin_contentaudit_postdetail', {id: comment.postId}) }}" target="_blank">
+                        {{ posts[comment.postId].id }}
+                    </a>
+                </td>
+                <td>{{ reportComment.time|date('Y-m-d H:i') }}</td>
+                <td>{{ comment.content }}</td>
+                <td><img src="{{ comment.imageUrl }}" alt="" class="post-pic"></td>
+                <td>{{ comment.createTime|date('Y-m-d H:i') }}</td>
+                <td>
+                    {% set deleted = comment.deleted %}
+                    {% if comment.deleted == 0 %}
+                        <button type="button" class="btn btn-danger delete-comment" data-id="{{ comment.id }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    {% else %}
+                        已删除
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+{{ helper.pagination(paginator, 'lychee_admin_contentaudit_reportcomments') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $(".delete-comment").on("click", function() {
+                var $deleteBtn = $(this);
+                var commentId = $(this).data("id");
+                if (true === confirm("确定删除？")) {
+                    $.ajax("{{ path('lychee_admin_contentaudit_deletecomment') }}", {
+                        type: "post",
+                        data: {
+                            id: commentId
+                        },
+                        dataType: "json",
+                        error: function() {
+                            alert("服务器发生错误！");
+                        },
+                        success: function() {
+                            $deleteBtn.parent().text('已删除');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

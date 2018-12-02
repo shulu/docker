@@ -1,0 +1,142 @@
+services:
+    lychee.task.count_topic:
+        class: Lychee\Module\Analysis\Task\CountTopic
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_user:
+        class: Lychee\Module\Analysis\Task\CountUser
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_post:
+        class: Lychee\Module\Analysis\Task\CountPost
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_comment_with_image:
+        class: Lychee\Module\Analysis\Task\CountCommentWithImage
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_comment_only_character:
+        class: Lychee\Module\Analysis\Task\CountCommentOnlyCharacter
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.count_post_like:
+        class: Lychee\Module\Analysis\Task\CountPostLike
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.count_comment_like:
+        class: Lychee\Module\Analysis\Task\CountCommentLike
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.count_following:
+        class: Lychee\Module\Analysis\Task\CountFollowing
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.count_content_contribution:
+        class: Lychee\Module\Analysis\Task\CountContentContribution
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.module.analysis:
+        class: Lychee\Module\Analysis\AnalysisService
+        arguments:
+            - '@doctrine'
+    lychee.task.image_increment:
+        class: Lychee\Module\Analysis\Task\ImageIncrement
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.chat_message:
+        class: Lychee\Module\Analysis\Task\ChatMessage
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.topic_views:
+        class: Lychee\Module\Analysis\Task\TopicViews
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.topics_views:
+        class: Lychee\Module\Analysis\Task\TopicsViews
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_topic_following:
+        class: Lychee\Module\Analysis\Task\CountTopicFollowing
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_recharge_user:
+        class: Lychee\Module\Analysis\Task\CountRechargeUser
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_recharge_times:
+        class: Lychee\Module\Analysis\Task\CountRechargeTimes
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_recharge_income:
+        class: Lychee\Module\Analysis\Task\CountRechargeIncome
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_user_following:
+            class: Lychee\Module\Analysis\Task\CountUserFollowing
+            calls:
+                - [setContainer, ['@service_container']]
+            tags:
+                - {name: lychee.task}
+    lychee.task.count_active_vip:
+        class: Lychee\Module\Analysis\Task\CountActiveVip
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_active_user:
+        class: Lychee\Module\Analysis\Task\CountActiveUser
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+    lychee.task.count_big_man:
+        class: Lychee\Module\Analysis\Task\CountBigMan
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.count_presenter:
+            class: Lychee\Module\Analysis\Task\CountPresenter
+            calls:
+                - [setContainer, ['@service_container']]
+            tags:
+                - {name: lychee.task}

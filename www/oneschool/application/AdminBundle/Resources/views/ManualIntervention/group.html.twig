@@ -1,0 +1,74 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:layout.html.twig' %}
+{% import 'LycheeAdminBundle:ManualIntervention:helper.html.twig' as helper %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        div.page-header { margin-bottom: 10px; padding-bottom: 5px; }
+        div.page-header h4 { margin-bottom: 5px; }
+        .past-groups { color: #999; margin-bottom: 20px; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <button type="button" id="create_group_btn" class="btn btn-primary" data-toggle="modal" data-target="#create_group_form">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <div class="page-header">
+        <h4 style="color: #a94442;">进行中的排期</h4>
+    </div>
+    {{ helper.groupTable(inProgress) }}
+    <div class="page-header">
+        <h4>将来的排期</h4>
+    </div>
+    {{ helper.groupTable(future) }}
+    <div class="past-groups clearfix">
+        <div class="page-header">
+            <h4>已结束的排期</h4>
+        </div>
+        {{ helper.groupTable(past) }}
+        <a class="pull-right" href="{{ path('lychee_admin_manualintervention_morepastgroups') }}">&gt;&gt;&nbsp;更多</a>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="create_group_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加{{ subTitle }}</h4>
+                </div>
+                <form role="form" method="post" action="{{ path('lychee_admin_manualintervention_addgroup') }}">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recommendation_type">类型</label>
+                            <select class="form-control" name="recommendation_type" id="recommendation_type">
+                                {% for type in recommendationTypes %}
+                                    <option value="{{ type }}">{{ type|title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="start_time">开始时间</label>
+                            <input type="text" name="start_time" id="start_time" class="form-control"
+                                   value="{{ 'now'|date('Y-m-d H:i') }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="end_time">结束时间</label>
+                            <input type="text" name="end_time" id="end_time" class="form-control"
+                                   value="{{ '+2day'|date('Y-m-d 00:00') }}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">保 存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ helper.groupEvents() }}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:postTemplate.html.twig' %}
+
+{% block list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>用户</th>
+                    <th>推荐理由</th>
+                    <th>发布时间</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                {% set author = authors[posts[item.recommendationId].authorId] %}
+                <tr>
+                    <td>
+                        <img src="{{ author.avatarUrl }}" alt="user-{{ author.id }}" width="50px" height="50px"/>
+                        <span>{{ author.nickname }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ path('lychee_admin_contentaudit_postdetail', {id: item.recommendationId}) }}">
+                            {{ item.recommendedReason }}
+                        </a>
+                    </td>
+                    <td>{{ item.publishTime|date('Y-m-d H:i') }}</td>
+                    <td>{{ item.createTime|date('Y-m-d H:i') }}</td>
+                    <td>
+                        <button class="btn btn-danger delete-item" data-item-id="{{ item.id }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $(".delete-item").click(function () {
+                if (confirm("确认删除？")) {
+                    var id = $(this).data("item-id");
+                    var $form = $('<form method="POST"></form>');
+                    $form.attr("action", "{{ path('lychee_admin_manualintervention_removecronjob') }}");
+                    $form.append('<input type="hidden" name="id" value="' + id + '">');
+                    $form.append(
+                            '<input type="hidden" name="callback_url" ' +
+                            'value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">'
+                    );
+                    $(document.body).append($form);
+                    $form.submit();
+                }
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

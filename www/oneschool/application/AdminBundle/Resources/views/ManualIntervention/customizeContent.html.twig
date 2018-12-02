@@ -1,0 +1,302 @@
+{% extends 'LycheeAdminBundle:ManualIntervention:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <div class="content-audit">
+        {{ helper.retrievalCustomizeContentNavs(type) }}
+        <input type="hidden" id="type" value="{{ type }}">
+        <div>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="exampleInputEmail2">查询日期</label>
+                    <input type="text" class="form-control datepicker" name="date" id="date" value="{{ date }}">
+                </div>
+                <div class="form-group">
+                    <select name="hour" id="hour" class="form-control">
+                        {% for i in 1..23 %}
+                            <option value="{{ i }}" {{ hour == i? 'selected' }}>{{ i|strpad('0') }}:00</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">查询</button>
+            </form>
+        </div>
+        <input type="hidden" id="last_review_id" value="0">
+        <div id="container"></div>
+        <div class="all-loaded"><p class="bg-info">全部载入完毕</p></div>
+    </div>
+    {{ helper.tagForm(tags) }}
+    {{ helper.recommendPostWin() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/datepicker2/css/bootstrap-datetimepicker.min.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts filter='?jsqueeze' output='js/contentaudit.js'
+        '@LycheeAdminBundle/Resources/public/datepicker2/js/bootstrap-datetimepicker.min.js'
+        '@LycheeAdminBundle/Resources/public/datepicker2/js/locales/bootstrap-datetimepicker.zh-CN.js'
+        '@LycheeAdminBundle/Resources/public/js/handlebars-v2.0.0.js'
+        '@LycheeAdminBundle/Resources/public/js/waterfall.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            var $container = $("#container");
+            var $setTag = $('#set_tag');
+            var containerWidth = $('#container').width();
+            var cardGutter = 15;
+            var cardWidth = 240;
+
+            if ($(window).width() < 768) {
+                cardGutter = 5;
+                cardWidth = containerWidth / 2 - 2 * cardGutter;
+                $('body').append("<style>.card{width: " + cardWidth + "px !important;}</style>");
+            }
+            var dd = new Date();
+            $(".datepicker").datetimepicker({
+                format: "yyyy-mm-dd",
+                language: "zh-CN",
+                todayHighlight: true,
+                endDate: dd,
+                minView: 'month',
+                autoclose: true
+            });
+
+            $('#callback_url').val(window.location.pathname + window.location.search);
+
+            $container.waterfall({
+                itemCls: 'card',
+                dataType: 'json',
+                colWidth: cardWidth,
+                gutterWidth: cardGutter,
+                gutterHeight: cardGutter,
+                path: function(cursor) {
+                    var date = $('#date').val();
+                    var hour = $('#hour').val();
+                    var urlPrefix = '/manualintervention/fetch_posts';
+
+                    cursor = $(".card").last().find(".post_id").eq(0).val();
+                    if (typeof cursor === 'undefined') {
+                        cursor = 0;
+                    }
+
+                    return urlPrefix + "?type={{ type }}&date=" + encodeURIComponent(date) +
+                            "&hour=" + encodeURIComponent(hour) + "&cursor=" + cursor;
+                },
+                callbacks: {
+                    renderData: function (data, dataType) {
+                        var tpl, template;
+
+                        if ('json' === dataType) {
+                            if (data.total > 0) {
+                                tpl = $('#waterfall-tpl').html();
+                                template = Handlebars.compile(tpl);
+
+                                return template(data);
+                            } else {
+                                $container.waterfall("pause", function() {
+                                    $(".all-loaded").show();
+                                });
+                            }
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+            });
+
+            $setTag.on('hidden.bs.modal', function () {
+                $('.tag-selector').prop('checked', false);
+            });
+            var $tagSelector = $('.tag-selector');
+            $('#tag_submit_btn').click(function() {
+                var tagIds = [];
+                var $selectedTags = $tagSelector.filter(':checked');
+                for (var i in $selectedTags) {
+                    tagIds.push($selectedTags.eq(i).val());
+                }
+                $.ajax("{{ path('lychee_admin_contentmanagement_addposttotag') }}", {
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        post_id: $('#tag_post_id').val(),
+                        tag_ids: tagIds
+                    },
+                    success: function() {
+                        $setTag.modal('hide');
+                    }
+                });
+                return false;
+            });
+
+            var $form = $('#create_item_form form').eq(0);
+            $form.submit(function() {
+                var formData = new FormData($form[0]);
+                var $submitBtn = $form.find('button[type=submit]');
+                $submitBtn.text('提交中...');
+                $.ajax('{{ path("lychee_admin_manualintervention_createrecommendationreturnjson") }}', {
+                    type: 'post',
+                    dataType: 'json',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        $('.card-' + $('#target_id').val()).find('.btn-recommend').remove();
+                        // Clear Recommendation Form
+                        $('#reason').val('');
+                        $('#stick_post').attr('checked', false);
+                        $('#publish_instantly').attr('checked', true);
+                        var $publishTime = $('#publish_time');
+                        $publishTime.attr('disabled', true);
+                        $publishTime.val('');
+                        $('#image').fileinput('reset');
+                    },
+                    error: function(jqXHR, textStatus) {
+                        alert('发生错误:' + textStatus);
+                    },
+                    complete: function () {
+                        $submitBtn.text('保 存');
+                        $('#create_item_form').modal('toggle');
+                    }
+                });
+
+                return false;
+            });
+        });
+        function switchFavor(target) {
+            var postType = $('#type').val();
+            var postId = $(target).data("id");
+            var notFavor = $(target).find('.glyphicon-heart-empty').length;
+            if (notFavor) {
+                $('#tag_post_id').val(postId);
+                $('#set_tag').modal('show');
+            }
+            if (notFavor && 3 == postType) { // 折叠帖子
+                if (!confirm('收藏折叠帖子的同时会恢复帖子，确认继续吗？')) {
+                    return false;
+                }
+            }
+            $.ajax("{{ path('lychee_admin_contentmanagement_togglepostfavor') }}", {
+                type: "post",
+                dataType: "json",
+                data: {
+                    type: postType,
+                    id: postId
+                },
+                success: function(data) {
+                    if ("undefined" !== typeof data.deleted) {
+                        var $btns = $(".card-" + postId + " button.favor span.glyphicon");
+                        $btns.toggleClass('glyphicon-heart-empty glyphicon-heart');
+                    }
+                }
+            });
+        }
+        function hoverCard(id) {
+            var $cards = $('.card-' + id);
+            $cards.addClass('card-hover');
+        }
+        function normalCard(id) {
+            var $cards = $('.card-' + id);
+            $cards.removeClass('card-hover');
+        }
+        function recommend(target) {
+            var $createItemForm = $('#create_item_form');
+            $('#target_id').val($(target).data('post-id'));
+            $createItemForm.modal('show');
+        }
+    </script>
+    <script id="waterfall-tpl" type="text/x-handlebars-template">
+        {% raw %}
+            {{#result}}
+            <div class="card card-{{id}}" onmouseover="hoverCard({{id}})" onmouseout="normalCard({{id}})">
+                <input type="hidden" class="post_id" value="{{id}}"/>
+                <div class="content">
+                    {{#if imageUrl}}
+                    <img class="image" src="{{imageUrl}}" alt="无图" onclick="showPostDetail(this)" data-post-id="{{id}}">
+                    {{else}}
+                    <div class="post-content">
+                        <div>
+                            <a class="card-link" href="/topic/detail/{{topicId}}" target="_blank">
+                                <span class="glyphicon glyphicon-tag"></span>
+                                {{topicName}}
+                            </a>
+                        </div>
+                        <div>
+                            <a class="card-link" href="/user_management/detail/{{authorId}}" target="_blank">
+                                <span class="glyphicon glyphicon-user"></span>
+                                {{#if authorName}}{{authorName}}{{else}}[{{authorId}}]{{/if}}
+                            </a>
+                        </div>
+                        {{#if type}}
+                        <div>
+                            <span class="label label-primary">{{type}}</span>
+                        </div>
+                        {{/if}}
+                        <p>{{{content}}}</p>
+                        <div>
+                            <button class="btn btn-default favor" data-id="{{id}}" onclick="switchFavor(this)">
+                                {{#if favor}}
+                                <span class="glyphicon glyphicon-heart"></span>
+                                {{else}}
+                                <span class="glyphicon glyphicon-heart-empty"></span>
+                                {{/if}}
+                            </button>
+                            <a class="btn btn-default" href="/audit/post/{{id}}" target="_blank">详情</a>
+                            {{#if link}}
+                            <a class="btn btn-default" href="{{link}}" target="_blank">链接</a>
+                            {{/if}}
+                            {{#unless recommended}}
+                            <button class="btn btn-info btn-recommend" type="button" data-post-id="{{id}}" onclick="recommend(this)">推荐</button>
+                            {{/unless}}
+                            {{#if imageUrl}}
+                            <p class="content-in-operation">{{content}}</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if deleted}}
+                    <div class="post-deleted">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </div>
+                    {{/if}}
+                </div>
+                {{#if imageUrl}}
+                <div class="operation">
+                    <button class="btn btn-default favor" data-id="{{id}}" onclick="switchFavor(this)">
+                        {{#if favor}}
+                        <span class="glyphicon glyphicon-heart"></span>
+                        {{else}}
+                        <span class="glyphicon glyphicon-heart-empty"></span>
+                        {{/if}}
+                    </button>
+                    <a class="btn btn-default" href="/audit/post/{{id}}" target="_blank">详情</a>
+                    {{#if link}}
+                    <a class="btn btn-default" href="{{link}}" target="_blank">链接</a>
+                    {{/if}}
+                    {{#unless recommended}}
+                        <button class="btn btn-info btn-recommend" type="button" data-post-id="{{id}}" onclick="recommend(this)">推荐</button>
+                    {{/unless}}
+                    {{#if imageUrl}}
+                    <p class="content-in-operation">{{content}}</p>
+                    {{/if}}
+                </div>
+                {{/if}}
+            </div>
+            {{/result}}
+        {% endraw %}
+    </script>
+{% endblock %}

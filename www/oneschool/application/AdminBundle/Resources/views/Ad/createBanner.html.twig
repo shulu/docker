@@ -1,0 +1,88 @@
+{% extends 'LycheeAdminBundle:Ad:layout.html.twig' %}
+
+{% block body %}
+    <div class="col-md-6 col-sm-8">
+        <form class="form-horizontal" role="form" action="{{ path('lychee_admin_ad_docreatebanner') }}" method="post"
+              enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title" class="col-sm-2 control-label"><span class="form-required">*&nbsp;</span>标题</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-sm-2 control-label"><span class="form-required">*&nbsp;</span>描述</label>
+                <div class="col-sm-10">
+                    <textarea name="description" id="description" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="url" class="col-sm-2 control-label"><span class="form-required">*&nbsp;</span>链接</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="url" name="url" placeholder="http://www.example.com/">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="image" class="col-sm-2 control-label"><span class="form-required">*&nbsp;</span>图片</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" id="image" name="image">
+                </div>
+            </div>
+            <div style="height: 25px;"></div>
+            <div class="form-group">
+                <label for="share_title" class="col-sm-2 control-label">分享标题</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="share_title" name="share_title">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="share_text" class="col-sm-2 control-label">分享内容</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="share_text" name="share_text"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="share_image" class="col-sm-2 control-label">分享图片</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" id="share_image" name="share_image">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="share_big_image" class="col-sm-2 control-label">分享大图片</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" id="share_big_image" name="share_big_image">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">保 存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@fileinput_css' filter="cssrewrite" %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style>
+        .form-required { color: red; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@fileinput_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            $("#image, #share_image, #share_big_image").fileinput({
+                allowedFileTypes: ['image'],
+                showUpload: false
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_preference_index' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_preference_index') }}">基本资料</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_preference_password' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_preference_password') }}">修改密码</a>
+    </li>
+{% endblock %}
+
+{% block body %}{% endblock %}

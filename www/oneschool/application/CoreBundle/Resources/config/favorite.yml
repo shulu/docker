@@ -1,0 +1,5 @@
+services:
+  lychee.module.favorite:
+    class: Lychee\Module\Favorite\FavoriteService
+    arguments:
+        - '@doctrine'

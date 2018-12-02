@@ -1,0 +1,355 @@
+{% extends 'LycheeAdminBundle:ContentAudit:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <div class="content-audit">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="{{ type == 0? 'active' }}">
+                <a href="{{ path('lychee_admin_contentaudit_classification', {type: 0}) }}">最新</a>
+            </li>
+            {% for c in categories %}
+                <li role="presentation" class="{{ type == c.id? 'active' }}">
+                    <a href="{{ path('lychee_admin_contentaudit_classification', {type: c.id}) }}">{{ c.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div style="margin-bottom: 10px;">
+            {% if type == 0 %}
+                {{ helper.datetimePicker(app.request.get('start_time')|default(startTime), app.request.get('end_time')|default(endTime)) }}
+            {% endif %}
+        </div>
+        <div id="container"></div>
+        <input type="hidden" id="cursor" value="0">
+        <div class="all-loaded"><p class="bg-info">全部载入完毕</p></div>
+    </div>
+    {{ helper.tagForm(tags) }}
+    {% javascripts filter='?jsqueeze' output='js/contentaudit_classification.js'
+        '@LycheeAdminBundle/Resources/public/datepicker2/js/bootstrap-datetimepicker.min.js'
+        '@LycheeAdminBundle/Resources/public/datepicker2/js/locales/bootstrap-datetimepicker.zh-CN.js'
+        '@LycheeAdminBundle/Resources/public/js/handlebars-v2.0.0.js'
+        '@LycheeAdminBundle/Resources/public/js/waterfall.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            var $container = $("#container");
+            var $setTag = $('#set_tag');
+            var $startTime = $('#start_time');
+            var $endTime = $('#end_time');
+            var containerWidth = $('#container').width();
+            var cardGutter = 15;
+            var cardWidth = 240;
+            if ($(window).width() < 768) {
+                cardGutter = 5;
+                cardWidth = containerWidth / 2 - 2 * cardGutter;
+                $('body').append("<style>.card{width: " + cardWidth + "px !important;}</style>");
+            }
+            $(".datepicker").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                language: "zh-CN",
+                todayHighlight: true,
+                endDate: new Date(),
+                autoclose: true
+            });
+            var $datetimeForm = $('#datetime-form');
+            $datetimeForm.submit(function() {
+                var endDateTimeStr = $endTime.val();
+                var startDateTimeStr = $startTime.val();
+                if (!startDateTimeStr || !endDateTimeStr) {
+                    alert("请指定时间段");
+                    return false;
+                }
+                var startDateTime = new Date(Date.parse(startDateTimeStr.replace(/-/g, "/")));
+                var endDateTime = new Date(Date.parse(endDateTimeStr.replace(/-/g, "/")));
+                if (startDateTime <= endDateTime) {
+                    alert("起始时间必须晚于结束时间");
+                    return false;
+                }
+            });
+            $('.back-tracking a').click(function () {
+                var $endTimeInput = $('#end_time');
+                var $startTimeInput = $('#start_time');
+                $startTimeInput.val($endTimeInput.val());
+                var interval = $(this).data('val');
+                var endTimeStamp = (new Date(Date.parse($endTimeInput.val().replace(/-/g, '/')))).getTime();
+                var intervalMilliseconds;
+                if (interval == 0.5) {
+                    intervalMilliseconds = 1800 * 1000;
+                } else if (interval == 1) {
+                    intervalMilliseconds = 3600 * 1000;
+                } else if (interval == 2) {
+                    intervalMilliseconds = 2 * 3600 * 1000;
+                }
+                endTimeStamp = endTimeStamp - intervalMilliseconds;
+                var newEndTime = new Date(endTimeStamp);
+                var pad = '00';
+                var month = (newEndTime.getMonth() + 1) + '';
+                var date = newEndTime.getDate() + '';
+                var hour = newEndTime.getHours() + '';
+                var min = newEndTime.getMinutes() + '';
+                $endTimeInput.val(
+                        newEndTime.getFullYear() + '-' +
+                        pad.substring(0, pad.length - month.length) + month + '-' +
+                        pad.substring(0, pad.length - date.length) + date + ' ' +
+                        pad.substring(0, pad.length - hour.length) + hour + ':' +
+                        pad.substring(0, pad.length - min.length) + min
+                );
+                $datetimeForm.submit();
+
+                return false;
+            });
+
+            $container.waterfall({
+                itemCls: 'card',
+                dataType: 'json',
+                colWidth: cardWidth,
+                gutterWidth: cardGutter,
+                gutterHeight: cardGutter,
+                path: function(cursor) {
+                    var urlPrefix = '/audit/fetch_posts_by_cat/';
+                    cursor = $('#cursor').val();
+                    var url = urlPrefix + '{{ type }}/' + cursor;
+                    if ($startTime.val() && $endTime.val()) {
+                        url += '?start_time=' + $startTime.val() + '&end_time=' + $endTime.val();
+                    }
+
+                    return url;
+                },
+                callbacks: {
+                    renderData: function (data, dataType) {
+                        var tpl, template;
+
+                        if ('json' === dataType) {
+                            $('#cursor').val(data.nextCursor);
+                            if (data.total > 0) {
+                                tpl = $('#waterfall-tpl').html();
+                                template = Handlebars.compile(tpl);
+
+                                return template(data);
+                            } else {
+                                $container.waterfall("pause", function() {
+                                    $(".all-loaded").show();
+                                });
+                            }
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+            });
+
+            $setTag.on('hidden.bs.modal', function () {
+                $('.tag-selector').prop('checked', false);
+            });
+            var $tagSelector = $('.tag-selector');
+            $('#tag_submit_btn').click(function() {
+                var tagIds = [];
+                var $selectedTags = $tagSelector.filter(':checked');
+                for (var i in $selectedTags) {
+                    tagIds.push($selectedTags.eq(i).val());
+                }
+                $.ajax("{{ path('lychee_admin_contentmanagement_addposttotag') }}", {
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        post_id: $('#tag_post_id').val(),
+                        tag_ids: tagIds
+                    },
+                    success: function() {
+                        $setTag.modal('hide');
+                    }
+                });
+                return false;
+            });
+        });
+
+        function delPost(target) {
+            var $targetCard = $(target).parent().parent();
+            if ($targetCard.hasClass('post-content')) {
+                $targetCard = $targetCard.parent().parent();
+            }
+            var postId = $(target).data("id");
+            var $img = $(target).parent().prev().find('img.image');
+            var imgUrl = '';
+            if (!confirm("（！！！危险操作）确定删除（删除后数据不可恢复）？")) {
+                return false;
+            }
+            if ($img.length > 0) {
+                imgUrl = $img.eq(0).attr('src');
+            }
+            $targetCard.addClass('card-deleted');
+            $.ajax("{{ path('lychee_admin_contentaudit_deletecontent') }}", {
+                type: "POST",
+                dataType: "json",
+                data: {
+                    post_id: postId,
+                    img_url: imgUrl
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (errorThrown) {
+                        alert(errorThrown);
+                    } else {
+                        alert("发生未知错误");
+                    }
+                },
+                success: function() {
+                    $targetCard.find(".operation button").attr("disabled", "disabled");
+                }
+            });
+        }
+
+        function switchFavor(target) {
+            var postType = $('#type').val();
+            var postId = $(target).data("id");
+            var notFavor = $(target).find('.glyphicon-heart-empty').length;
+            if (notFavor) {
+                $('#tag_post_id').val(postId);
+                $('#set_tag').modal('show');
+            }
+            if (notFavor && 3 == postType) { // 折叠帖子
+                if (!confirm('收藏折叠帖子的同时会恢复帖子，确认继续吗？')) {
+                    return false;
+                }
+            }
+            $.ajax("{{ path('lychee_admin_contentmanagement_togglepostfavor') }}", {
+                type: "post",
+                dataType: "json",
+                data: {
+                    type: postType,
+                    id: postId
+                },
+                success: function(data) {
+                    if ("undefined" !== typeof data.deleted) {
+                        var $btns = $(".card-" + postId + " button.favor span.glyphicon");
+                        $btns.toggleClass('glyphicon-heart-empty glyphicon-heart');
+                    }
+                }
+            });
+        }
+        function unfold(target) {
+            var id = $(target).data('id');
+            var $postCard = $('.card-' + id);
+            if (confirm('确定恢复该折叠帖子？')) {
+                $postCard.addClass('card-deleted');
+                $.ajax("{{ path('lychee_admin_contentmanagement_postunfold') }}", {
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        id: id
+                    },
+                    success: function() {
+                        $postCard.find(".operation button").attr("disabled", "disabled");
+                    }
+                });
+            }
+            return false;
+        }
+        function hoverCard(id) {
+            var $cards = $('.card-' + id);
+            $cards.addClass('card-hover');
+        }
+        function normalCard(id) {
+            var $cards = $('.card-' + id);
+            $cards.removeClass('card-hover');
+        }
+    </script>
+    <script id="waterfall-tpl" type="text/x-handlebars-template">
+        {% raw %}
+            {{#result}}
+            <div class="card card-{{id}}" onmouseover="hoverCard({{id}})" onmouseout="normalCard({{id}})">
+                <input type="hidden" class="post_id" value="{{id}}"/>
+                <div class="content">
+                    {{#if imageUrl}}
+                    <img class="image" src="{{imageUrl}}" alt="无图" onclick="showPostDetail(this)" data-post-id="{{id}}">
+                    {{else}}
+                    <div class="post-content">
+                        <div>
+                            <a class="card-link" href="/topic/detail/{{topicId}}" target="_blank">
+                                <span class="glyphicon glyphicon-tag"></span>
+                                {{topicName}}
+                            </a>
+                        </div>
+                        <div>
+                            <a class="card-link" href="/audit/user/detail/{{authorId}}" target="_blank">
+                                <span class="glyphicon glyphicon-user"></span>
+                                {{#if authorName}}{{authorName}}{{else}}[{{authorId}}]{{/if}}
+                            </a>
+                        </div>
+                        {{#if type}}
+                        <div>
+                            <span class="label label-primary">{{type}}</span>
+                        </div>
+                        {{/if}}
+                        <p>{{{content}}}</p>
+                        <div>
+                            <button class="btn btn-default favor" data-id="{{id}}" onclick="switchFavor(this)">
+                                {{#if favor}}
+                                <span class="glyphicon glyphicon-heart"></span>
+                                {{else}}
+                                <span class="glyphicon glyphicon-heart-empty"></span>
+                                {{/if}}
+                            </button>
+                            <a class="btn btn-default" href="/audit/post/{{id}}" target="_blank">详情</a>
+                            {{#if link}}
+                            <a class="btn btn-default" href="{{link}}" target="_blank">链接</a>
+                            {{/if}}
+                            <button class="btn btn-danger" data-id="{{id}}" onclick="delPost(this)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                            {{#if imageUrl}}
+                            <p class="content-in-operation">{{content}}</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if deleted}}
+                    <div class="post-deleted">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </div>
+                    {{/if}}
+                </div>
+                {{#if imageUrl}}
+                <div class="operation">
+                    <button class="btn btn-default favor" data-id="{{id}}" onclick="switchFavor(this)">
+                        {{#if favor}}
+                        <span class="glyphicon glyphicon-heart"></span>
+                        {{else}}
+                        <span class="glyphicon glyphicon-heart-empty"></span>
+                        {{/if}}
+                    </button>
+                    <a class="btn btn-default" href="/audit/post/{{id}}" target="_blank">详情</a>
+                    {{#if link}}
+                    <a class="btn btn-default" href="{{link}}" target="_blank">链接</a>
+                    {{/if}}
+                    <button class="btn btn-danger" data-id="{{id}}" onclick="delPost(this)">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                    {{#if imageUrl}}
+                    <p class="content-in-operation">{{content}}</p>
+                    {{/if}}
+                </div>
+                {{/if}}
+            </div>
+            {{/result}}
+        {% endraw %}
+    </script>
+    {% set userAgent = app.request.server.get('HTTP_USER_AGENT') %}
+    {% set isMobile = userAgent matches '/(android|iphone)/i' %}
+    {% if not isMobile %}
+        <style>
+            .placehold { height: 21px; }
+            form.form-inline { width: 100%; }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/datepicker2/css/bootstrap-datetimepicker.min.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style>
+        .content-audit .nav-tabs { margin-bottom: 15px; }
+    </style>
+{% endblock %}

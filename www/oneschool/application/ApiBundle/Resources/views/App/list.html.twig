@@ -1,0 +1,38 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>热门游戏</title>
+    <link rel="stylesheet" href="{{ asset('bundles/lycheeapi/app/style/list.css') }}" />
+</head>
+<body>
+<ol>
+    {% for application in apps %}
+    <li class="app" data-url="{{ path('lychee_api_game_getgameweb', {'id': application.id}) }}">
+        <div class="icon"><img src="{{ application.icon | resizeImage(150, 150) }}"/></div>
+        <span class="name">{{ application.appName }}</span>
+        <span class="description">{{ application.shortDescription }}</span>
+        {% set downloadLink = userAgent().ios ? application.iosLink : application.androidLink %}
+        <a class="link" target="_blank" {{downloadLink is empty ? "disabled" : ''}} href="{{
+            downloadLink is empty ? "javascript:alert('该应用暂不支持你手姬哦~')" : downloadLink
+        }}">安装</a>
+    </li>
+    {% endfor %}
+</ol>
+<script src="{{ asset('bundles/lycheeapi/common/jquery-3.1.0.min.js') }}"></script>
+<script>
+$(function(){
+    $('.app').on('click', function(e){
+        if (e.target.tagName == 'A') {
+            return;
+        }
+        var url = $(e.currentTarget).data('url');
+        window.location.href = url;
+    });
+});
+</script>
+</body>
+</html>
+{% endspaceless %}

@@ -1,0 +1,108 @@
+{% extends 'LycheeAdminBundle:Channel:layout.html.twig' %}
+
+{% block body %}
+    <div class="col-sm-6 col-sm-offset-3">
+        <form class="form-horizontal" action="{{ path('lychee_admin_channel_docreateappchannelpackage') }}"
+              id="create_app_channel_package" method="post">
+            <div class="form-group">
+                <label for="code" class="col-sm-2 control-label">代码</label>
+                <div class="col-sm-10">
+                    <div id="container">
+                        <input type="text" class="form-control" id="code" name="code" value="{{ code|default('') }}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="package" class="col-sm-2 control-label">渠道包</label>
+                <div class="col-sm-10">
+                    {#<input type="file" class="" id="package" name="file">#}
+                    <div id="container">
+                        <button type="button" class="btn btn-default" id="pickfiles">选择文件</button>
+                        <span id="upload_text"></span>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="link" id="link">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary" id="submit_btn" disabled>上 传</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://staticfile.qnssl.com/Plupload/2.1.1/plupload.full.min.js"></script>
+    <script src="https://staticfile.qnssl.com/qiniu-js-sdk/1.0.14-beta/qiniu.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var $uploadText = $('#upload_text');
+            var timeoutId;
+            var uploader = Qiniu.uploader({
+                multi_selection: false,
+                runtimes: 'html5,flash,html4',
+                browse_button: 'pickfiles',
+                uptoken: '{{ token }}',
+                get_new_uptoken: false,
+                domain: '{{ domain }}',
+                container: 'container',
+                max_file_size: '600mb',
+                flash_swf_url: 'https://staticfile.qnssl.com/Plupload/2.1.1/Moxie.swf',
+                max_retries: 3,
+                dragdrop: true,
+                drop_element: 'container',
+                chunk_size: '4mb',
+                auto_start: true,
+                save_key: false,
+                unique_names: false,
+                init: {
+                    'BeforeUpload': function(up, file) {
+                        var dotCount = 0;
+                        timeoutId = setInterval(function () {
+                            var dot = '';
+                            for (var i = 0; i < dotCount; i++) {
+                                dot += '.';
+                            }
+                            $uploadText.text('正在上传' + dot);
+                            if (dotCount >= 10) {
+                                dotCount = 0;
+                            } else {
+                                dotCount += 1;
+                            }
+                        }, 200);
+                    },
+                    'UploadComplete': function() {
+                        clearInterval(timeoutId);
+                    },
+                    'FileUploaded': function(up, file, info) {
+                        var infoJson = JSON.parse(info);
+//                        console.log(infoJson);
+                        var sourceLink = '{{ domain }}/' + infoJson.key;
+                        $('#link').val(sourceLink);
+                        $uploadText.text('上传完毕.');
+                        $('#submit_btn').prop('disabled', false);
+                    },
+                    'Error': function(up, err, errTip) {
+                        alert(errTip);
+                        console.log(err);
+                        $uploadText.text('上传失败, 请刷新页面重试.');
+                    },
+                    'Key': function(up, file) {
+                        var key = "android/" + file.name;
+
+                        return key;
+                    }
+                }
+            });
+            $('#create_app_channel_package').submit(function () {
+                var code = $('#code').val();
+                if (!code) {
+                    alert('请输入代码.');
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

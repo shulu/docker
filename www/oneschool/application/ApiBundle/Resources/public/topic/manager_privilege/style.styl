@@ -1,0 +1,77 @@
+@charset "UTF-8"
+
+@import 'nib'
+global-reset()
+
+cy-font-size(s)
+  font-size: 1rem * (s / 12px)
+  font-size: 100vw * (s / 640px)
+
+cy-percentage(n)
+  return percentage(round(n, 6))
+
+html
+  background-color: #fff
+  font-family: Helvetica
+  font-size: 12px
+  font-size: 100vw * (12px / 640px)
+  screens = 320px 346px 360px 375px 384px 390px 400px 412px 414px 480px 504px 600px 720px 768px 800px
+  for screen in screens
+    @media screen and (min-width: screen)
+      font-size: (12px / 640px * screen)
+  @media screen and (min-width: 9999px)
+    font-size: 12px
+
+body
+  width: 100%
+
+h2
+  text-align: center
+  padding-top: cy-percentage(30px / 640px)
+  cy-font-size: 32px
+
+h2:nth-of-type(1) img
+  width: cy-percentage(357px / 640px)
+h2:nth-of-type(2) img
+  width: cy-percentage(365px / 640px)
+
+ol.privileges
+  cy-font-size: 30px
+  font-weight: bold
+  text-align: center
+  &::after
+    content: ''
+    display: block
+    background-color: #e8e8e8
+    padding-top: cy-percentage(28px/640px)
+  li
+    padding: cy-percentage(30px/640px) 0 cy-percentage(20px/640px) 0
+    margin: 0 cy-percentage(20px/640px)
+    &:not(:first-child)
+      border-top: dashed 2px #ccc
+    img
+      margin-top: cy-percentage(40px/640px)
+      width: 100%
+
+
+ol.explanations
+  cy-font-size: 28px
+  padding: 0 cy-percentage(30px/640px) cy-percentage(40px/640px) cy-percentage(70px/640px)
+  counter-reset: explanation
+  li
+    margin-top: cy-percentage(50px/640px)
+    position: relative
+    counter-increment: explanation
+    &::before
+      content: counter(explanation)
+      display: inline-block
+      position: absolute
+      left: cy-percentage(-40px / (640px - 100px))
+      width: cy-percentage(26px / (640px - 100px))
+      background-color: #ff666f
+      border-radius: cy-percentage(6px/28px)
+      color: #fff
+      text-align: center
+      cy-font-size: 16px
+      line-height: (28 / 16)
+      vertical-align: middle

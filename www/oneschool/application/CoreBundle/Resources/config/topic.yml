@@ -1,0 +1,106 @@
+services:
+    lychee.module.topic:
+        class: Lychee\Module\Topic\TopicService
+        arguments:
+            - '@doctrine'
+            - '@lychee.event_dispatcher_async'
+            - '@lychee.module.topic.following'
+            - '@lychee.module.topic.category'
+            - '@service_container'
+
+    lychee.module.topic.following:
+        class: Lychee\Module\Topic\Following\TopicFollowingService
+        arguments:
+            - '@doctrine'
+            - '@lychee.event_dispatcher_async'
+            - '@service_container'
+
+    lychee.module.topic.following_apply:
+        class: Lychee\Module\Topic\Following\ApplyService
+        arguments:
+            - '@doctrine'
+            - '@lychee.module.topic.following'
+
+    lychee.module.topic.event_subscriber:
+        class: Lychee\Module\Topic\EventSubscriber
+        arguments:
+            - '@lychee.module.topic'
+        tags:
+            - {name: kernel.event_subscriber}
+
+    lychee.module.topic.deletor:
+        class: Lychee\Module\Topic\Deletion\DeferDeletor
+        arguments:
+            - '@old_sound_rabbit_mq.topic_deletion_producer'
+            - '@lychee.module.topic'
+            - '@lychee.module.topic.following'
+            - '@lychee.module.post'
+            - '@?logger'
+            - '@doctrine'
+
+    lychee.module.topic.category:
+        class: Lychee\Module\Topic\TopicCategoryService
+        arguments:
+            - '@doctrine'
+            - ~
+
+    lychee.module.topic.tag:
+        class: Lychee\Module\Topic\TopicTagService
+        arguments:
+            - '@doctrine'
+            - ~
+
+    lychee.module.topic.default_group:
+        class: Lychee\Module\Topic\TopicDefaultGroupService
+        arguments:
+            - '@doctrine'
+
+    lychee.module.topic.clear_timeout_application_task:
+        class: Lychee\Module\Topic\Tasks\ClearTimeoutApplicationTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.module.topic.visitor_recorder:
+        class: Lychee\Module\Topic\TopicVisitorRecorder
+        arguments:
+            - '@snc_redis.topic_visitor'
+            - '@doctrine'
+            - '@service_container'
+
+    lychee.module.topic.core_member:
+        class: Lychee\Module\Topic\CoreMember\TopicCoreMemberService
+        arguments:
+            - '@doctrine'
+
+    lychee.module.topic.announce:
+        class: Lychee\Module\Topic\TopicAnnouncementService
+        arguments:
+            - '@doctrine'
+            - '@old_sound_rabbit_mq.topic_announce_producer'
+            - '@lychee.module.topic'
+            - '@lychee.module.topic.following'
+            - '@lychee.module.notification'
+            - '@?logger'
+
+    lychee.consumer.topic_visit:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.topic.visitor_recorder'
+            - 'increaseCounterOnVisit'
+
+    lychee.consumer.post.create.follow_topic:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.topic.following'
+            - 'followOnCreatePost'
+
+    lychee.consumer.topic.update:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.topic'
+            - 'asyncAfterUpdate'

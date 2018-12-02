@@ -1,0 +1,37 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_index' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_index') }}">帖子查询</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_topposts' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_topposts') }}">置顶帖子</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_favor' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_favor') }}">收藏帖子</a>
+    </li>
+    <li class="{% if app.request.get('_route') matches '/tag/' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_tag') }}">标签</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_untreatedaudit' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_untreatedaudit') }}">待审核帖子</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_rejectedaudit' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_rejectedaudit') }}">已删帖子</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_passedaudit' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_passedaudit') }}">已通过帖子</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_rejectedauditundelete' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_rejectedauditundelete') }}">仅安卓通过</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_postmanager_auditstrategy' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_postmanager_auditstrategy') }}">内容审核策略</a>
+    </li>
+{% endblock %}
+
+{% block body %}
+    <div class="post-manager">
+        {% block bodyInner %}{% endblock %}
+    </div>
+{% endblock %}

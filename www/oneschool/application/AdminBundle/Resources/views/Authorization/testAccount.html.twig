@@ -1,0 +1,34 @@
+{% extends 'LycheeAdminBundle:Authorization:layout.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="col-sm-12 col-md-6">
+            <form class="form-horizontal" method="post" action="{{ path('lychee_admin_authorization_resettestaccount') }}">
+                <div class="form-group">
+                    <label for="test_account" class="col-sm-2 control-label">测试账号</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="test_account" value="{{ testPhoneNum }}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" id="reset_phone_num" class="btn btn-danger">重置测试账号</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('#reset_phone_num').click(function() {
+                if (!confirm('确定重置账号（重置后所有数据将失去）？')) {
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

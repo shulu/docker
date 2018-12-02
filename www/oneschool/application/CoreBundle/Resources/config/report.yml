@@ -1,0 +1,5 @@
+services:
+
+    lychee.module.report:
+        class: Lychee\Module\Report\ReportService
+        arguments: ['@doctrine', ~]

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<section code="12">
+    <group>
+        <error name="PizusAccountHasBeenBound" display="账号已绑定">Pizus account has been bound</error>
+        <error name="UserNotExist" display="用户不存在(账号未绑定)">User not exist</error>
+    </group>
+    <group>
+        <error name="GiftsJsonInvalid" display="无法解析礼物信息">Gifts json invalid</error>
+        <error name="SignatureInvalid" display="签名错误">Signature invalid</error>
+        <error name="InsufficientBalance" display="余额不足">Insufficient balance</error>
+    </group>
+</section>

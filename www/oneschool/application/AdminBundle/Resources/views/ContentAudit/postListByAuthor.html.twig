@@ -1,0 +1,86 @@
+{% extends 'LycheeAdminBundle:ContentAudit:layout.html.twig' %}
+{% import 'LycheeAdminBundle::helper.html.twig' as helper %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="{{ path('lychee_admin_contentaudit_userdetail', {userId: authorId}) }}">资料</a></li>
+        <li role="presentation" class="active"><a href="#">帖子</a></li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_managertopics', {managerId: authorId}) }}">领主次元</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_commentsbyauthor', {authorId: authorId}) }}">用户评论</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_rechargedetail', {authorId: authorId}) }}">用户充值明细</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_contentaudit_exchangedetail', {authorId: authorId}) }}">用户兑换明细</a>
+        </li>
+    </ul>
+    <div id="container"></div>
+    <div class="all-loaded"><p class="bg-info">全部载入完毕</p></div>
+    {{ helper.tagForm(tags) }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@LycheeAdminBundle/Resources/public/css/waterfall.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    <style>
+        #container { margin-top: 30px; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts filter='?jsqueeze' output='js/postmanager_listbyauthor.js'
+        '@LycheeAdminBundle/Resources/public/js/handlebars-v2.0.0.js'
+        '@LycheeAdminBundle/Resources/public/js/waterfall.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $container = $("#container");
+            var authorId = {{ authorId }};
+            $container.waterfall({
+                itemCls: 'card',
+                dataType: 'json',
+                colWidth: 250,
+                gutterWidth: 15,
+                gutterHeight: 15,
+                path: function(cursor) {
+                    cursor = $(".card").last().find(".post_id").eq(0).val();
+                    if (typeof cursor === 'undefined') {
+                        cursor = 0;
+                    }
+
+                    return '/audit/post/author/' + authorId + '/' + cursor;
+                },
+                callbacks: {
+                    renderData: function (data, dataType) {
+                        var tpl, template;
+
+                        if ('json' === dataType) {
+                            if (data.total > 0) {
+                                tpl = $('#waterfall-tpl').html();
+                                template = Handlebars.compile(tpl);
+
+                                return template(data);
+                            } else {
+                                $container.waterfall("pause", function() {
+                                    $(".all-loaded").show();
+                                });
+                            }
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    {{ include('LycheeAdminBundle:ContentManagement:postCard.html.twig') }}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'LycheeAdminBundle:Inquiry:layout.html.twig' %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="{{ path('lychee_admin_inquiry_userdetail', {userId: authorId}) }}">资料</a></li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_inquiry_userlistpostbyauthor', {authorId: authorId}) }}">帖子</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_inquiry_usertopics', {managerId: authorId}) }}">领主次元</a>
+        </li>
+        <li role="presentation" class="active"><a href="#">用户评论</a></li>
+    </ul>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>内容</th>
+                    <th>创建时间</th>
+                    <th>帖子ID</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <td>{{ comment.content }}</td>
+                    <td>{{ comment.createTime|date('Y-m-d H:i:s') }}</td>
+                    <td>
+                        <a href="{{ path('lychee_admin_inquiry_postdetail', {id: comment.postId}) }}" target="_blank">
+                            {{ comment.postId }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <nav>
+        <ul class="pager">
+            {% if cursor > 0 %}
+                <li class="previous">
+                    <a href="{{ path('lychee_admin_inquiry_usercomments', {authorId: authorId, cursor: prevCursor}) }}">
+                        <span aria-hidden="true">&larr;</span> 上一页
+                    </a>
+                </li>
+            {% endif %}
+            {% if nextCursor %}
+                <li class="next">
+                    <a href="{{ path('lychee_admin_inquiry_usercomments', {authorId: authorId, cursor: nextCursor, prev_cursor: cursor}) }}">
+                        下一页 <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

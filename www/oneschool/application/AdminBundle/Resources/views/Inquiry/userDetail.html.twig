@@ -1,0 +1,132 @@
+{% extends 'LycheeAdminBundle:Inquiry:layout.html.twig' %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">资料</a></li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_inquiry_userlistpostbyauthor', {authorId: user.id}) }}">帖子</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_inquiry_usertopics', {managerId: user.id}) }}">领主次元</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_inquiry_usercomments', {authorId: user.id}) }}">用户评论</a>
+        </li>
+    </ul>
+    <div style="margin-top: 20px;">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>ID</th>
+                    <td>{{ user.id }}</td>
+                </tr>
+                <tr>
+                    <th>昵称</th>
+                    <td>{{ user.nickname }}</td>
+                </tr>
+                <tr>
+                    <th>签名</th>
+                    <td>{{ user.signature }}</td>
+                </tr>
+                <tr>
+                    <th>注册时间</th>
+                    <td>{{ user.createTime|date('Y-m-d H:i:s') }}</td>
+                </tr>
+                <tr>
+                    <th>头像</th>
+                    <td>
+                        {% if user.avatarUrl %}
+                            <img src="{{ user.avatarUrl }}" alt="{{ user.id }}" style="max-width: 50px">
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>性别</th>
+                    <td>
+                        {% if user.gender == constant('Lychee\\Bundle\\CoreBundle\\Entity\\User::GENDER_MALE') %}
+                            男
+                        {% else %}
+                            {% if user.gender == constant('Lychee\\Bundle\\CoreBundle\\Entity\\User::GENDER_FEMALE') %}
+                                女
+                            {% else %}
+                                未知
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>状态</th>
+                    <td>
+                        {% if user.frozen %}
+                            已冻结
+                        {% else %}
+                            使用中
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>经验</th>
+                    <td>{{ user.experience }}</td>
+                </tr>
+                <tr>
+                    <th>等级</th>
+                    <td>{{ user.level }}</td>
+                </tr>
+                <tr>
+                    <th>年龄</th>
+                    <td>{{ profile.age }}</td>
+                </tr>
+                <tr>
+                    <th>所在地</th>
+                    <td>{{ profile.location }}</td>
+                </tr>
+                <tr>
+                    <th>领主次元</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>星座</th>
+                    <td>{{ profile.constellation }}</td>
+                </tr>
+                <tr>
+                    <th>血型</th>
+                    <td>{{ profile.bloodType }}</td>
+                </tr>
+                <tr>
+                    <th>学校</th>
+                    <td>{{ profile.school }}</td>
+                </tr>
+                <tr>
+                    <th>社团</th>
+                    <td>{{ profile.community }}</td>
+                </tr>
+                <tr>
+                    <th>粉丝数</th>
+                    <td>{{ followers }}</td>
+                </tr>
+                {#<tr>#}
+                    {#<th>登录方式</th>#}
+                    {#<td>#}
+                        {#{% if auth is not null %}#}
+                            {#{% if auth.grantType == 'phone' %}#}
+                                {#手机#}
+                            {#{% elseif auth.grantType == 'qq' %}#}
+                                {#QQ#}
+                            {#{% elseif auth.grantType == 'wechat' %}#}
+                                {#微信#}
+                            {#{% elseif auth.grantType == 'weibo' %}#}
+                                {#微博#}
+                            {#{% else %}#}
+                                {#未知#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<th>最后登录时间</th>#}
+                    {#<td>{{ lastLogin }}</td>#}
+                {#</tr>#}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

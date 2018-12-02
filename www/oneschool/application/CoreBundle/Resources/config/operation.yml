@@ -1,0 +1,11 @@
+services:
+  lychee.module.operation.liking_bot:
+    class: Lychee\Module\Operation\LikingBot\LikingBot
+    arguments: ['@doctrine', '@lychee.module.like', '@monolog.logger.task']
+
+  lychee.task.liking_bot:
+    class: Lychee\Module\Operation\Tasks\LikingBotTask
+    calls:
+        - [setContainer, ['@service_container']]
+    tags:
+        - {name: lychee.task}

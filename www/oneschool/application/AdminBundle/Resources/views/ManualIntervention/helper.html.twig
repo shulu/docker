@@ -1,0 +1,70 @@
+{% macro groupTable(groups) %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>类型</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for group in groups %}
+                <tr>
+                    <td>{{ group.getId() }}</td>
+                    <td>{{ group.getType() }}</td>
+                    <td>{{ group.getStartTime()|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ group.getEndTime()|date('Y-m-d H:i:s') }}</td>
+                    <td>
+                        <a class="btn btn-info" href="{{ path('lychee_admin_manualintervention_item', {'gid': group.getId()}) }}">
+                            <span class="glyphicon glyphicon-folder-open"></span>
+                        </a>
+                        <span style="display: inline-block; width: 10px;"></span>
+                        <a class="btn btn-warning group-edit" href="{{ path('lychee_admin_manualintervention_groupdetail', {'gid': group.getId()}) }}">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                        <a class="btn btn-danger group-delete" href="#" gid="{{ group.getId() }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endmacro %}
+
+{% macro groupEvents() %}
+    <script>
+        $(document).ready(function() {
+            $(".group-delete").on("click", function() {
+                if (!confirm("删除排期会把排期下的项目一并删除，确定吗？")) {
+                    return false;
+                }
+                var gid = $(this).attr("gid");
+                $.ajax("{{ path('lychee_admin_manualintervention_deletegroup') }}", {
+                    data: {
+                        gid: gid
+                    },
+                    dataType: "json",
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        if (errorThrown) {
+                            alert(errorThrown);
+                        } else {
+                            alert("发生未知错误");
+                        }
+                    },
+                    success: function() {
+                        alert("操作成功");
+                        window.location.href = "{{ path(app.request.get('_route')) }}";
+                    },
+                    type: "POST"
+                });
+
+                return false;
+            });
+        });
+    </script>
+{% endmacro %}

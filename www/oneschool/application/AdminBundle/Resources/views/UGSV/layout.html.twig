@@ -1,0 +1,16 @@
+{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
+
+{% block left_nav %}
+
+    <li class="{% if app.request.get('_route') == 'lychee_admin_ugsv_videos' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_ugsv_videos') }}">短视频</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_ugsv_bgms' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_ugsv_bgms') }}">背景音乐</a>
+    </li>
+    <li class="{% if app.request.get('_route') == 'lychee_admin_ugsv_whitelist' %}active{% endif %}">
+        <a href="{{ path('lychee_admin_ugsv_whitelist') }}">白名单</a>
+    </li>
+{% endblock %}
+
+{% block body %}{% endblock %}

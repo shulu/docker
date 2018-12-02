@@ -1,0 +1,23 @@
+services:
+    lychee.module.im:
+        class: Lychee\Module\IM\IMService
+        arguments:
+            - %chatto_host%
+            - %chatto_port%
+            - %chatto_api_token%
+
+    lychee.module.im.group:
+        class: Lychee\Module\IM\GroupService
+        arguments:
+            - %chatto_host%
+            - %chatto_port%
+            - %chatto_api_token%
+
+    lychee.module.im.event_subscriber:
+        class: Lychee\Module\IM\EventSubscriber
+        arguments:
+            - '@lychee.module.im.group'
+            - '@lychee.module.topic'
+            - '@lychee.module.topic.default_group'
+        tags:
+            - {name: kernel.event_subscriber}

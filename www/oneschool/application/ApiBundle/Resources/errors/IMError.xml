@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+
+<section code="9">
+    <group>
+        <error name="PermissionDenied"/>
+        <error name="CanNotKickYourself"/>
+        <error name="MemberExceedLimit"/>
+        <error name="GroupNonExist"/>
+        <error name="YouHaveBeenKicked"/>
+        <error name="JoinTooMuchGroupInTopic" display="每人每次元最多加入10个群聊"/>
+    </group>
+</section>

@@ -30,9 +30,6 @@ class User extends Base
 	 * @param string|null $nickname
 	 *
 	 * @return User|mixed
-	 * @throws Exception\EmailAndNicknameDuplicateException
-	 * @throws Exception\EmailDuplicateException
-	 * @throws Exception\NicknameDuplicateException
 	 * @throws \Exception
 	 */
 	public function createWithEmail($email = null, $nickname = null)
@@ -70,6 +67,62 @@ class User extends Base
 		}
 		
 		return $this->sendSuccess (['message'=>"Created User with ID " .$user->getId()]);
+	}
+	
+	/**
+	 * @param string|null $phone
+	 * @param string|null $areaCode
+	 * @param string|null $nickname
+	 *
+	 * @return User
+	 * @throws Exception\PhoneAndNicknameDuplicateException
+	 * @throws Exception\PhoneDuplicateException
+	 * @throws Exception\NicknameDuplicateException
+	 * @throws \Exception
+	 */
+	public function createWithPhone($phone = null, $areaCode = null, $nickname = null) {
+		$user = new User();
+		$user->createTime = new \DateTime('now');
+		$user->phone = $phone;
+		$user->areaCode = $areaCode;
+		if ($nickname == null) {
+			$needGenerateNickname = true;
+		} else {
+			$user->nickname = $nickname;
+			$needGenerateNickname = false;
+		}
+		
+		try {
+			$this->entityManager->beginTransaction();
+			if ($needGenerateNickname) {
+				$this->trySaveWithRandomNickname($user, 3);
+			} else {
+				$this->entityManager->persist($user);
+				$this->entityManager->flush($user);
+			}
+			
+			$counting = new UserCounting();
+			$counting->userId = $user->id;
+			$this->countingStorage->set($user->id, $counting);
+			
+			$this->entityManager->commit();
+			$this->eventDispatcher->dispatch(AccountEvent::CREATE, new AccountEvent($user->id));
+		} catch (UniqueConstraintViolationException $e) {
+			$this->entityManager->rollback();
+			$constraintName = $this->getConstraintName($e);
+			if ($constraintName == 'area_code_phone_udx') {
+				throw new PhoneDuplicateException();
+			} else if ($constraintName == 'nickname_udx') {
+				throw new NicknameDuplicateException();
+			} else {
+				throw $e;
+			}
+		} catch (\Exception $e) {
+			$this->entityManager->rollback();
+			throw $e;
+		}
+		
+		return $user;
 	}
 	
 	/**

@@ -1,0 +1,52 @@
+services:
+    lychee.module.comment:
+        class: Lychee\Module\Comment\CommentService
+        arguments:
+            - '@doctrine'
+            - '@memcache.default'
+            - '@lychee.module.comment.id_generator'
+            - '@lychee.module.post'
+            - '@lychee.module.account'
+            - '@lychee.event_dispatcher_async'
+            - '@service_container'
+
+    lychee.module.comment.id_generator:
+        class: Lychee\Component\IdGenerator\RedisIdGenerator
+        arguments: ['@snc_redis.idgen', '@=1404057600', "comment"]
+
+    lychee.module.comment.robot:
+        class: Lychee\Module\Comment\RobotService
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+
+    lychee.module.robot.comment:
+        class: Lychee\Module\Robot\OperationService
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+            - 'robot_commentator'
+            - 'robot_comment_task'
+            - '@lychee.module.comment.robot'
+            - 'comment'
+
+    lychee.task.comment_bot:
+        class: Lychee\Module\Comment\Task\CommentBotTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.task.settle_need_robot_post:
+        class: Lychee\Module\Comment\Task\SettleNeedRobotPostTask
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - {name: lychee.task}
+
+    lychee.consumer.comment.create:
+        class: Lychee\Component\EventDispatcher\DynamicAsyncConsumer
+        arguments:
+            - '@?monolog.logger.consumer'
+            - '@lychee.module.comment'
+            - 'asyncAfterCreateComment'

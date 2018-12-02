@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+
+<section code="2">
+    <group>
+        <error name="EmailUsed"/>
+        <error name="EmailInvalid"/>
+        <error name="PasswordInvalid"/>
+        <error name="NicknameUsed"/>
+        <error name="NicknameInvalid"/>
+        <error name="PhoneUsed"/>
+        <error name="PhoneInvalid"/>
+        <error name="PhoneVerifyFail"/>
+    </group>
+    <group>
+        <error name="EmailNonexist"/>
+        <error name="NicknameNonexist"/>
+        <error name="AccountOrPasswordError"/>
+        <error name="PasswordWrong"/>
+        <error name="PhoneNonexist"/>
+    </group>
+    <group>
+        <error name="BadAuthentication"/>
+    </group>
+    <group>
+        <error name="WeiboTokenInvalid"/>
+    </group>
+    <group>
+        <error name="QQTokenInvalid"/>
+        <error name="QQOpenIdInvalid"/>
+    </group>
+    <group>
+        <error name="WechatTokenInvalid"/>
+    </group>
+</section>

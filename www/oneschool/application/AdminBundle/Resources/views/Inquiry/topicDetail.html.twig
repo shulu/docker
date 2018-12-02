@@ -1,0 +1,94 @@
+{% extends 'LycheeAdminBundle:Inquiry:layout.html.twig' %}
+
+{% block body %}
+    <ul class="nav nav-tabs" style="margin-bottom: 30px;">
+        <li role="presentation" class="active"><a href="#">资料</a></li>
+        <li role="presentation">
+            <a href="{{ path('lychee_admin_inquiry_topicpost', {id: topic.id}) }}">帖子</a>
+        </li>
+    </ul>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ topic.id }}</td>
+            </tr>
+            <tr>
+                <th>名称</th>
+                <td>{{ topic.title }}</td>
+            </tr>
+            <tr>
+                <th>简介</th>
+                <td>{{ topic.summary }}</td>
+            </tr>
+            <tr>
+                <th>描述</th>
+                <td>{{ topic.description }}</td>
+            </tr>
+            <tr>
+                <th>创建时间</th>
+                <td>{{ topic.createTime|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>封面1</th>
+                <td>{% if topic.indexImageUrl %}<img src="{{ topic.indexImageUrl }}" alt="{{ topic.id }}">{% endif %}</td>
+            </tr>
+            <tr>
+                <th>封面2</th>
+                <td>{% if topic.coverImageUrl %}<img src="{{ topic.coverImageUrl }}" alt="{{ topic.id }}">{% endif %}</td>
+            </tr>
+            <tr>
+                <th>属性</th>
+                <td>{% if topicProperty %}{{ topicProperty.name }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>分类</th>
+                <td>{{ topicCategories|join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>帖子数</th>
+                <td>{{ topic.postCount }}</td>
+            </tr>
+            <tr>
+                <th>创建者</th>
+                <td>
+                    {% if creator %}
+                        [<a href="{{ path('lychee_admin_inquiry_userdetail', {userId: topic.creatorId}) }}" target="_blank">{{ topic.creatorId }}</a>]
+                        <span>{{ creator.nickname }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>领主</th>
+                <td>
+                    {% if manager %}
+                        [<a href="{{ path('lychee_admin_inquiry_userdetail', {userId: topic.managerId}) }}" target="_blank">{{ topic.managerId }}</a>]
+                        <span>{{ manager.nickname }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>角标</th>
+                <td>{{ topic.opMark }}</td>
+            </tr>
+            <tr>
+                <th>状态</th>
+                <td>
+                    {% if topic.deleted %}
+                        <span class="glyphicon glyphicon-remove"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-ok"></span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>私有</th>
+                <td>{% if topic.private %}私有{% else %}公开{% endif %}</td>
+            </tr>
+            <tr>
+                <th>入驻人数</th>
+                <td>{{ topicFollowerCount }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,286 @@
+@import 'nib'
+
+*
+	padding: 0
+	margin: 0
+ul, ol
+	list-style: none
+
+html
+	background-color: #e3e3e3
+	font-size: 12px
+
+body
+	position: relative
+	&::after
+		content: ''
+		position: absolute
+		display: block
+		width: 100%
+		height: 100%
+		background-color: #fff
+		z-index: -1
+		top: 0
+		left: 0
+
+.back
+	display: block
+	width: 13.75%
+	background-image: url(../image/back.png)
+	background-repeat: no-repeat
+	background-size: 100%
+	position: absolute
+	top: 10px
+	left: 10px
+	z-index: 99
+	&::before
+		content: ''
+		display: block
+		margin-top: 100%
+
+.banner
+	display: block
+	width: 100%
+	height: auto
+
+.intro
+	position: relative
+	display: block
+	width: 100%
+	color: #404040
+	margin: 2% 0 4%
+	font-size: 0
+	&::before
+		content: ''
+		display: block
+		height: 1px
+	&::after
+		content: ''
+		display: block
+		height: 1px
+	.icon
+		position: absolute
+		width: 22.5%
+		left: 2.8125%
+		top: 0
+		border-radius: 17.54%
+	.name
+		display: block
+		margin: 2% 0 1.875% 28.125%
+		width: 50%
+		font-size: 1.25rem
+		font-weight: bold
+		overflow: hidden
+		text-overflow: ellipsis
+		white-space: nowrap
+		line-height: 1
+	.publisher
+		display: block
+		margin-left: 28.125%
+		margin-bottom: 1%
+		font-size: 1rem
+		color: #45c3f5
+		overflow: hidden
+		text-overflow: ellipsis
+		white-space: nowrap
+		line-height: 1
+	.type
+		display: inline-block
+		margin: 2% 0 2% 28.125%
+		font-size: 1rem
+		vertical-align: middle
+		line-height: 1
+		&::after
+			content: ''
+			display: inline
+			border-right: solid 2px #404040
+			margin: 0 6px
+	.type:nth-of-type(2)
+		margin-top: 5%
+	.size
+		display: inline-block
+		margin: 2% 0
+		font-size: 1rem
+		vertical-align: middle
+		line-height: 1
+	.size:nth-of-type(3)
+		margin-top: 5%
+	.playerNumbers
+		display: block
+		margin-left: 28.125%
+		font-size: 1rem
+		color: #7b7b7b
+		line-height: 1
+	.install
+		display: inline-block
+		position: absolute
+		top: 28%
+		right: 2.8125%
+		width: 16.25%
+		height: 37.6%
+		border-radius: 6px
+		font-size: 1rem
+		color: #fff
+		background-color: #45c3f5
+		text-decoration: none
+		text-align: center
+		line-height: 1
+		&::before
+			content: ''
+			display: block
+			margin-top: 17%
+		&[disabled]
+			background-color: #E3E3E3
+
+.notice
+	display: block
+	border-top: solid 1px #e5e5e5
+	margin-left: 2.8125%
+	padding-left: 2.8125%
+	h2
+		margin-top: 4.6875%
+		font-size: 1.33rem
+		color: #272727
+	p
+		margin: 4.6875% 0 4.6875% 0
+		font-size: 1rem
+		line-height: 1.8
+		color: #7b7b7b
+		word-break: break-all
+		padding-right: 5.96%
+
+.description
+	position: relative
+	display: block
+	border-top: solid 1px #e5e5e5
+	margin-left: 2.8125%
+	padding-left: 2.8125%
+	h2
+		margin-top: 4.6875%
+		font-size: 1.33rem
+		color: #272727
+	p
+		margin: 4.6875% 0 12.5% 0
+		padding-right: 8.22%
+		font-size: 1rem
+		line-height: 1.5
+		color: #7b7b7b
+		overflow: hidden
+	.switch
+		appearance: none
+		background: none
+		border: none
+		position: absolute
+		right: 5.3%
+		bottom: 0
+		margin-bottom: 8.22%
+		font-size: 1rem
+		color: #25aaff
+		text-decoration: none
+	&::after
+		content: ''
+		display: block
+		height: 1px
+
+.screenshots
+	display: block
+	width: 100%
+	position: relative
+	&::before
+		content: ''
+		display: block
+		width: 97.1875%
+		height: 1px
+		background-color: #e5e5e5
+		position: absolute
+		top: 0
+		left: 2.8125%
+	ul
+		width: 100%
+		padding: 3.75% 0 5.9375% 0
+		overflow-x: scroll
+		-webkit-overflow-scrolling: touch
+		white-space: nowrap
+		&::-webkit-scrollbar
+			display: none
+	li
+		display: inline-block
+		width: 31.25%
+		margin-left: 3.125%
+		&:last-child
+			// border-right: solid 3.125% transparent
+			margin-right: 3.125%
+	img
+		width: 100%
+		height: auto
+
+
+.related-topics
+	position: relative
+	&::before
+		content: ''
+		display: block
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 3px
+		background: linear-gradient(top, rgba(0, 0, 0, 0.2), transparent);
+	h3
+		background-color: #e3e3e3
+		font-size: 12px
+		color: #767676
+		padding-left: 5.625%
+		&::before
+			content: ''
+			display: block
+			margin-bottom: 2%
+			border-bottom: solid 1px transparent
+		&::after
+			content: ''
+			display: block
+			margin-top: 1%
+			border-top: solid 1px transparent
+	.topic
+		width: 100%
+		position: relative
+		&::before
+			content: ''
+			background-image: url(../image/arrow.png)
+			background-size: 100% auto
+			background-repeat: no-repeat
+			width: 1.875%
+			height: 40%
+			display: inline-block
+			position: absolute
+			right: 5%
+			top: 43%
+		.-image
+			width: 25%
+			margin: 2.1875% 3.125% 2.5% 5.625%
+			float: left
+		.-title
+			display: inline-block
+			width: 58%
+			margin: 6% 8% 0 0
+			font-size: 1.33rem
+			color: #45c3f5
+			overflow: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
+		.-followed
+			display: inline-block
+			margin: 2% 3.125% 0 0
+			font-size: 1rem
+			color: #898989
+		.-posted
+			display: inline-block
+			margin-top: 2%
+			font-size: 1rem
+			color: #898989
+		&::after
+			content: ''
+			clear: both
+			display: block
+		&:not(:first-child)
+			border-top: solid 1px #e5e5e5

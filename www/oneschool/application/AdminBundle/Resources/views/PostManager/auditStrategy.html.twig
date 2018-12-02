@@ -1,0 +1,33 @@
+{% extends 'LycheeAdminBundle:PostManager:layout.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('lychee_admin_postmanager_auditstrategy') }}" method="post" class="form-horizontal" >
+        <div class="alert alert-danger" role="alert">这是一个危险操作!</div>
+
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="config[strategy]" value="1" >
+                    严格：发帖默认不可见
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="config[strategy]" value="2" >
+                    普通：发帖默认可见
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">保 存</button>
+        </div>
+    </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $("input[name='config[strategy]'][value='{{ config.strategy }}']").prop('checked', true);
+        });
+    </script>
+{% endblock %}
