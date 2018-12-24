@@ -6,7 +6,7 @@
  * Time: 1:53 PM
  */
 
-namespace Lychee\Module\Account\Exception;
+namespace app\module\account\exception;
 
 
 class EmptyNicknameException extends \Exception {

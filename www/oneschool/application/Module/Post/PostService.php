@@ -1,45 +1,17 @@
 <?php
-namespace Lychee\Module\Post;
+namespace app\module\post;
 
-use Doctrine\DBAL\LockMode;
-use Doctrine\ORM\Query;
-use Elastica\Exception\ResponseException;
-use Lychee\Bundle\ApiBundle\Error\ErrorsException;
-use Lychee\Bundle\ApiBundle\Error\LiveError;
-use Lychee\Bundle\ApiBundle\Error\PostError;
-use Lychee\Bundle\CoreBundle\Entity\PostCounting;
-use Lychee\Bundle\CoreBundle\Entity\TopicChatPost;
-use Lychee\Bundle\CoreBundle\Entity\TopicPost;
-use Lychee\Bundle\CoreBundle\Entity\UserPost;
-use Lychee\Component\Foundation\ArrayUtility;
-use Lychee\Component\Foundation\CursorableIterator\QueryCursorableIterator;
-use Lychee\Component\Foundation\CursorableIterator\CursorableIterator;
-use Lychee\Component\Foundation\IteratorTrait;
-use Lychee\Component\KVStorage\DoctrineStorage;
-use Lychee\Component\KVStorage\MemcacheStorage;
-use Lychee\Module\Post\Exception\PostHasDeletedException;
-use Lychee\Module\Post\Exception\PostNotFoundException;
-use Lychee\Module\Search\PostIndexer;
-use Lychee\Module\Topic\Entity\Topic;
-use Lychee\Module\Topic\Entity\TopicUserFollowing;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Doctrine\ORM\EntityManager;
-use Lsw\MemcacheBundle\Cache\MemcacheInterface;
-use Lychee\Bundle\CoreBundle\Entity\Post;
-use Lychee\Component\KVStorage\CachedDoctrineStorage;
-use Lychee\Component\IdGenerator\IdGenerator;
-use Lychee\Module\Topic\TopicService;
-use Lychee\Module\Post\Entity\TopicStickyPost;
-use Lychee\Module\Account\AccountService;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Lychee\Module\Post\StickyService;
-use Lychee\Module\Schedule\ScheduleService;
-use Lychee\Component\Foundation\ImageUtility;
+use app\common\model\Post;
+use app\common\model\PostCounting;
+use think\facade\Cache;
+use app\common\event\ArrayUtility;
+use app\common\model\City;
+use think\Controller;
 
-class PostService {
+class PostService extends Controller
+{
 
-    use IteratorTrait;
+    #use IteratorTrait;
 
     /**
      * @var ManagerRegistry
@@ -103,35 +75,11 @@ class PostService {
      * @param StickyService $stickyService
      * @param ScheduleService $scheduleService
      */
-    public function __construct(
-        $registry,
-        $memcache,
-        $idGenerator,
-        $topicService,
-        $accountService,
-        $eventDispatcher,
-        $stickyService,
-        $scheduleService,
-        $serviceContainer
-    ) {
-        $this->doctrine = $registry;
-        $this->entityManager = $registry->getManager($registry->getDefaultManagerName());
-
-        $cacheStorage = new MemcacheStorage($memcache, 'post:', 86400);
-        $this->storage = new CachedDoctrineStorage($this->entityManager, 'LycheeCoreBundle:Post', $cacheStorage);
-
-        $this->countingStorage = new DoctrineStorage(
-            $this->entityManager, 'LycheeCoreBundle:PostCounting'
-        );
-
-        $this->idGenerator = $idGenerator;
-
-        $this->topicService = $topicService;
-        $this->accountService = $accountService;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->stickyService = $stickyService;
-        $this->scheduleService = $scheduleService;
-        $this->serviceContainer = $serviceContainer;
+    public function __construct()
+    {
+        #$this->storage = Cache(['type'  =>  'redis', 'host'	=>	'192.168.99.100', 'port' => 6379,'expire'=>  86400, 'prefix'=>  'post:']);
+        $this->storage = Cache(['type'  =>  'redis', 'host'	=>	'127.0.0.1', 'port' => 6379,'expire'=>  86400, 'prefix'=>  'post:']);
+	    $this->countingStorage = new PostCounting;
     }
 
     private function validateContent($content) {
@@ -150,9 +98,8 @@ class PostService {
             $this->entityManager->beginTransaction();
             $this->storage->set(null, $post);
 
-            $counting = new PostCounting();
-            $counting->postId = $post->id;
-            $this->countingStorage->set($post->id, $counting);
+            $this->countingStorage->post_id = $post->id;
+            $this->countingStorage->save();
 
             $this->userAddPost($post->authorId, $post);
             if ($post->topicId > 0) {
@@ -202,14 +149,14 @@ class PostService {
         $post = new Post();
         $postId = $parameters->getPostId();
         $post->id = $postId == null ? $this->idGenerator->generate() : $postId;
-        $post->createTime = new \DateTime();
+        $post->create_time = new \DateTime();
         $post->content = $parameters->getContent();
-        $post->authorId = $parameters->getAuthorId();
-        $post->topicId = $parameters->getTopicId();
-        $post->imageUrl = $parameters->getImageUrl();
-        $post->videoUrl = $parameters->getVideoUrl();
-        $post->audioUrl = $parameters->getAudioUrl();
-        $post->siteUrl = $parameters->getSiteUrl();
+        $post->author_id = $parameters->getAuthorId();
+        $post->topic_id = $parameters->getTopicId();
+        $post->image_url = $parameters->getImageUrl();
+        $post->video_url = $parameters->getVideoUrl();
+        $post->audio_url = $parameters->getAudioUrl();
+        $post->site_url = $parameters->getSiteUrl();
         $post->longitude = $parameters->getLongitude();
         $post->latitude = $parameters->getLatitude();
         $post->address = $parameters->getAddress();
@@ -465,17 +412,15 @@ class PostService {
 	 *
 	 * @return int
 	 */
-    public function getCityId($city){
-
-	    $sql = 'SELECT id FROM city WHERE name = ?';
-	    $stat = $this->entityManager->getConnection()->executeQuery($sql, array($city),
-		    array(\PDO::PARAM_STR));
-	    $rows = $stat->fetchAll(\PDO::FETCH_ASSOC);
+    public function getCityId($city)
+    {
+	    #$sql = 'SELECT id FROM city WHERE name = ?';
+	    #$stat = $this->entityManager->getConnection()->executeQuery($sql, array($city), array(\PDO::PARAM_STR));
+	    #$rows = $stat->fetchAll(\PDO::FETCH_ASSOC);
+	    $rows = City::where('name',$city)->column('id');
 	    $cityIds = ArrayUtility::columns($rows, 'id');
 
-	    if(count($cityIds) <= 0){
-			return -1;
-	    }
+	    if(count($cityIds) <= 0){ return -1; }
 
 	    return $cityIds[0];
     }

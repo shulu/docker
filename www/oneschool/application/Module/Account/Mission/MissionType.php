@@ -1,6 +1,6 @@
 <?php
 
-namespace Lychee\Module\Account\Mission;
+namespace app\module\account\mission;
 
 
 interface MissionType {

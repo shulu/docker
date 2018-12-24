@@ -6,47 +6,33 @@
  * Time: 下午4:17
  */
 
-namespace Lychee\Module\ContentManagement;
-
-use Lychee\Module\ContentManagement\Entity\InputDomainRecord;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Doctrine\ORM\EntityManager;
-use Lychee\Module\ContentManagement\Entity\InputDomain;
+namespace app\module\contentmanagement;
+use app\module\contentmanagement\model\InputDomain;
+use app\module\contentmanagement\model\InputDomainRecord as InputDomainRecordModel;
 
 /**
  * Class InputDomainRecorder
  * @package Lychee\Module\ContentManagement
  */
-class InputDomainRecorder {
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @param RegistryInterface $doctrineRegistry
-     */
-    public function __construct($doctrineRegistry) {
-        $this->entityManager = $doctrineRegistry->getManager();
-    }
+class InputDomainRecorder
+{
 
     /**
      * @param $userId
      * @param $domain
      * @return bool
      */
-    public function record($userId, $domain) {
+    public function record($userId, $domain)
+    {
         $domainEntity = $this->getDomain($domain);
-        $inputDomainRecord = new InputDomainRecord();
-        $inputDomainRecord->datetime = new \DateTime();
-        $inputDomainRecord->domainId = $domainEntity->id;
-        $inputDomainRecord->userId = $userId;
-
-        $this->entityManager->persist($inputDomainRecord);
         $this->increaseDomain($domainEntity);
-        $this->entityManager->flush();
-
+        $data = [
+            'datetime' => new \DateTime(),
+	        'domain_id' => $domainEntity->id,
+	        'user_id' => $userId
+        ];
+	    InputDomainRecordModel::create($data);
+	    $domainEntity->save();
         return true;
     }
 
@@ -63,14 +49,16 @@ class InputDomainRecorder {
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function getDomain($domainName) {
-        $query = $this->entityManager->getRepository(InputDomain::class)
-            ->createQueryBuilder('i')
-            ->where('i.name = :name')
-            ->setParameter('name', $domainName)
-            ->setMaxResults(1)
-            ->getQuery();
-
-        $result = $query->getOneOrNullResult();
+        #$query = $this->entityManager->getRepository(InputDomain::class)
+        #    ->createQueryBuilder('i')
+        #    ->where('i.name = :name')
+        #    ->setParameter('name', $domainName)
+        #    ->setMaxResults(1)
+        #    ->getQuery();
+	    #$result = $query->getOneOrNullResult();
+	
+	    $where = ['name'=>$domainName];
+		$result = InputDomain::where($where)->find();
         if (null === $result) {
             return $this->addDomain($domainName);
         } else {
@@ -85,9 +73,7 @@ class InputDomainRecorder {
     private function addDomain($domainName) {
         $inputDomain = new InputDomain();
         $inputDomain->name = $domainName;
-        $this->entityManager->persist($inputDomain);
-        $this->entityManager->flush();
-
+		$inputDomain->save();
         return $inputDomain;
     }
 }

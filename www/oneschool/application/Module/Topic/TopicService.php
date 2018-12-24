@@ -1,5 +1,5 @@
 <?php
-namespace Lychee\Module\Topic;
+namespace app\module\topic;
 
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;

@@ -1,31 +1,12 @@
 <?php
-namespace Lychee\Module\Recommendation;
+namespace app\module\recommendation;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
-use Elastica\Exception\ResponseException;
-use Lsw\MemcacheBundle\Cache\MemcacheInterface;
-use Lychee\Bundle\CoreBundle\Entity\User;
-use Lychee\Component\Foundation\ArrayUtility;
-use Lychee\Component\Foundation\CursorableIterator\QueryCursorableIterator;
-use Lychee\Module\Recommendation\Entity\EditorChoiceTopic;
-use Lychee\Module\Recommendation\Entity\EditorChoiceTopicCategory;
-use Lychee\Module\Recommendation\Entity\RecommendableTopic;
-use Lychee\Module\Recommendation\Entity\RecommendationGroup;
-use Lychee\Module\Recommendation\Entity\RecommendationItem;
-use Lychee\Module\Recommendation\Entity\StickyRecommendationItem;
-use Lychee\Module\Recommendation\Entity\TyroRecommendationTopicCategory;
-use Lychee\Module\Recommendation\Entity\TyroRecommendationTopics;
-use Lychee\Module\Recommendation\Exception\GroupTimeInvalidException;
-use Lychee\Module\Recommendation\Exception\GroupTypeInvalidException;
-use Lychee\Module\Recommendation\Exception\ItemPositionDuplicateException;
-use Lychee\Module\Recommendation\RecommendationType;
-use Lychee\Module\Recommendation\Entity\RecommendationTopicTest;
-use Lychee\Module\Recommendation\UserRankingType;
-use Lychee\Component\Foundation\ImageUtility;
+use app\common\event\ArrayUtility;
+use app\module\recommendation\model\RecommendableTopic;
+use think\Controller;
 
-class RecommendationService {
+class RecommendationService extends Controller
+{
     /**
      * @var EntityManager
      */
@@ -655,12 +636,9 @@ class RecommendationService {
 	 * @return array
 	 */
     public function filterRecommendableTopicIds($topicIds) {
-        $topics = $this->entityManager->getRepository(RecommendableTopic::class)
-            ->findBy([
-                'topicId' => $topicIds
-            ]);
-        
-        return ArrayUtility::columns($topics, 'topicId');
+        #$topics = $this->entityManager->getRepository(RecommendableTopic::class)->findBy(['topicId' => $topicIds]);
+        $topics = RecommendableTopic::where('topic_id', $topicIds)->find();
+        return ArrayUtility::columns($topics, 'topic_id');
     }
 
     public function fetchRecommendableTopicIds() {

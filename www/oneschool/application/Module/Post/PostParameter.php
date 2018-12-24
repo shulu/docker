@@ -1,7 +1,8 @@
 <?php
-namespace Lychee\Module\Post;
+namespace app\module\post;
 
-class PostParameter {
+class PostParameter
+{
 
     private $parameters = array();
 

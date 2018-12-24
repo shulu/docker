@@ -1,5 +1,5 @@
 <?php
-namespace Lychee\Module\Account;
+namespace app\module\account;
 
 class NicknameGenerator {
 

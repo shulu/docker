@@ -1,7 +1,7 @@
 <?php
-namespace Lychee\Module\Topic\Following;
+namespace app\module\topic;
 
-use Lychee\Module\Topic\Entity\TopicUserFollowing;
+use app\module\topic\model\TopicUserFollowing;
 
 class FollowingResolver {
 

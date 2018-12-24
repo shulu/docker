@@ -1,25 +1,11 @@
 <?php
-namespace Lychee\Module\ContentManagement\Domain;
+namespace app\module\contentmanagement\domain;
 
-use Doctrine\DBAL\Exception\DriverException;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Lychee\Module\ContentManagement\Entity\DomainWhiteListItem;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use app\module\contentmanagement\model\DomainWhiteListItem;
+use \think\Facade\Cache;
 
-class WhiteList {
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @param RegistryInterface $registry
-     */
-    public function __construct($registry, $emName) {
-        $this->em = $registry->getManager($emName);
-    }
+class WhiteList
+{
 
     /**
      * @param string $name
@@ -91,13 +77,12 @@ class WhiteList {
             $domains[] = implode('.', $components);
             array_shift($components);
         }
-
-        $sql = 'SELECT 1 FROM domain_whitelist WHERE '
-            . implode(' or ', array_pad(array(), count($domains), 'domain=?'))
-            . ' LIMIT 1';
-        $statement = $this->em->getConnection()->executeQuery(
-            $sql, $domains);
-        if ($statement->rowCount() > 0) {
+		$domain = implode(' or ', array_pad(array(), count($domains), 'domain=?'));
+        $where = ['domain'=>$domain];
+        $count = DomainWhiteListItem::where($where)->count();
+        #$sql = 'SELECT 1 FROM domain_whitelist WHERE ' . implode(' or ', array_pad(array(), count($domains), 'domain=?')) . ' LIMIT 1';
+        #$statement = $this->em->getConnection()->executeQuery($sql, $domains);
+        if ($count > 0) {
             return true;
         } else {
             return false;

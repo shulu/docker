@@ -1,5 +1,5 @@
 <?php
-namespace Lychee\Module\Account\Mission;
+namespace app\module\account\mission;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\LockMode;
