@@ -2,6 +2,8 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+echo md5 ('13987100520').PHP_EOL;exit();
+
 echo md5 ('61.140.24.26reg_forbidden').PHP_EOL;
 
 echo md5 ('318654321').PHP_EOL;
