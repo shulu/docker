@@ -1,5 +1,0 @@
-services:
-    lychee.module.voting:
-        class: Lychee\Module\Voting\VotingService
-        arguments:
-            - '@doctrine'

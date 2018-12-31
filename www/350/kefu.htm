@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>客服中心_联系客服_350手游平台 - </title>
+    <meta name="keywords" content="账号,安全,充值,投诉,BUG提交,举报外挂">
+    <meta name="description" content="350手游平台客服中心，致力为玩家提供专业贴心服务，并坚持不断提升服务品质，及时有效解决玩家在游戏过程中遇到的账号、安全、充值、投诉、BUG提交、举报外挂等问题。">
+    <link rel="stylesheet" type="text/css" href="kefu_files/base.css">
+    <link rel="stylesheet" type="text/css" href="kefu_files/common.css">
+    <link rel="stylesheet" type="text/css" href="kefu_files/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="kefu_files/customer_service.css">
+    <script src="kefu_files/hm.txt"></script><script type="text/javascript" src="kefu_files/jquery-1.js"></script>
+    <script type="text/javascript" src="kefu_files/common_002.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //客服中心 问题下拉收起
+            var $down=true;
+            $('.question li').click(function(){
+                if ($down) {
+                    $(this).siblings().hide();
+                    $(this).animate({
+                        "height":"100%"
+                    },300);
+                    $(this).find('.down_btn').removeClass('.remove');
+                    $(this).find('.down_btn').addClass('add');
+                    $down=!$down
+                }
+                else{
+                    $(this).css({
+                        "height":"30px"
+                    });
+                    $(this).siblings().show();
+                    $(this).find('.down_btn').removeClass('add');
+                    $(this).find('.down_btn').addClass('.remove');
+                    $down=!$down
+                }
+            })
+        })
+    </script>
+</head>
+<body navigation-id="3">
+<!--判断手机还是pc-->
+<script language="javascript">
+    (function(){
+        var res = GetRequest();
+        var par = res['index'];
+        if(par!='gfan'){
+            var ua=navigator.userAgent.toLowerCase();
+            var contains=function (a, b){
+                if(a.indexOf(b)!=-1){return true;}
+            };
+            var toMobileVertion = function(){
+                window.location.href = 'http://m.350.com'
+            }
+
+            if(contains(ua,"ipad")||(contains(ua,"rv:1.2.3.4"))||(contains(ua,"0.0.0.0"))||(contains(ua,"8.0.552.237"))){return false}
+            if((contains(ua,"android") && contains(ua,"mobile"))||(contains(ua,"android") && contains(ua,"mozilla")) ||(contains(ua,"android") && contains(ua,"opera"))
+                ||contains(ua,"ucweb7")||contains(ua,"iphone")){toMobileVertion();}
+        }
+    })();
+    function GetRequest() {
+        var url = location.search;
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+</script>
+<script type="text/javascript" src="kefu_files/tools-1.js"></script>
+<script type="text/javascript" src="kefu_files/common.js"></script>
+<script type="text/javascript" src="kefu_files/userClass.js"></script>
+<script src="kefu_files/header.js" type="text/javascript"></script>
+<!-- 顶部 -->
+<div class="top">
+    <div class="pop">
+        <!-- 登录 -->
+        <div class="login_pop_inner">
+            <div class="closed"></div>
+            <div class="login_title">账号登录</div>
+            <div class="form clear">
+                <div class="input_border">
+                    <i class="iconfont"></i>
+                    <input name="h-username" placeholder="请输入账号" class="input username" type="text">
+                    <i class="iconfont cancel"></i>
+                </div>
+                <div class="input_border">
+                    <i class="iconfont"></i>
+                    <input name="h-password" placeholder="请输入密码" class="input password" type="password">
+                    <i class="iconfont cancel"></i>
+                </div>
+                <div class="next_forget">
+                    <label class="z" for="r_dialog_keep">
+                        <input name="h-long_login" id="r_dialog_keep" class="r_checkbox" checked="checked" type="checkbox">下次自动登录
+                    </label>
+                    <a href="http://www.350.com/html/user/forget/" class="y">
+                        忘记密码
+                    </a>
+                </div>
+                <span class="login-tips tips"></span>
+                <div class="submit animation">
+                    <input class="login-submit" value="登录" type="submit">
+                </div>
+                <div class="regist_list">
+                    还没有账号，<a href="javascript:;" class="regist_link">立即注册</a>
+                </div>
+            </div>
+        </div>
+        <!-- 注册 -->
+        <div class="regist_pop_inner">
+            <div class="closed"></div>
+            <div class="login_title">注册</div>
+            <div>
+                <div class="regist_tab">
+                    <div class="cur">
+                        <a href="javascript:;">账号注册</a>
+                    </div>
+                    <div class="">
+                        <a href="javascript:;">手机注册</a>
+                    </div>
+                </div>
+                <!--账号注册-->
+                <div class="form clear number_regist">
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hg-username" placeholder="请输入账号" class="input username" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="password" placeholder="请输入密码" class="input password" id="hg-password" type="password">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="rpassword" placeholder="请再次输入密码" class="input rpassword" id="hg-repassword" type="password">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hg-true_name" placeholder="真实姓名" class="input true_name" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hg-id_card" placeholder="身份证号码" class="input id_card" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <span class="number-regist-tips tips"></span>
+                    <div class="submit animation">
+                        <input name="" value="注册" class="number-regist-submit" type="submit">
+                    </div>
+                    <div class="regist_list">
+                        已有账号，<a href="javascript:;" class="login_link">立即登录</a>
+                    </div>
+                </div>
+                <!-- 手机注册 -->
+                <div class="form clear phone_regist" style="display: none">
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hgp-phone" placeholder="请输入手机号码" class="input phone" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="password" placeholder="请输入密码" class="input password" id="hgp-password" type="password">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="code" placeholder="请输入验证码" class="input check_input" id="hgp-phone_code" type="text">
+                        <div class="z"></div>
+                        <div id="check_code">发送验证码</div>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hgp-true_name" placeholder="真实姓名" class="input true_name" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hgp-id_card" placeholder="身份证号码" class="input id_card" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <span class="phone-regist-tips tips"></span>
+                    <div class="submit animation">
+                        <input value="注册" class="phone-regist-submit" type="submit">
+                    </div>
+                    <div class="regist_list">
+                        已有账号，<a href="javascript:;" class="login_link">立即登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner">
+        <div class="top_left z">
+            <div class="z">
+                <i class="iconfont z" style="margin-top: 2px;color: #58ddba; ">
+                    
+                </i>
+                <p class="z">
+                    客服电话 : 0755-86564350
+                </p>
+            </div>
+            <div class="z qq_p">
+                <i class="iconfont z" style="color: #4fbfff">
+                    
+                </i>
+                <p class="z">
+                    <a href="http://www.350.com/html/customer/kf/" target="_blank">在线客服</a>
+                </p>
+            </div>
+            <div class="z cellection_p">
+                <a href="javascript:;" class="cellection">
+                    <i class="iconfont z" style="color: #f9d95a">
+                        
+                    </i>
+                    <p class="z">
+                        点击收藏
+                    </p>
+                </a>
+            </div>
+        </div>
+        <div class="user_id y" id="header_user_nologin" style="">
+            <div class="login z">立即登录</div>
+            <div class="line z">|</div>
+            <div class="regist z">免费注册</div>
+        </div>
+        <!-- 已登录 -->
+        <div class="user_id y" id="header_user_login" style="display: none">
+            <a href="http://www.350.com/html/user/"><span><i class="iconfont"></i> <span id="header_username"></span> </span></a>
+            <a href="javascript:void(0);" id="header_logout_btn">退出</a>
+        </div>
+    </div>
+</div>
+<!-- 头部 -->
+<header>
+    <div class="inner clear">
+        <div class="logo z">
+            <a href="http://www.350.com/">
+                <img src="kefu_files/350_logo.png">
+            </a>
+        </div>
+        <ul class="header_nav z">
+                        <ul class="nav-site">
+                            <li class="header_nav_cur"><a href="http://350demo.local/">平台首页</a></li>
+                            <!-- <li><a href="http://www.350.com/html/game/">游戏大全</a></li> -->
+                            <!-- <li><a href="http://www.350.com/html/gift/">礼包中心</a></li> -->
+                            <li><a href="http://350demo.local/kefu.htm">客服中心</a></li>
+                            <li><a href="http://350demo.local/news.htm">游戏资讯</a></li>
+                            <!-- <li><a href="http://350.com/html/user">用户中心</a></li> -->
+            </ul>
+                                </ul>
+        <!--<div class="search_form y">-->
+            <!--<form method="post" action="">-->
+                <!--<input type="text" name="" placeholder="搜索游戏" value="" class="search_area">-->
+                <!--<input type="submit" name="" class="search_button" value="" id="search_button">-->
+            <!--</form>-->
+        <!--</div>-->
+    </div>
+</header>
+<script type="text/javascript">
+    $(function(){var tab = $("body").attr("navigation-id");$(".header_nav li").eq($("body").attr("navigation-id")).addClass("header_nav_cur");});
+</script>
+<script>
+    // 退出按钮
+    $('#header_logout_btn').bind('click', function () {
+        userClass.api('logout', {}, function () {
+            userClass.goUserUrl('login');
+        }, function (msg) {
+        });
+    });
+    $(function () {
+        // 判断用户是否登陆
+        userClass.api('status', {}, function (response) {
+            // 登陆成功状态 跳转首页
+            if (response.status === 200) {
+                showHearderUserTip(localStorage.username);
+            } else {
+                showHearderUserTip(false);
+            }
+        }, function (response) {
+            showHearderUserTip(false);
+        });
+        $('input').on('input', function () {
+            cFunction.tips('.login-tips', '', true);
+        });
+    });
+</script><div class="customer_banner">
+    <div class="service_btn">
+        <a href="http://www.350.com/html/customer/kf" target="_blank">
+            <i class="iconfont"></i>
+            在线客服
+        </a>
+    </div>
+</div>
+<ul class="customer_main">
+    <li>
+        <div class="recharge">
+            <i class="iconfont"></i>
+            充值问题
+        </div>
+        <ul class="question">
+                                <li>
+                <div class="question_detail">1.扣费成功但没收到游戏元宝</div>
+                <div class="answer">
+                    <p>您好，如果您在支付完成扣款成功，但您的游戏服务器里没有收到游戏元宝，这时可能是由于网络延迟而造成的，请您耐心等待几分钟即可！如果较长时间仍未到帐，可能是系统出现问题，这时候您可以联系QQ：2978983811提交给我们的人工客服进行处理。</p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">2.我微信支付了，现在怎么查订单号?</div>
+                <div class="answer">
+                    <p><span style="font-family: Menlo, monospace; white-space: pre-wrap;">若已经支付成功，可在手机微信中设置里面，钱包中查看交易记录。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">3. 我的卡一直被限额</div>
+                <div class="answer">
+                    <p><span style="color: rgb(153, 153, 153); font-family: &quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif; font-size: 14px; text-indent: 30px;">您好，因为银行相关政策，导致单笔消费被限制了额度，微信和支付宝也同样如此，具体情况因不同的银行而有差异，建议您可以分开多笔进行充值。如有疑问，可以联系客服。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">4.我充值了以后，但是无法领取充值道具</div>
+                <div class="answer">
+                    <p><span style="color: rgb(153, 153, 153); font-family: &quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif; font-size: 14px; text-indent: 30px;">您好，遇到这种情况，建议您优先查看自己的充值订单，确认是否充值成功，如果充值成功，仍然无法领取，建议您查看游戏活动日期，活动日期也没有差错的话，您可以联系我们客服进行处理。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                            </ul>
+    </li>
+    <li>
+        <div class="recharge">
+            <i class="iconfont"></i>
+            账号问题
+        </div>
+        <ul class="question">
+                                <li>
+                <div class="question_detail">1.我不记得自己的密码的，该如何找回密码</div>
+                <div class="answer">
+                    <p><span font-size:="" microsoft="" style="color: rgb(153, 153, 153); font-family: " text-indent:="">您
+好，如果您已经在350官网绑定了手机号或者邮箱，您可以通过自己绑定的手机号或者邮箱找回密码。如果您什么都没有绑定，您可以联系
+QQ：2978983811通过我们的客服进行找回，当然，通过客服找回需要核验很多信息，相对较麻烦，建议您绑定手机号或者邮箱哦，这样方便您找回密
+码。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">2.我的手机号换了，如何更改绑定的手机号</div>
+                <div class="answer">
+                    <p><span style="font-family: Menlo, monospace; white-space: pre-wrap;">您好，您可以登录到我们平台官网首页点击 用户中心--账号资料--修改（手机），验证通过解绑后即可重新进行绑定新的手机号码。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">3.我重新安装了游戏，进入游戏，找不到角色</div>
+                <div class="answer">
+                    <p><span font-size:="" microsoft="" style="color: rgb(153, 153, 153); font-family: " text-indent:="">您好，您这种情况，可能是重新安装了客户端后，进错区服了，或者是使用了新的账号进行登录。您可以多尝试登录几次前面的区服或者更改账号进行登录，如果还是不行，您可以联系QQ：2978983811通过我们的客服进行处理。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">4.如何修改密码</div>
+                <div class="answer">
+                    <p><span style="color: rgb(153, 153, 153); font-family: &quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif; font-size: 14px; text-indent: 30px;">您好，您可以通过登录350游戏的官网，在用户中心即可修改密码或者登陆游戏界面悬浮窗点击账户也可修改密码哦。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">5.我的账号怎么被禁言或者封禁了</div>
+                <div class="answer">
+                    <p><span style="color: rgb(153, 153, 153); font-family: &quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif; font-size: 14px; text-indent: 30px;">您
+好，为了游戏平衡和公平，会对使用第三方辅助软件，包括但不限于游戏外挂、辅助加速软件等的行为进行处理，对玩家账号封禁处理。游戏内禁止发布代充、折扣
+等广告，禁止发布色情/反动/暴力/恐吓/辱骂/谣言/刷屏等一切恶意信息，一旦发现玩家发布这些信息会进行禁言处理。如有疑问，请联系客服。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">6.怎么交易账号</div>
+                <div class="answer">
+                    <p><span style="color: rgb(153, 153, 153); font-family: &quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif; font-size: 14px; text-indent: 30px;">您好，350游戏平台目前没有账号交易功能，不支持也不保障玩家的的账号交易买卖行为。为了保障玩家的账号和财产安全，建议玩家不要进行账号交易，以免受到损失。如因账号交易造成的损失350游戏平台概不负责。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                            </ul>
+    </li>
+    <li>
+        <div class="recharge">
+            <i class="iconfont"></i>
+            游戏问题
+        </div>
+        <ul class="question">
+                                <li>
+                <div class="question_detail">1.如何领取游戏礼包</div>
+                <div class="answer">
+                    <p><span style="font-family: Menlo, monospace; white-space: pre-wrap;">您好，领取游戏礼包一般有四种方式，第一种，通过游戏内350悬浮窗，打开礼包界面即可领取；第二种，通过350官网礼包中心进行领取，第三种，通过加入对应官方玩家QQ群进行领取，第四种，通过关注官方微信公众号进行领取。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">2.我领取的礼包不见了，如何查看</div>
+                <div class="answer">
+                    <p><span style="font-family: Menlo, monospace; white-space: pre-wrap;">您好，您可以登录350游戏官网，在用户中心-我的礼包当中即可查看您领取的所有礼包或者在游戏内打开350游戏悬浮窗，点击我的礼包，也可以查看到您已经领取的礼包码哦!</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">3.如何反馈游戏bug</div>
+                <div class="answer">
+                    <p><span font-size:="" microsoft="" style="color: rgb(153, 153, 153); font-family: " text-indent:="">您好，您可以通过联系QQ：2978983811进行反馈，最好能加入玩家群，私聊客服并且提供相应截图和小视频，方便工作人员能更快的弄情况您的情况。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">4.如何提升战力</div>
+                <div class="answer">
+                    <p><span style="color: rgb(153, 153, 153); font-family: &quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif; font-size: 14px; text-indent: 30px;">您好，您可以通过查看350官网，微信以及官方玩家群所发布的攻略，尽快了解熟悉游戏，领取对应的礼包获取资源，用来提升战力。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                        <li>
+                <div class="question_detail">5.怎么查看开服信息</div>
+                <div class="answer">
+                    <p><span style="color: rgb(153, 153, 153); font-family: &quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif; font-size: 14px; text-indent: 30px;">您好，官网平台首页有开服时间表哦。</span></p>
+                </div>
+                <div class="down_btn addw"></div>
+            </li>
+                            </ul>
+    </li>
+</ul>
+<div class="footer z">
+    <div class="footer_inner">
+        <ul class="footer_con1">
+            <li><a href="http://www.350.com/html/website/aboutus/" target="_blank">关于我们</a></li>
+            <li><a href="http://www.350.com/html/website/sitemap/" target="_blank">站点地图</a></li>
+            <li><a href="http://www.350.com/html/website/fcmxt/" target="_blank">防沉迷系统</a></li>
+            <li><a href="http://www.350.com/html/website/business/" target="_blank">商务合作</a></li>
+            <li><a href="http://www.350.com/html/customer/" target="_blank">客服中心</a></li>
+            <li><a href="http://www.350.com/html/website/friend/" class="border_none" target="_blank">友情链接</a></li>
+        </ul>
+        <div class="footer_con2">
+            <a href="http://www.350.com/">350游戏</a>&nbsp;版权所有&nbsp;文化部网络游戏举报和电子邮箱：wlwh@vip.sina.com 纠纷处理方式：联系客服或依&nbsp;<a href="http://www.350.com/html/website/yhxy/">用户协议</a>&nbsp;约定方式处理<br>深圳三五零网络游戏有限公司 粤网文[2016]5561-1298号 <a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备16077961号-1 </a>
+            <script type="text/javascript">
+                //CNZZ统计
+                var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+                document.write(unescape("%3Cspan id='cnzz_stat_icon_1261744615'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261744615%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+
+                //百度统计
+                var _hmt = _hmt || [];
+                (function() {
+                    var hm = document.createElement("script");
+                    hm.src = "https://hm.baidu.com/hm.js?4a897a9b777df8d0072e36d555305eb5";
+                    var s = document.getElementsByTagName("script")[0];
+                    s.parentNode.insertBefore(hm, s);
+                })();
+            </script><span id="cnzz_stat_icon_1261744615"></span><script src="kefu_files/z_stat.php" type="text/javascript"></script>
+        </div>
+        <div class="footer_con3">
+            <p>抵制不良游戏，拒绝盗版游戏。 注意自我保护，谨防受骗上当。 适度游戏益脑，沉迷游戏伤身。 合理安排时间，享受健康生活。</p>
+        </div>
+    </div>
+</div>
+</body></html>

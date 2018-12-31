@@ -1,1 +1,0 @@
-# [详细说明](http://gitlab.ciyo.cn/ciyocon/lychee-server/wikis/home)

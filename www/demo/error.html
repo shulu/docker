@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>系统发生错误</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <style>
+        /* Base */
+        body {
+            color: #333;
+            font: 16px Verdana, "Helvetica Neue", helvetica, Arial, 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0 20px 20px;
+        }
+        h1{
+            margin: 10px 0 0;
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 32px;
+        }
+        h2{
+            color: #4288ce;
+            font-weight: 400;
+            padding: 6px 0;
+            margin: 6px 0 0;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+        }
+        h3{
+            margin: 12px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        abbr{
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+        a{
+            color: #868686;
+            cursor: pointer;
+        }
+        a:hover{
+            text-decoration: underline;
+        }
+        .line-error{
+            background: #f8cbcb;
+        }
+
+        .echo table {
+            width: 100%;
+        }
+
+        .echo pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            background-color: #f7f7f7;
+            border: 0;
+            border-radius: 3px;
+            font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+
+        .echo pre > pre {
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Exception Info */
+        .exception {
+            margin-top: 20px;
+        }
+        .exception .message{
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-bottom: 0 none;
+            line-height: 18px;
+            font-size:16px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            font-family: Consolas,"Liberation Mono",Courier,Verdana,"微软雅黑";
+        }
+
+        .exception .code{
+            float: left;
+            text-align: center;
+            color: #fff;
+            margin-right: 12px;
+            padding: 16px;
+            border-radius: 4px;
+            background: #999;
+        }
+        .exception .source-code{
+            padding: 6px;
+            border: 1px solid #ddd;
+
+            background: #f9f9f9;
+            overflow-x: auto;
+
+        }
+        .exception .source-code pre{
+            margin: 0;
+        }
+        .exception .source-code pre ol{
+            margin: 0;
+            color: #4288ce;
+            display: inline-block;
+            min-width: 100%;
+            box-sizing: border-box;
+            font-size:14px;
+            font-family: "Century Gothic",Consolas,"Liberation Mono",Courier,Verdana;
+            padding-left: 48px;
+        }
+        .exception .source-code pre li{
+            border-left: 1px solid #ddd;
+            height: 18px;
+            line-height: 18px;
+        }
+        .exception .source-code pre code{
+            color: #333;
+            height: 100%;
+            display: inline-block;
+            border-left: 1px solid #fff;
+            font-size:14px;
+            font-family: Consolas,"Liberation Mono",Courier,Verdana,"微软雅黑";
+        }
+        .exception .trace{
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-top: 0 none;
+            line-height: 16px;
+            font-size:14px;
+            font-family: Consolas,"Liberation Mono",Courier,Verdana,"微软雅黑";
+        }
+        .exception .trace ol{
+            margin: 12px;
+        }
+        .exception .trace ol li{
+            padding: 2px 4px;
+        }
+        .exception div:last-child{
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Exception Variables */
+        .exception-var table{
+            width: 100%;
+            margin: 12px 0;
+            box-sizing: border-box;
+            table-layout:fixed;
+            word-wrap:break-word;
+        }
+        .exception-var table caption{
+            text-align: left;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 6px 0;
+        }
+        .exception-var table caption small{
+            font-weight: 300;
+            display: inline-block;
+            margin-left: 10px;
+            color: #ccc;
+        }
+        .exception-var table tbody{
+            font-size: 13px;
+            font-family: Consolas,"Liberation Mono",Courier,"微软雅黑";
+        }
+        .exception-var table td{
+            padding: 0 6px;
+            vertical-align: top;
+            word-break: break-all;
+        }
+        .exception-var table td:first-child{
+            width: 28%;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .exception-var table td pre{
+            margin: 0;
+        }
+
+        /* Copyright Info */
+        .copyright{
+            margin-top: 24px;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+        }
+
+        /* SPAN elements with the classes below are added by prettyprint. */
+        pre.prettyprint .pln { color: #000 }  /* plain text */
+        pre.prettyprint .str { color: #080 }  /* string content */
+        pre.prettyprint .kwd { color: #008 }  /* a keyword */
+        pre.prettyprint .com { color: #800 }  /* a comment */
+        pre.prettyprint .typ { color: #606 }  /* a type name */
+        pre.prettyprint .lit { color: #066 }  /* a literal value */
+        /* punctuation, lisp open bracket, lisp close bracket */
+        pre.prettyprint .pun, pre.prettyprint .opn, pre.prettyprint .clo { color: #660 }
+        pre.prettyprint .tag { color: #008 }  /* a markup tag name */
+        pre.prettyprint .atn { color: #606 }  /* a markup attribute name */
+        pre.prettyprint .atv { color: #080 }  /* a markup attribute value */
+        pre.prettyprint .dec, pre.prettyprint .var { color: #606 }  /* a declaration; a variable name */
+        pre.prettyprint .fun { color: red }  /* a function name */
+    </style>
+</head>
+<body>
+<div class="echo">
+</div>
+<div class="exception">
+    <div class="message">
+
+        <div class="info">
+            <div>
+                <h2>[0]&nbsp;<abbr title="think\exception\ThrowableError">ThrowableError</abbr> in <a class="toggle" title="/usr/share/nginx/html/oneschool/application/api/event/auth/AuthenticationService.php line 41">AuthenticationService.php line 41</a></h2>
+            </div>
+            <div><h1>致命错误: Call to a member function encodePassword() on string</h1></div>
+        </div>
+
+    </div>
+    <div class="source-code">
+            <pre class="prettyprint lang-php"><ol start="32"><li class="line-32"><code>        $this-&gt;passwordEncoder = PasswordEncoderInterface::class;
+</code></li><li class="line-33"><code>    }
+</code></li><li class="line-34"><code>
+</code></li><li class="line-35"><code>    /**
+</code></li><li class="line-36"><code>     * @param int $userId
+</code></li><li class="line-37"><code>     * @param string $password
+</code></li><li class="line-38"><code>     */
+</code></li><li class="line-39"><code>    public function createPasswordForUser($userId, $password) {
+</code></li><li class="line-40"><code>        $salt = base64_encode( openssl_random_pseudo_bytes(32) );
+</code></li><li class="line-41"><code>        $passwordEncoded = $this-&gt;passwordEncoder-&gt;encodePassword($password, $salt);
+</code></li><li class="line-42"><code>        return $passwordEncoded;
+</code></li><li class="line-43"><code>        return AuthPassword::create ([
+</code></li><li class="line-44"><code>        	'user_id' =&gt; $userId,
+</code></li><li class="line-45"><code>	        'salt' =&gt; $salt,
+</code></li><li class="line-46"><code>	        'password' =&gt; $passwordEncoded
+</code></li><li class="line-47"><code>        ]);
+</code></li><li class="line-48"><code>    }
+</code></li><li class="line-49"><code>
+</code></li><li class="line-50"><code>    /**
+</code></li></ol></pre>
+    </div>
+    <div class="trace">
+        <h2>Call Stack</h2>
+        <ol>
+            <li>in <a class="toggle" title="/usr/share/nginx/html/oneschool/application/api/event/auth/AuthenticationService.php line 41">AuthenticationService.php line 41</a></li>
+            <li>
+                at <abbr title="app\api\event\auth\authenticationService">authenticationService</abbr>->createPasswordForUser(1, 'yskj666') in <a class="toggle" title="/usr/share/nginx/html/oneschool/application/api/controller/Auth.php line 59">Auth.php line 59</a>                </li>
+            <li>
+                at <abbr title="app\api\controller\Auth">Auth</abbr>->signupWithPhoneAction(<em>object</em>(<abbr title="think\Request">Request</abbr>))                </li>
+            <li>
+                at <abbr title="ReflectionMethod">ReflectionMethod</abbr>->invokeArgs(<em>object</em>(<abbr title="app\api\controller\Auth">Auth</abbr>), [<em>object</em>(<abbr title="think\Request">Request</abbr>)]) in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/Container.php line 395">Container.php line 395</a>                </li>
+            <li>
+                at <abbr title="think\Container">Container</abbr>->invokeReflectMethod(<em>object</em>(<abbr title="app\api\controller\Auth">Auth</abbr>), <em>object</em>(<abbr title="ReflectionMethod">ReflectionMethod</abbr>), ['area_code' => '86', 'phone' => '13825461473', 'password' => 'yskj666', ...]) in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/route/dispatch/Module.php line 135">Module.php line 135</a>                </li>
+            <li>
+                at <abbr title="think\route\dispatch\Module">Module</abbr>->think\route\dispatch\{closure}(<em>object</em>(<abbr title="think\Request">Request</abbr>), <em>object</em>(<abbr title="Closure">Closure</abbr>), <em>null</em>)                </li>
+            <li>
+                at call_user_func_array(<em>object</em>(<abbr title="Closure">Closure</abbr>), [<em>object</em>(<abbr title="think\Request">Request</abbr>), <em>object</em>(<abbr title="Closure">Closure</abbr>), <em>null</em>]) in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/Middleware.php line 185">Middleware.php line 185</a>                </li>
+            <li>
+                at <abbr title="think\Middleware">Middleware</abbr>->think\{closure}(<em>object</em>(<abbr title="think\Request">Request</abbr>))                </li>
+            <li>
+                at call_user_func(<em>object</em>(<abbr title="Closure">Closure</abbr>), <em>object</em>(<abbr title="think\Request">Request</abbr>)) in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/Middleware.php line 130">Middleware.php line 130</a>                </li>
+            <li>
+                at <abbr title="think\Middleware">Middleware</abbr>->dispatch(<em>object</em>(<abbr title="think\Request">Request</abbr>), 'controller') in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/route/dispatch/Module.php line 140">Module.php line 140</a>                </li>
+            <li>
+                at <abbr title="think\route\dispatch\Module">Module</abbr>->exec() in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/route/Dispatch.php line 168">Dispatch.php line 168</a>                </li>
+            <li>
+                at <abbr title="think\route\Dispatch">Dispatch</abbr>->run() in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/App.php line 432">App.php line 432</a>                </li>
+            <li>
+                at <abbr title="think\App">App</abbr>->think\{closure}(<em>object</em>(<abbr title="think\Request">Request</abbr>), <em>object</em>(<abbr title="Closure">Closure</abbr>), <em>null</em>)                </li>
+            <li>
+                at call_user_func_array(<em>object</em>(<abbr title="Closure">Closure</abbr>), [<em>object</em>(<abbr title="think\Request">Request</abbr>), <em>object</em>(<abbr title="Closure">Closure</abbr>), <em>null</em>]) in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/Middleware.php line 185">Middleware.php line 185</a>                </li>
+            <li>
+                at <abbr title="think\Middleware">Middleware</abbr>->think\{closure}(<em>object</em>(<abbr title="think\Request">Request</abbr>))                </li>
+            <li>
+                at call_user_func(<em>object</em>(<abbr title="Closure">Closure</abbr>), <em>object</em>(<abbr title="think\Request">Request</abbr>)) in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/Middleware.php line 130">Middleware.php line 130</a>                </li>
+            <li>
+                at <abbr title="think\Middleware">Middleware</abbr>->dispatch(<em>object</em>(<abbr title="think\Request">Request</abbr>)) in <a class="toggle" title="/usr/share/nginx/html/oneschool/thinkphp/library/think/App.php line 435">App.php line 435</a>                </li>
+            <li>
+                at <abbr title="think\App">App</abbr>->run() in <a class="toggle" title="/usr/share/nginx/html/oneschool/public/index.php line 21">index.php line 21</a>                </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="exception-var">
+    <h2>Environment Variables</h2>
+    <table>
+        <caption>GET Data</caption>
+        <tbody>
+        <tr>
+            <td>area_code</td>
+            <td>
+                86                    </td>
+        </tr>
+        <tr>
+            <td>phone</td>
+            <td>
+                13825461473                    </td>
+        </tr>
+        <tr>
+            <td>password</td>
+            <td>
+                yskj666                    </td>
+        </tr>
+        <tr>
+            <td>code</td>
+            <td>
+                2                    </td>
+        </tr>
+        </tbody>
+    </table>
+    <table>
+        <caption>POST Data<small>empty</small></caption>
+    </table>
+    <table>
+        <caption>Files<small>empty</small></caption>
+    </table>
+    <table>
+        <caption>Cookies<small>empty</small></caption>
+    </table>
+    <table>
+        <caption>Session<small>empty</small></caption>
+    </table>
+    <table>
+        <caption>Server/Request Data</caption>
+        <tbody>
+        <tr>
+            <td>PHP_EXTRA_CONFIGURE_ARGS</td>
+            <td>
+                --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi                    </td>
+        </tr>
+        <tr>
+            <td>HOSTNAME</td>
+            <td>
+                4955ecded21a                    </td>
+        </tr>
+        <tr>
+            <td>PHP_INI_DIR</td>
+            <td>
+                /usr/local/etc/php                    </td>
+        </tr>
+        <tr>
+            <td>HOME</td>
+            <td>
+                /var/www                    </td>
+        </tr>
+        <tr>
+            <td>PHP_LDFLAGS</td>
+            <td>
+                -Wl,-O1 -Wl,--hash-style=both -pie                    </td>
+        </tr>
+        <tr>
+            <td>PHP_CFLAGS</td>
+            <td>
+                -fstack-protector-strong -fpic -fpie -O2                    </td>
+        </tr>
+        <tr>
+            <td>PHP_MD5</td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>PHP_VERSION</td>
+            <td>
+                7.2.8                    </td>
+        </tr>
+        <tr>
+            <td>GPG_KEYS</td>
+            <td>
+                1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F                    </td>
+        </tr>
+        <tr>
+            <td>PHP_CPPFLAGS</td>
+            <td>
+                -fstack-protector-strong -fpic -fpie -O2                    </td>
+        </tr>
+        <tr>
+            <td>PHP_ASC_URL</td>
+            <td>
+                https://secure.php.net/get/php-7.2.8.tar.xz.asc/from/this/mirror                    </td>
+        </tr>
+        <tr>
+            <td>PHP_URL</td>
+            <td>
+                https://secure.php.net/get/php-7.2.8.tar.xz/from/this/mirror                    </td>
+        </tr>
+        <tr>
+            <td>PATH</td>
+            <td>
+                /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin                    </td>
+        </tr>
+        <tr>
+            <td>PHPIZE_DEPS</td>
+            <td>
+                autoconf 		dpkg-dev 		file 		g++ 		gcc 		libc-dev 		make 		pkg-config 		re2c                    </td>
+        </tr>
+        <tr>
+            <td>PWD</td>
+            <td>
+                /var/www/html                    </td>
+        </tr>
+        <tr>
+            <td>PHP_SHA256</td>
+            <td>
+                53ba0708be8a7db44256e3ae9fcecc91b811e5b5119e6080c951ffe7910ffb0f                    </td>
+        </tr>
+        <tr>
+            <td>TZ</td>
+            <td>
+                Asia/Shanghai                    </td>
+        </tr>
+        <tr>
+            <td>PHPREDIS_VERSION</td>
+            <td>
+                4.1.1                    </td>
+        </tr>
+        <tr>
+            <td>USER</td>
+            <td>
+                www-data                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_CONNECTION</td>
+            <td>
+                keep-alive                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_CONTENT_LENGTH</td>
+            <td>
+                0                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_ACCEPT_ENCODING</td>
+            <td>
+                gzip, deflate                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_HOST</td>
+            <td>
+                oneschool.local                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_ACCEPT</td>
+            <td>
+                */*                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_USER_AGENT</td>
+            <td>
+                PostmanRuntime/7.4.0                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_POSTMAN_TOKEN</td>
+            <td>
+                98a68698-fdea-40ce-be12-fa3f80448100                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_CACHE_CONTROL</td>
+            <td>
+                no-cache                    </td>
+        </tr>
+        <tr>
+            <td>REDIRECT_STATUS</td>
+            <td>
+                200                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_NAME</td>
+            <td>
+                oneschool.local                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_PORT</td>
+            <td>
+                80                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_ADDR</td>
+            <td>
+                172.18.0.5                    </td>
+        </tr>
+        <tr>
+            <td>REMOTE_PORT</td>
+            <td>
+                11107                    </td>
+        </tr>
+        <tr>
+            <td>REMOTE_ADDR</td>
+            <td>
+                192.168.99.1                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_SOFTWARE</td>
+            <td>
+                nginx/1.15.1                    </td>
+        </tr>
+        <tr>
+            <td>GATEWAY_INTERFACE</td>
+            <td>
+                CGI/1.1                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_SCHEME</td>
+            <td>
+                http                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_PROTOCOL</td>
+            <td>
+                HTTP/1.1                    </td>
+        </tr>
+        <tr>
+            <td>DOCUMENT_ROOT</td>
+            <td>
+                /usr/share/nginx/html/oneschool/public                    </td>
+        </tr>
+        <tr>
+            <td>DOCUMENT_URI</td>
+            <td>
+                /index.php                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_URI</td>
+            <td>
+                /v1/auth/signup/mobile?area_code=86&amp;phone=13825461473&amp;password=yskj666&amp;code=2                    </td>
+        </tr>
+        <tr>
+            <td>SCRIPT_NAME</td>
+            <td>
+                /index.php                    </td>
+        </tr>
+        <tr>
+            <td>CONTENT_LENGTH</td>
+            <td>
+                0                    </td>
+        </tr>
+        <tr>
+            <td>CONTENT_TYPE</td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>REQUEST_METHOD</td>
+            <td>
+                POST                    </td>
+        </tr>
+        <tr>
+            <td>QUERY_STRING</td>
+            <td>
+                s=//v1/auth/signup/mobile&amp;area_code=86&amp;phone=13825461473&amp;password=yskj666&amp;code=2                    </td>
+        </tr>
+        <tr>
+            <td>PATH_TRANSLATED</td>
+            <td>
+                /usr/share/nginx/html/oneschool/public                    </td>
+        </tr>
+        <tr>
+            <td>PATH_INFO</td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>SCRIPT_FILENAME</td>
+            <td>
+                /usr/share/nginx/html/oneschool/public/index.php                    </td>
+        </tr>
+        <tr>
+            <td>FCGI_ROLE</td>
+            <td>
+                RESPONDER                    </td>
+        </tr>
+        <tr>
+            <td>PHP_SELF</td>
+            <td>
+                /index.php                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_TIME_FLOAT</td>
+            <td>
+                1544632074.6484                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_TIME</td>
+            <td>
+                1544632074                    </td>
+        </tr>
+        <tr>
+            <td>argv</td>
+            <td>
+                [
+                &quot;s=\/\/v1\/auth\/signup\/mobile&amp;area_code=86&amp;phone=13825461473&amp;password=yskj666&amp;code=2&quot;
+                ]                    </td>
+        </tr>
+        <tr>
+            <td>argc</td>
+            <td>
+                1                    </td>
+        </tr>
+        </tbody>
+    </table>
+    <table>
+        <caption>Environment Variables</caption>
+        <tbody>
+        <tr>
+            <td>PHP_EXTRA_CONFIGURE_ARGS</td>
+            <td>
+                --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi                    </td>
+        </tr>
+        <tr>
+            <td>HOSTNAME</td>
+            <td>
+                4955ecded21a                    </td>
+        </tr>
+        <tr>
+            <td>PHP_INI_DIR</td>
+            <td>
+                /usr/local/etc/php                    </td>
+        </tr>
+        <tr>
+            <td>HOME</td>
+            <td>
+                /var/www                    </td>
+        </tr>
+        <tr>
+            <td>PHP_LDFLAGS</td>
+            <td>
+                -Wl,-O1 -Wl,--hash-style=both -pie                    </td>
+        </tr>
+        <tr>
+            <td>PHP_CFLAGS</td>
+            <td>
+                -fstack-protector-strong -fpic -fpie -O2                    </td>
+        </tr>
+        <tr>
+            <td>PHP_MD5</td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>PHP_VERSION</td>
+            <td>
+                7.2.8                    </td>
+        </tr>
+        <tr>
+            <td>GPG_KEYS</td>
+            <td>
+                1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F                    </td>
+        </tr>
+        <tr>
+            <td>PHP_CPPFLAGS</td>
+            <td>
+                -fstack-protector-strong -fpic -fpie -O2                    </td>
+        </tr>
+        <tr>
+            <td>PHP_ASC_URL</td>
+            <td>
+                https://secure.php.net/get/php-7.2.8.tar.xz.asc/from/this/mirror                    </td>
+        </tr>
+        <tr>
+            <td>PHP_URL</td>
+            <td>
+                https://secure.php.net/get/php-7.2.8.tar.xz/from/this/mirror                    </td>
+        </tr>
+        <tr>
+            <td>PATH</td>
+            <td>
+                /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin                    </td>
+        </tr>
+        <tr>
+            <td>PHPIZE_DEPS</td>
+            <td>
+                autoconf 		dpkg-dev 		file 		g++ 		gcc 		libc-dev 		make 		pkg-config 		re2c                    </td>
+        </tr>
+        <tr>
+            <td>PWD</td>
+            <td>
+                /var/www/html                    </td>
+        </tr>
+        <tr>
+            <td>PHP_SHA256</td>
+            <td>
+                53ba0708be8a7db44256e3ae9fcecc91b811e5b5119e6080c951ffe7910ffb0f                    </td>
+        </tr>
+        <tr>
+            <td>TZ</td>
+            <td>
+                Asia/Shanghai                    </td>
+        </tr>
+        <tr>
+            <td>PHPREDIS_VERSION</td>
+            <td>
+                4.1.1                    </td>
+        </tr>
+        <tr>
+            <td>USER</td>
+            <td>
+                www-data                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_CONNECTION</td>
+            <td>
+                keep-alive                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_CONTENT_LENGTH</td>
+            <td>
+                0                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_ACCEPT_ENCODING</td>
+            <td>
+                gzip, deflate                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_HOST</td>
+            <td>
+                oneschool.local                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_ACCEPT</td>
+            <td>
+                */*                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_USER_AGENT</td>
+            <td>
+                PostmanRuntime/7.4.0                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_POSTMAN_TOKEN</td>
+            <td>
+                98a68698-fdea-40ce-be12-fa3f80448100                    </td>
+        </tr>
+        <tr>
+            <td>HTTP_CACHE_CONTROL</td>
+            <td>
+                no-cache                    </td>
+        </tr>
+        <tr>
+            <td>REDIRECT_STATUS</td>
+            <td>
+                200                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_NAME</td>
+            <td>
+                oneschool.local                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_PORT</td>
+            <td>
+                80                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_ADDR</td>
+            <td>
+                172.18.0.5                    </td>
+        </tr>
+        <tr>
+            <td>REMOTE_PORT</td>
+            <td>
+                11107                    </td>
+        </tr>
+        <tr>
+            <td>REMOTE_ADDR</td>
+            <td>
+                192.168.99.1                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_SOFTWARE</td>
+            <td>
+                nginx/1.15.1                    </td>
+        </tr>
+        <tr>
+            <td>GATEWAY_INTERFACE</td>
+            <td>
+                CGI/1.1                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_SCHEME</td>
+            <td>
+                http                    </td>
+        </tr>
+        <tr>
+            <td>SERVER_PROTOCOL</td>
+            <td>
+                HTTP/1.1                    </td>
+        </tr>
+        <tr>
+            <td>DOCUMENT_ROOT</td>
+            <td>
+                /usr/share/nginx/html/oneschool/public                    </td>
+        </tr>
+        <tr>
+            <td>DOCUMENT_URI</td>
+            <td>
+                /index.php                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_URI</td>
+            <td>
+                /v1/auth/signup/mobile?area_code=86&amp;phone=13825461473&amp;password=yskj666&amp;code=2                    </td>
+        </tr>
+        <tr>
+            <td>SCRIPT_NAME</td>
+            <td>
+                /index.php                    </td>
+        </tr>
+        <tr>
+            <td>CONTENT_LENGTH</td>
+            <td>
+                0                    </td>
+        </tr>
+        <tr>
+            <td>CONTENT_TYPE</td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>REQUEST_METHOD</td>
+            <td>
+                POST                    </td>
+        </tr>
+        <tr>
+            <td>QUERY_STRING</td>
+            <td>
+                s=//v1/auth/signup/mobile&amp;area_code=86&amp;phone=13825461473&amp;password=yskj666&amp;code=2                    </td>
+        </tr>
+        <tr>
+            <td>PATH_TRANSLATED</td>
+            <td>
+                /usr/share/nginx/html/oneschool/public                    </td>
+        </tr>
+        <tr>
+            <td>PATH_INFO</td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>SCRIPT_FILENAME</td>
+            <td>
+                /usr/share/nginx/html/oneschool/public/index.php                    </td>
+        </tr>
+        <tr>
+            <td>FCGI_ROLE</td>
+            <td>
+                RESPONDER                    </td>
+        </tr>
+        <tr>
+            <td>PHP_SELF</td>
+            <td>
+                /index.php                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_TIME_FLOAT</td>
+            <td>
+                1544632074.6484                    </td>
+        </tr>
+        <tr>
+            <td>REQUEST_TIME</td>
+            <td>
+                1544632074                    </td>
+        </tr>
+        <tr>
+            <td>argv</td>
+            <td>
+                [
+                &quot;s=\/\/v1\/auth\/signup\/mobile&amp;area_code=86&amp;phone=13825461473&amp;password=yskj666&amp;code=2&quot;
+                ]                    </td>
+        </tr>
+        <tr>
+            <td>argc</td>
+            <td>
+                1                    </td>
+        </tr>
+        </tbody>
+    </table>
+    <table>
+        <caption>ThinkPHP Constants<small>empty</small></caption>
+    </table>
+</div>
+
+<div class="copyright">
+    <a title="官方网站" href="http://www.thinkphp.cn">ThinkPHP</a>
+    <span>V5.1.30 LTS</span>
+    <span>{ 十年磨一剑-为API开发设计的高性能框架 }</span>
+</div>
+<script>
+    var LINE = 41;
+
+    function $(selector, node){
+        var elements;
+
+        node = node || document;
+        if(document.querySelectorAll){
+            elements = node.querySelectorAll(selector);
+        } else {
+            switch(selector.substr(0, 1)){
+                case '#':
+                    elements = [node.getElementById(selector.substr(1))];
+                    break;
+                case '.':
+                    if(document.getElementsByClassName){
+                        elements = node.getElementsByClassName(selector.substr(1));
+                    } else {
+                        elements = get_elements_by_class(selector.substr(1), node);
+                    }
+                    break;
+                default:
+                    elements = node.getElementsByTagName();
+            }
+        }
+        return elements;
+
+        function get_elements_by_class(search_class, node, tag) {
+            var elements = [], eles,
+                pattern  = new RegExp('(^|\\s)' + search_class + '(\\s|$)');
+
+            node = node || document;
+            tag  = tag  || '*';
+
+            eles = node.getElementsByTagName(tag);
+            for(var i = 0; i < eles.length; i++) {
+                if(pattern.test(eles[i].className)) {
+                    elements.push(eles[i])
+                }
+            }
+
+            return elements;
+        }
+    }
+
+    $.getScript = function(src, func){
+        var script = document.createElement('script');
+
+        script.async  = 'async';
+        script.src    = src;
+        script.onload = func || function(){};
+
+        $('head')[0].appendChild(script);
+    }
+
+    ;(function(){
+        var files = $('.toggle');
+        var ol    = $('ol', $('.prettyprint')[0]);
+        var li    = $('li', ol[0]);
+
+        // 短路径和长路径变换
+        for(var i = 0; i < files.length; i++){
+            files[i].ondblclick = function(){
+                var title = this.title;
+
+                this.title = this.innerHTML;
+                this.innerHTML = title;
+            }
+        }
+
+        // 设置出错行
+        var err_line = $('.line-' + LINE, ol[0])[0];
+        err_line.className = err_line.className + ' line-error';
+
+        $.getScript('//cdn.bootcss.com/prettify/r298/prettify.min.js', function(){
+            prettyPrint();
+
+            // 解决Firefox浏览器一个很诡异的问题
+            // 当代码高亮后，ol的行号莫名其妙的错位
+            // 但是只要刷新li里面的html重新渲染就没有问题了
+            if(window.navigator.userAgent.indexOf('Firefox') >= 0){
+                ol[0].innerHTML = ol[0].innerHTML;
+            }
+        });
+
+    })();
+</script>
+<div id="think_page_trace" style="position: fixed;bottom:0;right:0;font-size:14px;width:100%;z-index: 999999;color: #000;text-align:left;font-family:'微软雅黑';">
+    <div id="think_page_trace_tab" style="display: none;background:white;margin:0;height: 250px;">
+        <div id="think_page_trace_tab_tit" style="height:30px;padding: 6px 12px 0;border-bottom:1px solid #ececec;border-top:1px solid #ececec;font-size:16px">
+            <span style="color:#000;padding-right:12px;height:30px;line-height:30px;display:inline-block;margin-right:3px;cursor:pointer;font-weight:700">基本</span>
+            <span style="color:#000;padding-right:12px;height:30px;line-height:30px;display:inline-block;margin-right:3px;cursor:pointer;font-weight:700">文件</span>
+            <span style="color:#000;padding-right:12px;height:30px;line-height:30px;display:inline-block;margin-right:3px;cursor:pointer;font-weight:700">流程</span>
+            <span style="color:#000;padding-right:12px;height:30px;line-height:30px;display:inline-block;margin-right:3px;cursor:pointer;font-weight:700">错误</span>
+            <span style="color:#000;padding-right:12px;height:30px;line-height:30px;display:inline-block;margin-right:3px;cursor:pointer;font-weight:700">SQL</span>
+            <span style="color:#000;padding-right:12px;height:30px;line-height:30px;display:inline-block;margin-right:3px;cursor:pointer;font-weight:700">调试</span>
+        </div>
+        <div id="think_page_trace_tab_cont" style="overflow:auto;height:212px;padding:0;line-height: 24px">
+            <div style="display:none;">
+                <ol style="padding: 0; margin:0">
+                    <li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">请求信息 : 2018-12-13 00:27:54 HTTP/1.1 POST : http://oneschool.local/v1/auth/signup/mobile?area_code=86&amp;phone=13825461473&amp;password=yskj666&amp;code=2</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">运行时间 : 0.304631s [ 吞吐率：3.28req/s ] 内存消耗：3,258.94kb 文件加载：75</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">查询信息 : 1 queries 0 writes </li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">缓存信息 : 0 reads,0 writes</li>                </ol>
+            </div>
+            <div style="display:none;">
+                <ol style="padding: 0; margin:0">
+                    <li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/public/index.php ( 0.84 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/base.php ( 1.71 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Loader.php ( 12.70 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/vendor/composer/autoload_static.php ( 1.00 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Error.php ( 4.00 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Container.php ( 15.53 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/App.php ( 26.70 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Env.php ( 2.85 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Config.php ( 9.71 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/convention.php ( 11.74 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/tags.php ( 0.99 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Hook.php ( 5.58 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/common.php ( 0.61 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/helper.php ( 20.23 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/provider.php ( 0.63 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/app.php ( 5.61 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/facade/Env.php ( 1.17 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Facade.php ( 3.44 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/cache.php ( 1.28 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/console.php ( 0.93 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/cookie.php ( 1.14 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/database.php ( 2.23 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/log.php ( 1.19 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/middleware.php ( 0.86 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/session.php ( 1.09 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/template.php ( 1.43 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/config/trace.php ( 0.86 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Db.php ( 7.67 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Lang.php ( 7.38 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Request.php ( 56.94 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Log.php ( 8.81 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/log/driver/File.php ( 8.83 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/lang/zh-cn.php ( 12.58 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/route/route.php ( 5.25 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/facade/Route.php ( 3.83 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Route.php ( 25.77 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/Domain.php ( 7.07 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/RuleGroup.php ( 16.52 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/Rule.php ( 28.50 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/RuleItem.php ( 8.69 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/RuleName.php ( 3.92 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/Resource.php ( 3.97 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/dispatch/Module.php ( 5.33 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/route/Dispatch.php ( 9.27 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Middleware.php ( 5.34 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Cookie.php ( 7.35 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/View.php ( 5.71 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/view/driver/Think.php ( 6.12 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Template.php ( 47.31 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/template/driver/File.php ( 2.29 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Session.php ( 14.13 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Debug.php ( 7.57 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Cache.php ( 3.27 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/cache/driver/File.php ( 7.91 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/cache/Driver.php ( 8.38 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/api/controller/Auth.php ( 24.11 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/api/controller/Base.php ( 23.05 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Controller.php ( 7.44 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/traits/controller/Jump.php ( 4.76 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/common/controller/ModuleTrait.php ( 8.92 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/api/event/auth/PhoneVerifier.php ( 6.73 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/db/Connection.php ( 58.83 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/db/connector/Mysql.php ( 5.58 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/db/builder/Mysql.php ( 5.46 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/db/Builder.php ( 36.36 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/db/Query.php ( 103.84 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/common/validate/Password.php ( 0.45 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Validate.php ( 43.23 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/application/api/event/auth/AuthenticationService.php ( 10.26 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/exception/ThrowableError.php ( 1.53 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/exception/Handle.php ( 8.96 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/tpl/think_exception.tpl ( 16.86 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/facade/App.php ( 3.48 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/Response.php ( 9.68 KB )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">/usr/share/nginx/html/oneschool/thinkphp/library/think/debug/Html.php ( 4.02 KB )</li>                </ol>
+            </div>
+            <div style="display:none;">
+                <ol style="padding: 0; margin:0">
+                    <li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[ LANG ] /usr/share/nginx/html/oneschool/thinkphp/lang/zh-cn.php</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[ ROUTE ] array (
+                    'rule' =&gt; 'v1/auth/signup/mobile',
+                    'route' =&gt; 'api/auth/signupWithPhoneAction',
+                    'option' =&gt;
+                    array (
+                    'merge_rule_regex' =&gt; false,
+                    ),
+                    'var' =&gt;
+                    array (
+                    ),
+                    )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[ HEADER ] array (
+                    'connection' =&gt; 'keep-alive',
+                    'content-length' =&gt; '0',
+                    'accept-encoding' =&gt; 'gzip, deflate',
+                    'host' =&gt; 'oneschool.local',
+                    'accept' =&gt; '*/*',
+                    'user-agent' =&gt; 'PostmanRuntime/7.4.0',
+                    'postman-token' =&gt; '98a68698-fdea-40ce-be12-fa3f80448100',
+                    'cache-control' =&gt; 'no-cache',
+                    'content-type' =&gt; '',
+                    )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[ PARAM ] array (
+                    'area_code' =&gt; '86',
+                    'phone' =&gt; '13825461473',
+                    'password' =&gt; 'yskj666',
+                    'code' =&gt; '2',
+                    )</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[ DB ] INIT mysql</li>                </ol>
+            </div>
+            <div style="display:none;">
+                <ol style="padding: 0; margin:0">
+                    <li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[0]致命错误: Call to a member function encodePassword() on string[/usr/share/nginx/html/oneschool/application/api/event/auth/AuthenticationService.php:41]</li>                </ol>
+            </div>
+            <div style="display:none;">
+                <ol style="padding: 0; margin:0">
+                    <li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[ DB ] CONNECT:[ UseTime:0.001484s ] mysql:host=192.168.99.100;port=3306;dbname=oneschool;charset=utf8</li><li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">[ SQL ] DELETE FROM phone_code WHERE area_code = '86' AND phone = '13825461473' AND create_time &gt;= '1544632074' - 300 AND code = '2' [ RunTime:0.000964s ]</li>                </ol>
+            </div>
+            <div style="display:none;">
+                <ol style="padding: 0; margin:0">
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div id="think_page_trace_close" style="display:none;text-align:right;height:15px;position:absolute;top:10px;right:12px;cursor:pointer;"><img style="vertical-align:top;" src="data:image/gif;base64,R0lGODlhDwAPAJEAAAAAAAMDA////wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MUQxMjc1MUJCQUJDMTFFMTk0OUVGRjc3QzU4RURFNkEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MUQxMjc1MUNCQUJDMTFFMTk0OUVGRjc3QzU4RURFNkEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoxRDEyNzUxOUJBQkMxMUUxOTQ5RUZGNzdDNThFREU2QSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxRDEyNzUxQUJBQkMxMUUxOTQ5RUZGNzdDNThFREU2QSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAAAAAAALAAAAAAPAA8AAAIdjI6JZqotoJPR1fnsgRR3C2jZl3Ai9aWZZooV+RQAOw==" /></div>
+</div>
+<div id="think_page_trace_open" style="height:30px;float:right;text-align:right;overflow:hidden;position:fixed;bottom:0;right:0;color:#000;line-height:30px;cursor:pointer;">
+    <div style="background:#232323;color:#FFF;padding:0 6px;float:right;line-height:30px;font-size:14px">0.358742s </div>
+    <img width="30" style="" title="ShowPageTrace" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjVERDVENkZGQjkyNDExRTE5REY3RDQ5RTQ2RTRDQUJCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjVERDVENzAwQjkyNDExRTE5REY3RDQ5RTQ2RTRDQUJCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NURENUQ2RkRCOTI0MTFFMTlERjdENDlFNDZFNENBQkIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NURENUQ2RkVCOTI0MTFFMTlERjdENDlFNDZFNENBQkIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5fx6IRAAAMCElEQVR42sxae3BU1Rk/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">
+</div>
+
+<script type="text/javascript">
+    (function(){
+        var tab_tit  = document.getElementById('think_page_trace_tab_tit').getElementsByTagName('span');
+        var tab_cont = document.getElementById('think_page_trace_tab_cont').getElementsByTagName('div');
+        var open     = document.getElementById('think_page_trace_open');
+        var close    = document.getElementById('think_page_trace_close').children[0];
+        var trace    = document.getElementById('think_page_trace_tab');
+        var cookie   = document.cookie.match(/thinkphp_show_page_trace=(\d\|\d)/);
+        var history  = (cookie && typeof cookie[1] != 'undefined' && cookie[1].split('|')) || [0,0];
+        open.onclick = function(){
+            trace.style.display = 'block';
+            this.style.display = 'none';
+            close.parentNode.style.display = 'block';
+            history[0] = 1;
+            document.cookie = 'thinkphp_show_page_trace='+history.join('|')
+        }
+        close.onclick = function(){
+            trace.style.display = 'none';
+            this.parentNode.style.display = 'none';
+            open.style.display = 'block';
+            history[0] = 0;
+            document.cookie = 'thinkphp_show_page_trace='+history.join('|')
+        }
+        for(var i = 0; i < tab_tit.length; i++){
+            tab_tit[i].onclick = (function(i){
+                return function(){
+                    for(var j = 0; j < tab_cont.length; j++){
+                        tab_cont[j].style.display = 'none';
+                        tab_tit[j].style.color = '#999';
+                    }
+                    tab_cont[i].style.display = 'block';
+                    tab_tit[i].style.color = '#000';
+                    history[1] = i;
+                    document.cookie = 'thinkphp_show_page_trace='+history.join('|')
+                }
+            })(i)
+        }
+        parseInt(history[0]) && open.click();
+        tab_tit[history[1]].click();
+    })();
+</script>
+</body>
+</html>

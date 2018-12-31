@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-
-<section code="7">
-    <group>
-        <error name="FileSizeTooLarge">file size should less than {size}</error>
-        <error name="FileTypeInvalid">you should upload file with {type} mime type</error>
-        <error name="UploadFail"></error>
-    </group>
-</section>

@@ -2,6 +2,13 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+$redis = new \redis();
+
+$redis->connect ('192.168.99.100', '6379');
+
+exit();
+
+
 echo md5 ('61.140.24.26reg_forbidden').PHP_EOL;
 
 echo md5 ('318654321').PHP_EOL;

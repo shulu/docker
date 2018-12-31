@@ -11,7 +11,7 @@ namespace Lychee\Module\ExtraMessage\Tests;
 
 use Lychee\Component\Foundation\HttpUtility;
 use Lychee\Component\Test\ModuleAwareTestCase;
-use Lychee\Module\Authentication\AuthenticationService;
+use Lychee\Module\Authentication\auth;
 use Lychee\Module\ExtraMessage\EMAuthenticationService;
 use Lychee\Module\ExtraMessage\Entity\EMUser;
 

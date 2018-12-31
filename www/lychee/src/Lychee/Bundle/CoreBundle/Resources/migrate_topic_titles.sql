@@ -1,1 +1,0 @@
-INSERT INTO `topic_titles`(title) SELECT title FROM topic

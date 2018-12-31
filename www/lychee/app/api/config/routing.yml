@@ -1,5 +1,0 @@
-_lychee_api:
-    resource: "@LycheeApiBundle/Resources/config/routing.yml"
-
-_lychee_core:
-    resource: "@LycheeCoreBundle/Resources/config/routing.yml"

@@ -1,8 +1,0 @@
-services:
-    lychee.module.activitytopciyobyweek.topciyobyweek:
-        class: Lychee\Module\CiyoActivity\TopCiyoByWeekService
-        arguments:
-            - '@doctrine'
-            - '@lychee.module.post'
-            - '@lychee.module.account'
-

@@ -1,58 +1,12 @@
 <?php
-namespace Lychee\Module\Relation;
+namespace app\module\relation;
 
-use Doctrine\ORM\EntityManager;
-use Lychee\Component\Foundation\ArrayUtility;
-use Lychee\Component\Foundation\CursorableIterator\DatetimeQueryCursorableIterator;
-use Lychee\Component\GraphStorage\Doctrine\AbstractFollowing;
-use Lychee\Module\Relation\BlackList\ParticalBlackListResolver;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Lychee\Component\GraphStorage\Redis\RedisFollowingStorage;
-use Lychee\Component\GraphStorage\FollowingStorage;
-use Lychee\Component\GraphStorage\FollowingCounter;
-use Lychee\Component\GraphStorage\FollowingResolver;
-use Lychee\Component\GraphStorage\Exception\FollowingException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Lychee\Component\GraphStorage\Doctrine\DoctrineFollowingStorage;
-use Lychee\Module\Relation\Entity\UserFollowing;
-use Lychee\Module\Relation\Entity\UserFollowingCounting;
-use Lychee\Module\Relation\BlackList\BlackListResolver;
+use think\Controller;
 
-class RelationService {
+class RelationService extends Controller
+{
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var FollowingStorage
-     */
-    private $doctrineStorage;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ContainerInterface
-     */
-    private $serviceContainer;
-
-    /**
-     * @param ManagerRegistry $doctrine
-     * @param EventDispatcherInterface $eventDispatcher
-     */
-    public function __construct($doctrine, $eventDispatcher, $serviceContainer=null) {
-        $this->entityManager = $doctrine->getManager();
-        $this->doctrineStorage = new DoctrineFollowingStorage(
-            $this->entityManager, UserFollowing::class, UserFollowingCounting::class
-        );
-        $this->eventDispatcher = $eventDispatcher;
-        $this->serviceContainer = $serviceContainer;
-    }
+    public function __construct() {}
 
     /**
      * @param int $userId
@@ -187,8 +141,9 @@ class RelationService {
      * @param int $hint
      * @return FollowingResolver
      */
-    public function buildRelationResolver($userId, $otherIds, $hint = FollowingResolver::HINT_NONE) {
-        return $this->doctrineStorage->buildResolver($userId, $otherIds, $hint);
+    public function buildRelationResolver($userId, $otherIds)
+    {
+        return $this->doctrineStorage->buildResolver($userId, $otherIds);
     }
 
     /**

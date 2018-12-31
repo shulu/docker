@@ -1,5 +1,5 @@
 <?php
-namespace Lychee\Module\Account\Exception;
+namespace app\module\account\exception;
 
 class EmailDuplicateException extends \Exception {
 

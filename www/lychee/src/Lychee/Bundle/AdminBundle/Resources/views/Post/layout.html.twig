@@ -1,9 +1,0 @@
-{% extends 'LycheeAdminBundle::left_nav_layout.html.twig' %}
-
-{% block left_nav %}
-    <li class="{% if app.request.get('_route') == 'lychee_admin_post_index' %}active{% endif %}">
-        <a href="{{ path('lychee_admin_post_index') }}">快速发帖</a>
-    </li>
-{% endblock %}
-
-{% block body %}{% endblock %}

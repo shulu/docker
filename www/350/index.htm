@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>350手游平台_人气火爆手游网_热门手机游戏推荐_好玩的手游平台</title>
+    <meta name="keywords" content="350,350游戏,350手游,手游网,好玩的手游,手机游戏下载,安卓游戏,苹果游戏">
+    <meta name="description" content="350手游平台，超火爆精品手机游戏平台，为玩家提供免费好玩的手机游戏下载和超值游戏礼包福利。玩游戏，就上350手游（www.350.com），各种独家人气游戏礼包等你来拿。">
+    <link rel="stylesheet" type="text/css" href="index_files/common.css">
+    <link rel="stylesheet" type="text/css" href="index_files/base.css">
+    <link rel="stylesheet" type="text/css" href="index_files/index.css">
+    <link rel="stylesheet" type="text/css" href="index_files/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="index_files/animate.css">
+    <script type="text/javascript" async="" charset="utf-8" src="index_files/core.php"></script><script src="index_files/hm.txt"></script><script type="text/javascript" src="index_files/jquery-1.js"></script>
+    <script type="text/javascript" src="index_files/gift_center_pcms.js"></script>
+<script type="text/javascript" src="index_files/z_stat.php" charset="utf-8" id="r_script"></script><style type="text/css"></style></head>
+<body navigation-id="0">
+<span name="在测试成功了"></span>
+<!--判断手机还是pc-->
+<script language="javascript">
+    (function(){
+        var res = GetRequest();
+        var par = res['index'];
+        if(par!='gfan'){
+            var ua=navigator.userAgent.toLowerCase();
+            var contains=function (a, b){
+                if(a.indexOf(b)!=-1){return true;}
+            };
+            var toMobileVertion = function(){
+                window.location.href = 'http://m.350.com'
+            }
+
+            if(contains(ua,"ipad")||(contains(ua,"rv:1.2.3.4"))||(contains(ua,"0.0.0.0"))||(contains(ua,"8.0.552.237"))){return false}
+            if((contains(ua,"android") && contains(ua,"mobile"))||(contains(ua,"android") && contains(ua,"mozilla")) ||(contains(ua,"android") && contains(ua,"opera"))
+                ||contains(ua,"ucweb7")||contains(ua,"iphone")){toMobileVertion();}
+        }
+    })();
+    function GetRequest() {
+        var url = location.search;
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+</script>
+<script type="text/javascript" src="index_files/tools-1.js"></script>
+<script type="text/javascript" src="index_files/common.js"></script>
+<script type="text/javascript" src="index_files/userClass.js"></script>
+<script src="index_files/header.js" type="text/javascript"></script>
+<!-- 顶部 -->
+<div class="top">
+    <div class="pop">
+        <!-- 登录 -->
+        <div class="login_pop_inner">
+            <div class="closed"></div>
+            <div class="login_title">账号登录</div>
+            <div class="form clear">
+                <div class="input_border">
+                    <i class="iconfont"></i>
+                    <input name="h-username" placeholder="请输入账号" class="input username" type="text">
+                    <i class="iconfont cancel"></i>
+                </div>
+                <div class="input_border">
+                    <i class="iconfont"></i>
+                    <input name="h-password" placeholder="请输入密码" class="input password" type="password">
+                    <i class="iconfont cancel"></i>
+                </div>
+                <div class="next_forget">
+                    <label class="z" for="r_dialog_keep">
+                        <input name="h-long_login" id="r_dialog_keep" class="r_checkbox" checked="checked" type="checkbox">下次自动登录
+                    </label>
+                    <a href="http://350.com/html/user/forget/" class="y">
+                        忘记密码
+                    </a>
+                </div>
+                <span class="login-tips tips"></span>
+                <div class="submit animation">
+                    <input class="login-submit" value="登录" type="submit">
+                </div>
+                <div class="regist_list">
+                    还没有账号，<a href="javascript:;" class="regist_link">立即注册</a>
+                </div>
+            </div>
+        </div>
+        <!-- 注册 -->
+        <div class="regist_pop_inner">
+            <div class="closed"></div>
+            <div class="login_title">注册</div>
+            <div>
+                <div class="regist_tab">
+                    <div class="cur">
+                        <a href="javascript:;">账号注册</a>
+                    </div>
+                    <div class="">
+                        <a href="javascript:;">手机注册</a>
+                    </div>
+                </div>
+                <!--账号注册-->
+                <div class="form clear number_regist">
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hg-username" placeholder="请输入账号" class="input username" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="password" placeholder="请输入密码" class="input password" id="hg-password" type="password">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="rpassword" placeholder="请再次输入密码" class="input rpassword" id="hg-repassword" type="password">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hg-true_name" placeholder="真实姓名" class="input true_name" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hg-id_card" placeholder="身份证号码" class="input id_card" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <span class="number-regist-tips tips"></span>
+                    <div class="submit animation">
+                        <input name="" value="注册" class="number-regist-submit" type="submit">
+                    </div>
+                    <div class="regist_list">
+                        已有账号，<a href="javascript:;" class="login_link">立即登录</a>
+                    </div>
+                </div>
+                <!-- 手机注册 -->
+                <div class="form clear phone_regist" style="display: none">
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hgp-phone" placeholder="请输入手机号码" class="input phone" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="password" placeholder="请输入密码" class="input password" id="hgp-password" type="password">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="code" placeholder="请输入验证码" class="input check_input" id="hgp-phone_code" type="text">
+                        <div class="z"></div>
+                        <div id="check_code">发送验证码</div>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hgp-true_name" placeholder="真实姓名" class="input true_name" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <div class="input_border">
+                        <i class="iconfont"></i>
+                        <input name="hgp-id_card" placeholder="身份证号码" class="input id_card" type="text">
+                        <i class="iconfont cancel"></i>
+                    </div>
+                    <span class="phone-regist-tips tips"></span>
+                    <div class="submit animation">
+                        <input value="注册" class="phone-regist-submit" type="submit">
+                    </div>
+                    <div class="regist_list">
+                        已有账号，<a href="javascript:;" class="login_link">立即登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner">
+        <div class="top_left z">
+            <div class="z">
+                <i class="iconfont z" style="margin-top: 2px;color: #58ddba; ">
+                    
+                </i>
+                <p class="z">
+                    客服电话 : 0755-86564350
+                </p>
+            </div>
+            <div class="z qq_p">
+                <i class="iconfont z" style="color: #4fbfff">
+                    
+                </i>
+                <p class="z">
+                    <a href="http://www.350.com/html/customer/kf/" target="_blank">在线客服</a>
+                </p>
+            </div>
+            <div class="z cellection_p">
+                <a href="javascript:;" class="cellection">
+                    <i class="iconfont z" style="color: #f9d95a">
+                        
+                    </i>
+                    <p class="z">
+                        点击收藏
+                    </p>
+                </a>
+            </div>
+        </div>
+        <div class="user_id y" id="header_user_nologin" style="">
+            <div class="login z">立即登录</div>
+            <div class="line z">|</div>
+            <div class="regist z">免费注册</div>
+        </div>
+        <!-- 已登录 -->
+        <div class="user_id y" id="header_user_login" style="display: none">
+            <a href="http://350.com/html/user/"><span><i class="iconfont"></i> <span id="header_username"></span> </span></a>
+            <a href="javascript:void(0);" id="header_logout_btn">退出</a>
+        </div>
+    </div>
+</div>
+<!-- 头部 -->
+<header>
+    <div class="inner clear">
+        <div class="logo z">
+            <a href="http://www.350.com/">
+                <img src="index_files/350_logo.png">
+            </a>
+        </div>
+        <ul class="header_nav z">
+                        <ul class="nav-site">
+                                                <li class="header_nav_cur"><a href="http://350demo.local/">平台首页</a></li>
+                                                <!-- <li><a href="http://www.350.com/html/game/">游戏大全</a></li> -->
+                                                <!-- <li><a href="http://www.350.com/html/gift/">礼包中心</a></li> -->
+                                                <li><a href="http://350demo.local/kefu.htm">客服中心</a></li>
+                                                <li><a href="http://350demo.local/news.htm">游戏资讯</a></li>
+                                                <!-- <li><a href="http://350.com/html/user">用户中心</a></li> -->
+            </ul>
+                                </ul>
+        <!--<div class="search_form y">-->
+            <!--<form method="post" action="">-->
+                <!--<input type="text" name="" placeholder="搜索游戏" value="" class="search_area">-->
+                <!--<input type="submit" name="" class="search_button" value="" id="search_button">-->
+            <!--</form>-->
+        <!--</div>-->
+    </div>
+</header>
+<script type="text/javascript">
+    $(function(){var tab = $("body").attr("navigation-id");$(".header_nav li").eq($("body").attr("navigation-id")).addClass("header_nav_cur");});
+</script>
+<script>
+    // 退出按钮
+    $('#header_logout_btn').bind('click', function () {
+        userClass.api('logout', {}, function () {
+            userClass.goUserUrl('login');
+        }, function (msg) {
+        });
+    });
+    $(function () {
+        // 判断用户是否登陆
+        userClass.api('status', {}, function (response) {
+            // 登陆成功状态 跳转首页
+            if (response.status === 200) {
+                showHearderUserTip(localStorage.username);
+            } else {
+                showHearderUserTip(false);
+            }
+        }, function (response) {
+            showHearderUserTip(false);
+        });
+        $('input').on('input', function () {
+            cFunction.tips('.login-tips', '', true);
+        });
+    });
+</script><!-- 轮播 -->
+<div class="slide_box" id="slide_box">
+    <ul class="slide_bd">
+                        <li style="display: list-item; opacity: 0.375655;">
+            <a href="http://www.350.com/html/2018/game_0410/5.html" style="background: url(http://images.350.com/cms/uploadfile/2018/0903/20180903075452376.jpg) center top no-repeat"></a>
+        </li>
+                <li style="display: list-item; opacity: 0.624345;">
+            <a href="http://www.350.com/html/2017/game_1101/1.html" style="background: url(http://images.350.com/cms/uploadfile/2018/0326/20180326102250445.jpg) center top no-repeat"></a>
+        </li>
+                <li style="display: none;">
+            <a href="http://www.350.com/html/2018/game_0424/17.html" style="background: url(http://images.350.com/cms/uploadfile/2018/0605/20180605073948905.jpg) center top no-repeat"></a>
+        </li>
+                <li style="display: none;">
+            <a href="http://www.350.com/html/2018/game_0507/18.html" style="background: url(http://images.350.com/cms/uploadfile/2018/0903/20180903075435688.jpg) center top no-repeat"></a>
+        </li>
+                    </ul>
+<div class="slide_fd"><ul class="slide-nav" style="margin-left: -65px;"><li class="">1</li><li class="active">2</li><li class="">3</li><li class="">4</li></ul></div></div>
+<div class="main">
+    <!-- 游戏推荐 -->
+    <div class="game_recom">
+        <div class="big_title">
+            <i class="iconfont"></i><span>游戏推荐</span>
+        </div>
+        <ul class="game_recom_con">
+                                                                                    <li>
+                <div class="game_recom_img">
+                    <img src="index_files/20180903074434706.jpg">
+                    <div class="down_block transition">
+                        <a href="http://www.350.com/html/2018/game_0410/5.html">
+                            <div class="game_introduce z">
+                                <p>角色扮演</p>
+                                <p>玩家评分：★★★★★</p>
+                                <p>游戏包：124m</p>
+                                <p>下载次数：782w</p>
+                            </div>
+                            <div class="down_code z">
+                                <img src="index_files/20180904023640929.png">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="game_name z">
+                    <p>王者乾坤</p>
+                </div>
+                <div class="down_gift y">
+                    <a href="javascript:;" class="animation"><i class="iconfont"></i>113万</a>
+                    <span class="plus z">+1</span>
+                    <a href="http://www.350.com/html/2018/game_0410/5.html" class="animation">进入官网</a>
+                </div>
+            </li>
+                                                                                    <li>
+                <div class="game_recom_img">
+                    <img src="index_files/20180510053411535.jpg">
+                    <div class="down_block transition">
+                        <a href="http://www.350.com/html/2018/game_0424/17.html">
+                            <div class="game_introduce z">
+                                <p>角色扮演</p>
+                                <p>玩家评分：★★★★★</p>
+                                <p>游戏包：59m</p>
+                                <p>下载次数：769w</p>
+                            </div>
+                            <div class="down_code z">
+                                <img src="index_files/20180424105443166.png">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="game_name z">
+                    <p>幻灵</p>
+                </div>
+                <div class="down_gift y">
+                    <a href="javascript:;" class="animation"><i class="iconfont"></i>11万</a>
+                    <span class="plus z">+1</span>
+                    <a href="http://www.350.com/html/2018/game_0424/17.html" class="animation">进入官网</a>
+                </div>
+            </li>
+                                                                                    <li>
+                <div class="game_recom_img">
+                    <img src="index_files/20180903070947771.jpg">
+                    <div class="down_block transition">
+                        <a href="http://www.350.com/html/2018/game_0507/18.html">
+                            <div class="game_introduce z">
+                                <p>角色扮演</p>
+                                <p>玩家评分：★</p>
+                                <p>游戏包：142m</p>
+                                <p>下载次数：755w</p>
+                            </div>
+                            <div class="down_code z">
+                                <img src="">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="game_name z">
+                    <p>商战创世纪</p>
+                </div>
+                <div class="down_gift y">
+                    <a href="javascript:;" class="animation"><i class="iconfont"></i>22万</a>
+                    <span class="plus z">+1</span>
+                    <a href="http://www.350.com/html/2018/game_0507/18.html" class="animation">进入官网</a>
+                </div>
+            </li>
+                                                        </ul>
+    </div>
+    <!-- 热门游戏 -->
+    <div class="game_hot z">
+        <div class="big_title">
+            <i class="iconfont"></i>
+            <span>热门游戏</span>
+            <a href="http://www.350.com/html/game/" title="更多"><i class="more iconfont y"></i></a>
+        </div>
+        <ul class="game_list">
+                                                <li>
+                <div class="slide_bar"></div>
+                <div class="game_icon z"><a href="http://www.350.com/html/2018/game_0410/5.html"><img src="index_files/20180418012937907.png"></a></div>
+                <div class="game_intro z">
+                    <a href="http://www.350.com/html/2018/game_0410/5.html" target="_blank">王者乾坤</a>
+                    <h2>类型:角色扮演</h2>
+                    <h4>★★★★★</h4>
+                                        <a href="http://app.350.com/grwhy/grwhy_350.apk" class="down_button">立即下载</a>
+                                    </div>
+            </li>
+                                    <li>
+                <div class="slide_bar"></div>
+                <div class="game_icon z"><a href="http://www.350.com/html/2018/game_0424/17.html"><img src="index_files/20180424101920873.png"></a></div>
+                <div class="game_intro z">
+                    <a href="http://www.350.com/html/2018/game_0424/17.html" target="_blank">幻灵</a>
+                    <h2>类型:角色扮演</h2>
+                    <h4>★★★★★</h4>
+                                        <a href="http://app.350.com/wzxx/wzxx_7180.apk" class="down_button">立即下载</a>
+                                    </div>
+            </li>
+                                    <li>
+                <div class="slide_bar"></div>
+                <div class="game_icon z"><a href="http://www.350.com/html/2018/game_0507/18.html"><img src="index_files/20180507100141974.png"></a></div>
+                <div class="game_intro z">
+                    <a href="http://www.350.com/html/2018/game_0507/18.html" target="_blank">商战创世纪</a>
+                    <h2>类型:角色扮演</h2>
+                    <h4>★</h4>
+                                        <a href="http://app.350.com/fhjq/fhjq_350.apk" class="down_button">立即下载</a>
+                                    </div>
+            </li>
+                                    <li>
+                <div class="slide_bar"></div>
+                <div class="game_icon z"><a href="http://www.350.com/html/2018/game_0411/7.html"><img src="index_files/20180418013005412.png"></a></div>
+                <div class="game_intro z">
+                    <a href="http://www.350.com/html/2018/game_0411/7.html" target="_blank">魔法无敌</a>
+                    <h2>类型:经典卡牌</h2>
+                    <h4>★★★★★</h4>
+                                        <a href="http://app.350.com/oldgames/mfmqj_350_t1_new.apk" class="down_button">立即下载</a>
+                                    </div>
+            </li>
+                                    <li>
+                <div class="slide_bar"></div>
+                <div class="game_icon z"><a href="http://www.350.com/html/2017/game_1101/1.html"><img src="index_files/20180418012856426.png"></a></div>
+                <div class="game_intro z">
+                    <a href="http://www.350.com/html/2017/game_1101/1.html" target="_blank">传奇来了</a>
+                    <h2>类型:热血pk</h2>
+                    <h4>★★★★★</h4>
+                                        <a href="http://app.350.com/cqll/cqll_8230.apk" class="down_button">立即下载</a>
+                                    </div>
+            </li>
+                                    <li>
+                <div class="slide_bar"></div>
+                <div class="game_icon z"><a href="http://ltcs.350.com/"><img src="index_files/20180418013136396.png"></a></div>
+                <div class="game_intro z">
+                    <a href="http://ltcs.350.com/" target="_blank">龙腾传世</a>
+                    <h2>类型:角色扮演</h2>
+                    <h4>★★★★★</h4>
+                                        <a href="http://app.350.com/ltcs/ltcs_5127.apk" class="down_button">立即下载</a>
+                                    </div>
+            </li>
+                                </ul>
+    </div>
+    <!-- 开服列表 -->
+    <div class="service_table z">
+        <div class="big_title"><i class="iconfont"></i><span>游戏开服表</span></div>
+        <div class="service_table_title">
+            <div class="service_name z">游戏名称</div>
+            <div class="service_time z">时间</div>
+            <div class="service_area z">区服</div>
+        </div>
+        <ul style="display: block;">
+                                                                                    <li>
+                <a href="http://www.350.com/html/2017/game_1101/1.html" target="_blank">
+                    <div class="g_name">传奇来了</div>
+                    <div class="g_time">10-09 00:05</div>
+                    <div class="g_area">297区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2018/game_0410/5.html" target="_blank">
+                    <div class="g_name">王者乾坤</div>
+                    <div class="g_time">10-07 16:00</div>
+                    <div class="g_area">420区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2018/game_0410/5.html" target="_blank">
+                    <div class="g_name">王者乾坤</div>
+                    <div class="g_time">10-06 11:00</div>
+                    <div class="g_area">419区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2017/game_1101/1.html" target="_blank">
+                    <div class="g_name">传奇来了</div>
+                    <div class="g_time">10-06 00:05</div>
+                    <div class="g_area">296区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2018/game_0410/5.html" target="_blank">
+                    <div class="g_name">王者乾坤</div>
+                    <div class="g_time">10-05 00:00</div>
+                    <div class="g_area">418区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2018/game_0410/5.html" target="_blank">
+                    <div class="g_name">王者乾坤</div>
+                    <div class="g_time">10-03 15:00</div>
+                    <div class="g_area">417区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2017/game_1101/1.html" target="_blank">
+                    <div class="g_name">传奇来了</div>
+                    <div class="g_time">10-03 00:05</div>
+                    <div class="g_area">295区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2018/game_0410/5.html" target="_blank">
+                    <div class="g_name">王者乾坤</div>
+                    <div class="g_time">10-02 00:00</div>
+                    <div class="g_area">416区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2018/game_0410/5.html" target="_blank">
+                    <div class="g_name">王者乾坤</div>
+                    <div class="g_time">09-30 14:00</div>
+                    <div class="g_area">415区</div>
+                </a>
+            </li>
+                                                                                    <li>
+                <a href="http://www.350.com/html/2017/game_1101/1.html" target="_blank">
+                    <div class="g_name">传奇来了</div>
+                    <div class="g_time">09-30 00:05</div>
+                    <div class="g_area">294区</div>
+                </a>
+            </li>
+                                                        </ul>
+        <div class="page_nation">
+            <a href="javascript:;" class="page_prev z"><i class="iconfont"></i></a>
+            <div class="cur_page z">1/1</div>
+            <a href="javascript:;" class="page_next z"><i class="iconfont"></i></a>
+        </div>
+    </div>
+    <!-- 新闻资讯 -->
+    <div class="news z">
+        <div class="big_title">
+            <i class="iconfont"></i>
+            <span>最新资讯</span>
+            <a href="http://www.350.com/html/news/" title="更多"><i class="more iconfont y"></i></a>
+        </div>
+        <ul class="news_con">
+            <div class="top_news"><a href="javascript:void(0);"><img src="index_files/news_img.jpg"></a></div>
+                                                <li>
+                <a href="http://www.350.com/html/news/">
+                    <span class="active_tag z">官方</span>
+                </a>
+                <a href="http://www.350.com/html/2018/gfgg_1009/219.html" class="new_tit z">《传奇来了》10月09日更新维护公告</a>
+                <div class="news_time y">10-09</div>
+            </li>
+                        <li>
+                <a href="http://www.350.com/html/news/">
+                    <span class="active_tag z">活动</span>
+                </a>
+                <a href="http://www.350.com/html/2018/hdzx_0930/217.html" class="new_tit z">《龙腾传世》七天狂欢活动</a>
+                <div class="news_time y">09-30</div>
+            </li>
+                        <li>
+                <a href="http://www.350.com/html/news/">
+                    <span class="active_tag z">官方</span>
+                </a>
+                <a href="http://www.350.com/html/2018/gfgg_0930/216.html" class="new_tit z">《龙腾传世》9月30日维护更新公告</a>
+                <div class="news_time y">09-30</div>
+            </li>
+                        <li>
+                <a href="http://www.350.com/html/news/">
+                    <span class="active_tag z">活动</span>
+                </a>
+                <a href="http://www.350.com/html/2018/hdzx_0929/214.html" class="new_tit z">《魔法无敌》国庆节活动</a>
+                <div class="news_time y">09-29</div>
+            </li>
+                        <li>
+                <a href="http://www.350.com/html/news/">
+                    <span class="active_tag z">官方</span>
+                </a>
+                <a href="http://www.350.com/html/2018/gfgg_0927/210.html" class="new_tit z">《传奇来了》9月28日更新维护公告</a>
+                <div class="news_time y">09-27</div>
+            </li>
+                        <li>
+                <a href="http://www.350.com/html/news/">
+                    <span class="active_tag z">官方</span>
+                </a>
+                <a href="http://www.350.com/html/2018/gfgg_0926/206.html" class="new_tit z">《魔法无敌》9月28日合服公告</a>
+                <div class="news_time y">09-26</div>
+            </li>
+                        <li>
+                <a href="http://www.350.com/html/news/">
+                    <span class="active_tag z">官方</span>
+                </a>
+                <a href="http://www.350.com/html/2018/gfgg_0926/204.html" class="new_tit z">《幻灵》9月27日更新维护公告</a>
+                <div class="news_time y">09-26</div>
+            </li>
+                                </ul>
+    </div>
+    <script>
+        function getGiftNum(gift_id,game_id) {
+            GiftCenter.prototype.getGiftBagRemain(gift_id,game_id);
+        }
+    </script>
+    <!-- 游戏礼包	 -->
+    <div class="gift z">
+        <div class="big_title">
+            <i class="iconfont"></i>
+            <span>游戏礼包</span>
+            <a href="http://www.350.com/html/gift/" title="更多"><i class="more iconfont y"></i></a>
+        </div>
+        <ul class="news_con gift_con">
+            <div class="top_news"><a href="javascript:void(0);"><img src="index_files/gift_img.jpg"></a></div>
+                                                                                    <li>
+                <div class="gift_icon z"><a href="http://www.350.com/html/2018/gift_0614/31.html"><img src="index_files/20180418013005412.png"></a></div>
+                <div class="gift_name z gift_detail_main" gift-id="336" game-id="902">
+                    <span>魔法无敌 端午节礼包</span>
+                    <span class="surplus">剩余：<i id="gift_left_336">1000</i>/<span id="gift_total_336">1000</span></span>
+                </div>
+                <script>getGiftNum(336,902)</script>
+                <a href="http://www.350.com/html/2018/gift_0614/31.html" class="get_gift z">领取</a>
+            </li>
+                                                                                    <li>
+                <div class="gift_icon z"><a href="http://www.350.com/html/2018/gift_0531/30.html"><img src="index_files/20180418013005412.png"></a></div>
+                <div class="gift_name z gift_detail_main" gift-id="334" game-id="902">
+                    <span>魔法无敌 儿童节礼包</span>
+                    <span class="surplus">剩余：<i id="gift_left_334">1000</i>/<span id="gift_total_334">1000</span></span>
+                </div>
+                <script>getGiftNum(334,902)</script>
+                <a href="http://www.350.com/html/2018/gift_0531/30.html" class="get_gift z">领取</a>
+            </li>
+                                                                                    <li>
+                <div class="gift_icon z"><a href="http://www.350.com/html/2018/gift_0507/29.html"><img src="index_files/20180507100141974.png"></a></div>
+                <div class="gift_name z gift_detail_main" gift-id="330" game-id="87">
+                    <span>商战创世纪 豪华礼包</span>
+                    <span class="surplus">剩余：<i id="gift_left_330">8239</i>/<span id="gift_total_330">10000</span></span>
+                </div>
+                <script>getGiftNum(330,87)</script>
+                <a href="http://www.350.com/html/2018/gift_0507/29.html" class="get_gift z">领取</a>
+            </li>
+                                                                                    <li>
+                <div class="gift_icon z"><a href="http://www.350.com/html/2018/gift_0507/28.html"><img src="index_files/20180507100141974.png"></a></div>
+                <div class="gift_name z gift_detail_main" gift-id="331" game-id="87">
+                    <span>商战创世纪 新手礼包</span>
+                    <span class="surplus">剩余：<i id="gift_left_331">8585</i>/<span id="gift_total_331">10000</span></span>
+                </div>
+                <script>getGiftNum(331,87)</script>
+                <a href="http://www.350.com/html/2018/gift_0507/28.html" class="get_gift z">领取</a>
+            </li>
+                                                        </ul>
+    </div>
+    <!-- 游戏客服 -->
+    <div class="service z">
+        <div class="big_title"><i class="iconfont"></i><span>客服中心</span></div>
+        <div class="news_con">
+            <div class="top_news"><a href="javascript:void(0);"><img src="index_files/service_img.jpg"></a></div>
+            <ul class="contact">
+                <li>
+                    <i class="iconfont ser_phone" style="color:#12b7f5"></i>&nbsp;&nbsp;
+                    <a href="http://350.com/html/customer/kf/" style="margin-left: 30px;">在线客服</a>
+                </li>
+                <li>
+                    <i class="iconfont ser_phone"></i>联系电话&nbsp;:&nbsp;0755-86564350
+                </li>
+                <li>
+                    <i class="iconfont ser_phone" style="color:#f35f5f"></i>移动电话&nbsp;:&nbsp;
+                    133-2640-8131
+                </li>
+                <li><i class="iconfont ser_mail"></i>投诉邮箱&nbsp;:&nbsp;kefu@350.com</li>
+            </ul>
+            <h4>快速通道</h4>
+            <div class="quick find_pass" title="找回密码">
+                <a href="http://350.com/html/user/forget">
+                    <img src="index_files/pass_icon.jpg">
+                </a>
+            </div>
+            <div class="quick perfect_infor" title="完善资料">
+                <a href="http://www.350.com/html/user/"><img src="index_files/perfect_icon.jpg"></a>
+            </div>
+            <div class="quick contact_qq" title="联系QQ">
+                <a href="tencent://message/?uin=2978983811&amp;Site=350%E6%B8%B8%E6%88%8F&amp;Menu=yes" target="_blank"><img src="index_files/qq_icon.jpg"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="fix_bar">
+    <li><div class="wechat_code"><img src="index_files/wechat_code.png"></div></li>
+    <li><a href="http://350.com/html/customer/kf/" title="在线客服" target="_blank"></a></li>
+    <li><a href="javascript:void(0);" id="totop" class="totop"></a></li>
+</ul>
+
+<div class="friend_link">
+    <div class="friend_link_t">友情链接</div>
+    <div class="all_link">
+                        <a href="http://www.8477.com/" target="_blank">8477手游网</a>
+                <a href="http://m.tanwan.com/" target="_blank">贪玩手游</a>
+                <a href="http://www.9game.cn/cfx/" target="_blank">CFX手游</a>
+                <a href="http://www.baojinyou.com/" target="_blank">网游排行榜</a>
+                <a href="http://www.92118.cn/" target="_blank">92游戏网</a>
+                <a href="http://www.tanwan.com/" target="_blank">贪玩游戏</a>
+                    </div>
+</div>
+
+
+
+<div class="footer z">
+    <div class="footer_inner">
+        <ul class="footer_con1">
+            <li><a href="http://www.350.com/html/website/aboutus/" target="_blank">关于我们</a></li>
+            <li><a href="http://www.350.com/html/website/sitemap/" target="_blank">站点地图</a></li>
+            <li><a href="http://www.350.com/html/website/fcmxt/" target="_blank">防沉迷系统</a></li>
+            <li><a href="http://www.350.com/html/website/business/" target="_blank">商务合作</a></li>
+            <li><a href="http://www.350.com/html/customer/" target="_blank">客服中心</a></li>
+            <li><a href="http://www.350.com/html/website/friend/" class="border_none" target="_blank">友情链接</a></li>
+        </ul>
+        <div class="footer_con2">
+            <a href="http://www.350.com/">350游戏</a>&nbsp;版权所有&nbsp;文化部网络游戏举报和电子邮箱：wlwh@vip.sina.com 纠纷处理方式：联系客服或依&nbsp;<a href="http://www.350.com/html/website/yhxy/">用户协议</a>&nbsp;约定方式处理<br>深圳三五零网络游戏有限公司 粤网文[2016]5561-1298号 <a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备16077961号-1 </a>
+            <script type="text/javascript">
+                //CNZZ统计
+                var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+                document.write(unescape("%3Cspan id='cnzz_stat_icon_1261744615'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261744615%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+
+                //百度统计
+                var _hmt = _hmt || [];
+                (function() {
+                    var hm = document.createElement("script");
+                    hm.src = "https://hm.baidu.com/hm.js?4a897a9b777df8d0072e36d555305eb5";
+                    var s = document.getElementsByTagName("script")[0];
+                    s.parentNode.insertBefore(hm, s);
+                })();
+            </script><span id="cnzz_stat_icon_1261744615"><a href="http://www.cnzz.com/stat/website.php?web_id=1261744615" target="_blank" title="站长统计"><img src="index_files/pic1.gif" vspace="0" hspace="0" border="0"></a></span><script src="index_files/z_stat_002.php" type="text/javascript"></script>
+        </div>
+        <div class="footer_con3">
+            <p>抵制不良游戏，拒绝盗版游戏。 注意自我保护，谨防受骗上当。 适度游戏益脑，沉迷游戏伤身。 合理安排时间，享受健康生活。</p>
+        </div>
+    </div>
+</div><script type="text/javascript" src="index_files/jquery.js"></script>
+<script type="text/javascript" src="index_files/index.js"></script>
+
+</body></html>
