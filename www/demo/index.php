@@ -2,6 +2,9 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+$str = preg_replace('#[^\x{4e00}-\x{9fa5}A-Za-z0-9]#u','','你sd#^*)好12@3Ab+=45');
+echo $str;    //输出'你sd好123Ab45'
+exit();
 # 返回 随机密码 默认10位
 function random_pwd($len = 10, $type = 1)
 {
