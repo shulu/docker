@@ -2,9 +2,56 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+$pattern = '^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$';
+$content = '61.140.27.8';
+$pattern_two = "/^61\.140\.\d{1,3}\.\d{1,3}$/";
+if (preg_match($pattern_two, $content, $matches) > 0)
+{
+	var_dump ($matches);
+}
+exit();
+$content = ' @不是程序员的程序员 234543656';
+
+$pattern = '/(?>@([^\p{C}\p{Z}@]{2,36}))(?: |$)/u';
+if (preg_match_all($pattern, $content, $matches) > 0)
+{
+	#$userNames = $matches[1];
+	echo json_encode ($matches, JSON_UNESCAPED_UNICODE);
+} else {
+	echo 'no match';
+}
+exit();
+$phone = '13570274240';
+echo turnCharToNum ($phone);
+
+function turnCharToNum($phone)
+{
+	$charactor = array(
+		'A', 'B', 'C', 'D', 'E',
+		'F', 'G', 'H', 'I', 'J',
+		'K', 'L', 'M', 'N', 'O',
+		'P', 'Q', 'R', 'S', 'T',
+		'U', 'V', 'W', 'X', 'Y',
+		'Z'
+	);
+	$phone_arr = str_split ($phone);
+	$phone_char = '';
+	foreach ($phone_arr as $num)
+	{
+		$rand_n = rand (0,9);
+		if ($rand_n < 5)
+		{
+			$phone_char .= strtolower ($charactor[$num]);
+		}else{
+			$phone_char .= $charactor[$num];
+		}
+	}
+	return $phone_char;
+}
+exit();
 $str = preg_replace('#[^\x{4e00}-\x{9fa5}A-Za-z0-9]#u','','你sd#^*)好12@3Ab+=45');
 echo $str;    //输出'你sd好123Ab45'
-exit();
+#exit();
 # 返回 随机密码 默认10位
 function random_pwd($len = 10, $type = 1)
 {
@@ -93,7 +140,7 @@ $content = " 【多娱互动】 {$code} (手机绑定验证码)，请在20分钟
 $ori_coding = mb_detect_encoding($content);
 $content = mb_convert_encoding($content, 'utf-8', $ori_coding);
 $content = urlencode($content);
-$mobile = 18353659828;
+$mobile = 15707685324;
 $un=400178;
 $pw = 400178;
 $api_url = "http://61.129.57.153:7891/mt";
