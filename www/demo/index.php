@@ -2,6 +2,22 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+echo usertab ('wx453626');
+
+function usertab($uname, $s = TRUE) {
+	$uname = strtolower($uname);
+	$c1    = substr($uname, 0, 1);
+	$c2    = substr($uname, -1);
+	$n     = ord($c1) + ord($c2);
+	$l     = strlen($uname);
+	$n     += $l * $l;
+	if ($s) {
+		return 'user_' . $n % 20;
+	} else {
+		return $n % 20;
+	}
+}
+exit();
 $pattern = '^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$';
 $content = '61.140.27.8';
 $pattern_two = "/^61\.140\.\d{1,3}\.\d{1,3}$/";
@@ -171,21 +187,7 @@ echo md5 ('61.140.24.26reg_forbidden').PHP_EOL;
 
 echo md5 ('318654321').PHP_EOL;
 
-echo usertab ('yu54294535', 1);
 
-function usertab($uname, $s = TRUE) {
-	$uname = strtolower($uname);
-	$c1    = substr($uname, 0, 1);
-	$c2    = substr($uname, -1);
-	$n     = ord($c1) + ord($c2);
-	$l     = strlen($uname);
-	$n     += $l * $l;
-	if ($s) {
-		return 'user_' . $n % 20;
-	} else {
-		return $n % 20;
-	}
-}
 exit();
 $url = "http://logselect.gznuoer.com/getAgentinfo_sql.php?uname=sarcasme3&sign=".md5('sarcasme3#gr*%com#');
 echo $url;
